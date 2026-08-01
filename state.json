@@ -1,0 +1,86 @@
+{
+  "2822005": {
+    "name": "Thanh Duy",
+    "start_budget": 50000000,
+    "history": [
+      {
+        "budget": 50100000.0,
+        "teamwert": 194801809.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 244901809.0,
+        "max_gebot": 131733936.33,
+        "date": "2026-08-01"
+      }
+    ]
+  },
+  "3181699": {
+    "name": "Lam Quy ",
+    "start_budget": 50000000,
+    "history": [
+      {
+        "budget": 50100000.0,
+        "teamwert": 254873500.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 304973500.0,
+        "max_gebot": 151757833.33,
+        "date": "2026-08-01"
+      }
+    ]
+  },
+  "3181707": {
+    "name": "Tam Dan",
+    "start_budget": 50000000,
+    "history": [
+      {
+        "budget": 50100000.0,
+        "teamwert": 193647216.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 243747216.0,
+        "max_gebot": 131349072.0,
+        "date": "2026-08-01"
+      }
+    ]
+  },
+  "3308384": {
+    "name": "Tai",
+    "start_budget": 50000000,
+    "history": [
+      {
+        "budget": 50100000.0,
+        "teamwert": 180122583.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 230222583.0,
+        "max_gebot": 126840861.0,
+        "date": "2026-08-01"
+      }
+    ]
+  },
+  "3310917": {
+    "name": "Duy Tam",
+    "start_budget": 50000000,
+    "history": [
+      {
+        "budget": 50100000.0,
+        "teamwert": 314029651.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 364129651.0,
+        "max_gebot": 171476550.33,
+        "date": "2026-08-01"
+      }
+    ]
+  },
+  "3458038": {
+    "name": "Dragontrieu ",
+    "start_budget": 50000000,
+    "history": [
+      {
+        "budget": 50100000.0,
+        "teamwert": 278379277.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 328479277.0,
+        "max_gebot": 159593092.33,
+        "date": "2026-08-01"
+      }
+    ]
+  }
+}
