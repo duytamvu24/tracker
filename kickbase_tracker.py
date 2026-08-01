@@ -52,6 +52,14 @@ LOGIN_BONUS = 100_000       # € pro Tag, laut eurer Liga-Regel fix
 MINUS_GRENZE = 1 / 3        # offizielle Kickbase 33%-Regel
 
 STATE_FILE = "state.json"
+CONFIG_FILE = "config.json"
+
+# Beim Reset (after_reset=1) wird angenommen, dass Teamwert+Budget in Summe
+# exakt diesem Wert entspricht (Kickbase-Standard: 100 Mio Startkader + 50 Mio
+# Cash = 150 Mio Netto-Teamwert). Budget wird dann als 150 Mio - aktueller
+# Teamwert bestimmt, statt geschaetzt zu werden.
+NETTO_TEAMWERT_START = 150_000_000
+
 
 # Startbudget pro Manager -> HIER die echten Werte deiner Liga eintragen.
 # Key = manager_id (wird beim ersten Lauf ausgegeben, dann hier ergänzen).
@@ -64,7 +72,7 @@ DEFAULT_START_BUDGET = 50_000_000
 # Liga-Auswahl: leer lassen (None) -> nimmt automatisch die erste Liga.
 # Sobald du mehrere Ligen hast (z.B. echte Liga + Testliga), hier die
 # gewünschte League-ID eintragen (steht im Log als "Liga gefunden: NAME -> ID").
-LEAGUE_ID_OVERRIDE = "11162077"  # z.B. "abc123..."
+LEAGUE_ID_OVERRIDE = None  # z.B. "abc123..."
 
 
 # ---------------------------------------------------------------------------
@@ -204,9 +212,10 @@ def fetch_and_archive_transfers(league_id: str, manager_id: str, headers: dict, 
         print(f"  -> {neu} neue Transfer(s) fürs Archiv gefunden (Manager {manager_id}).")
 
 
-def get_tagesgewinn_aus_archiv(store: dict, manager_id: str) -> pd.DataFrame:
+def get_tagesgewinn_aus_archiv(store: dict, manager_id: str, reset_threshold: str | None = None) -> pd.DataFrame:
     """Netto-Transfer (Gewinn) pro Kickbase-Tag, berechnet aus dem GESAMTEN Archiv
-    (nicht nur den aktuell von der API sichtbaren letzten ~24 Transfers)."""
+    (nicht nur den aktuell von der API sichtbaren letzten ~24 Transfers).
+    Transfers VOR reset_threshold (falls gesetzt) werden ignoriert."""
     manager_store = store.get(manager_id, {})
     if not manager_store:
         return pd.DataFrame(columns=["Tag", "Gewinn"])
@@ -220,6 +229,16 @@ def get_tagesgewinn_aus_archiv(store: dict, manager_id: str) -> pd.DataFrame:
         for t in manager_store.values()
     ])
 
+    if reset_threshold:
+        schwelle = pd.to_datetime(reset_threshold)
+        if schwelle.tzinfo is None:
+            schwelle = schwelle.tz_localize("Europe/Berlin")
+        else:
+            schwelle = schwelle.tz_convert("Europe/Berlin")
+        df = df[df["Datetime"] > schwelle]
+        if df.empty:
+            return pd.DataFrame(columns=["Tag", "Gewinn"])
+
     df["Tag"] = df["Datetime"].apply(kickbase_day)
     df["Tag"] = pd.to_datetime(df["Tag"]) + pd.Timedelta(days=1)
     df["Gewinn"] = df.apply(
@@ -230,9 +249,9 @@ def get_tagesgewinn_aus_archiv(store: dict, manager_id: str) -> pd.DataFrame:
     return df.groupby("Tag")["Gewinn"].sum().reset_index()
 
 
-def get_netto_transfer_am_tag(store: dict, manager_id: str, target_day: str) -> float:
+def get_netto_transfer_am_tag(store: dict, manager_id: str, target_day: str, reset_threshold: str | None = None) -> float:
     """Netto-Transfer eines Managers für genau einen Kickbase-Tag (0, falls kein Transfer)."""
-    tagesgewinne = get_tagesgewinn_aus_archiv(store, manager_id)
+    tagesgewinne = get_tagesgewinn_aus_archiv(store, manager_id, reset_threshold)
     target_ts = pd.to_datetime(target_day)
     treffer = tagesgewinne[tagesgewinne["Tag"] == target_ts]
     if treffer.empty:
@@ -254,6 +273,18 @@ def load_state() -> dict:
 def save_state(state: dict) -> None:
     with open(STATE_FILE, "w", encoding="utf-8") as f:
         json.dump(state, f, indent=2, ensure_ascii=False)
+
+
+def load_config() -> dict:
+    if os.path.exists(CONFIG_FILE):
+        with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {"after_reset": 0}
+
+
+def save_config(config: dict) -> None:
+    with open(CONFIG_FILE, "w", encoding="utf-8") as f:
+        json.dump(config, f, indent=2, ensure_ascii=False)
 
 
 def last_budget(history: list, start_budget: float) -> float:
@@ -297,6 +328,13 @@ def run_for_day(target_day: str) -> pd.DataFrame:
 
     state = load_state()
     transfers_store = load_transfers_store()
+    config = load_config()
+    after_reset = config.get("after_reset", 0) == 1
+    if after_reset:
+        print("=== AFTER_RESET aktiv: setze Budget/Teamwert-Basis für alle Manager neu ===")
+
+    jetzt_iso = pd.Timestamp.now(tz="Europe/Berlin").isoformat()
+
     zeilen = []
 
     for m in managers:
@@ -314,29 +352,56 @@ def run_for_day(target_day: str) -> pd.DataFrame:
                   f"nutze Default {DEFAULT_START_BUDGET:,.0f} €. In STARTBUDGETS ergänzen!")
 
         if manager_id not in state:
-            state[manager_id] = {"name": name, "start_budget": start_budget, "history": []}
+            state[manager_id] = {"name": name, "start_budget": start_budget, "history": [], "reset_threshold": None}
+        if "reset_threshold" not in state[manager_id]:
+            state[manager_id]["reset_threshold"] = None
 
         history = state[manager_id]["history"]
 
-        if history and history[-1]["date"] == target_day:
-            # Tag ist noch "offen" (gleiches Zeitfenster, Fenster schließt erst
-            # beim naechsten 22:04-Update) -> neu berechnen, NICHT ueberspringen,
-            # damit neue Transfers seit dem letzten Lauf erfasst werden.
-            netto_transfer = get_netto_transfer_am_tag(transfers_store, manager_id, target_day)
-            prev_budget = history[-2]["budget"] if len(history) >= 2 else start_budget
-            day_result = compute_day(prev_budget, teamwert, netto_transfer)
+        if after_reset:
+            # Budget exakt aus der Invariante Teamwert+Budget = 150 Mio ermitteln,
+            # alle bisherigen Transfers/Historie verwerfen, Schwelle setzen -
+            # ab jetzt zaehlen nur noch Transfers NACH diesem Zeitpunkt.
+            budget = NETTO_TEAMWERT_START - teamwert
+            day_result = compute_day(prev_budget=budget, teamwert=teamwert, netto_transfer=0.0)
+            # compute_day addiert LOGIN_BONUS, den wollen wir beim Reset selbst nicht:
+            day_result["budget"] = round(budget, 2)
+            day_result["netto_teamwert"] = round(teamwert + budget, 2)
+            basis = teamwert + min(budget, 0)
+            day_result["max_gebot"] = round(budget + MINUS_GRENZE * basis, 2)
             day_result["date"] = target_day
-            history[-1] = day_result  # bestehenden (noch offenen) Eintrag ueberschreiben
-            print(f"[{name}] {target_day}: Eintrag war schon offen, neu berechnet/aktualisiert.")
+
+            state[manager_id]["history"] = [day_result]
+            state[manager_id]["reset_threshold"] = jetzt_iso
+            print(f"[{name}] RESET: Budget neu berechnet = {budget:,.0f} € "
+                  f"(Teamwert {teamwert:,.0f} €), Schwelle = {jetzt_iso}")
         else:
-            netto_transfer = get_netto_transfer_am_tag(transfers_store, manager_id, target_day)
-            prev_budget = last_budget(history, start_budget)
+            reset_threshold = state[manager_id].get("reset_threshold")
+            if history and history[-1]["date"] == target_day:
+                # Tag ist noch "offen" (gleiches Zeitfenster, Fenster schließt erst
+                # beim naechsten 22:04-Update) -> neu berechnen, NICHT ueberspringen,
+                # damit neue Transfers seit dem letzten Lauf erfasst werden.
+                netto_transfer = get_netto_transfer_am_tag(transfers_store, manager_id, target_day, reset_threshold)
+                prev_budget = history[-2]["budget"] if len(history) >= 2 else start_budget
+                day_result = compute_day(prev_budget, teamwert, netto_transfer)
+                day_result["date"] = target_day
+                history[-1] = day_result  # bestehenden (noch offenen) Eintrag ueberschreiben
+                print(f"[{name}] {target_day}: Eintrag war schon offen, neu berechnet/aktualisiert.")
+            else:
+                netto_transfer = get_netto_transfer_am_tag(transfers_store, manager_id, target_day, reset_threshold)
+                prev_budget = last_budget(history, start_budget)
 
-            day_result = compute_day(prev_budget, teamwert, netto_transfer)
-            day_result["date"] = target_day
+                day_result = compute_day(prev_budget, teamwert, netto_transfer)
+                day_result["date"] = target_day
 
-            history.append(day_result)
+                history.append(day_result)
+
         zeilen.append({"Manager": name, **day_result})
+
+    if after_reset:
+        config["after_reset"] = 0
+        save_config(config)
+        print("=== AFTER_RESET abgeschlossen, config.json auf after_reset=0 zurückgesetzt ===")
 
     save_state(state)
     save_transfers_store(transfers_store)
