@@ -49,7 +49,9 @@ KICKBASE_EMAIL = os.environ.get("KICKBASE_EMAIL", "DEINE_EMAIL")
 KICKBASE_PASSWORD = os.environ.get("KICKBASE_PASSWORD", "DEIN_PASSWORT")
 
 LOGIN_BONUS = 100_000       # € pro Tag, laut eurer Liga-Regel fix
-MINUS_GRENZE = 1 / 3        # offizielle Kickbase 33%-Regel
+MINUS_GRENZE = 0.33         # exakt 33,00% - empirisch bestaetigt (Abweichung nur 1 Euro
+                             # bei Budget=50.152.491 / Teamwert=99.847.509 -> Max-Gebot
+                             # exakt 83.102.169, real getestet: 83.102.168)
 
 STATE_FILE = "state.json"
 CONFIG_FILE = "config.json"
@@ -72,7 +74,7 @@ DEFAULT_START_BUDGET = 50_000_000
 # Liga-Auswahl: leer lassen (None) -> nimmt automatisch die erste Liga.
 # Sobald du mehrere Ligen hast (z.B. echte Liga + Testliga), hier die
 # gewünschte League-ID eintragen (steht im Log als "Liga gefunden: NAME -> ID").
-LEAGUE_ID_OVERRIDE = "11162077"  # z.B. "abc123..."
+LEAGUE_ID_OVERRIDE = None  # z.B. "abc123..."
 
 
 # ---------------------------------------------------------------------------
