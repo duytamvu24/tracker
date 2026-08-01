@@ -24,6 +24,9 @@ jobs:
       - name: Repo auschecken
         uses: actions/checkout@v4
 
+      - name: Neuesten Stand sicherstellen
+        run: git pull origin main
+
       - name: Python einrichten
         uses: actions/setup-python@v5
         with:
@@ -42,12 +45,18 @@ jobs:
         run: |
           git config user.name "kickbase-tracker-bot"
           git config user.email "kickbase-tracker-bot@users.noreply.github.com"
+
+          # Neuesten Remote-Stand als Basis nehmen, OHNE zu versuchen, den
+          # Inhalt von state.json/transfers_store.json inhaltlich zu mergen -
+          # das ist bei generierten JSON-Dateien nie sinnvoll und fuehrt bei
+          # "add/add"-Situationen zu Konflikten. Stattdessen: unsere frisch
+          # berechneten Dateien immer OBEN AUF den aktuellen Remote-Stand setzen.
+          git fetch origin main
+          git reset --soft origin/main
+
           for f in state.json transfers_store.json config.json; do
             [ -f "$f" ] && git add "$f"
           done
           git diff --staged --quiet || git commit -m "Tracker-Update $(date -u +%Y-%m-%d)"
-          # Sicherheitsnetz: falls der Remote-Stand inzwischen weiter ist
-          # (z.B. manuelle Aenderung ueber die Weboberflaeche), erst
-          # rebasen, dann pushen, statt direkt abzubrechen.
-          git pull --rebase origin main
-          git push
+          git push origin HEAD:main
+
