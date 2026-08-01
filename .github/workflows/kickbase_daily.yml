@@ -42,7 +42,9 @@ jobs:
         run: |
           git config user.name "kickbase-tracker-bot"
           git config user.email "kickbase-tracker-bot@users.noreply.github.com"
-          git add state.json transfers_store.json
+          for f in state.json transfers_store.json config.json; do
+            [ -f "$f" ] && git add "$f"
+          done
           git diff --staged --quiet || git commit -m "Tracker-Update $(date -u +%Y-%m-%d)"
           # Sicherheitsnetz: falls der Remote-Stand inzwischen weiter ist
           # (z.B. manuelle Aenderung ueber die Weboberflaeche), erst
