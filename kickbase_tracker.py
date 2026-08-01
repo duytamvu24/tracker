@@ -104,8 +104,9 @@ def get_league_id(headers: dict) -> str:
         print(f"Liga gefunden: {l['n']} -> {l['i']}")
 
     if LEAGUE_ID_OVERRIDE:
+        target = str(LEAGUE_ID_OVERRIDE).strip()
         for l in leagues:
-            if l["i"] == LEAGUE_ID_OVERRIDE:
+            if str(l["i"]).strip() == target:
                 print(f"-> nutze konfigurierte Liga: {l['n']}")
                 return l["i"]
         raise RuntimeError(
@@ -264,7 +265,15 @@ def last_budget(history: list, start_budget: float) -> float:
 def compute_day(prev_budget: float, teamwert: float, netto_transfer: float) -> dict:
     budget = prev_budget + netto_transfer + LOGIN_BONUS
     netto_teamwert = teamwert + budget
-    max_gebot = budget + MINUS_GRENZE * netto_teamwert
+
+    # Basis fuer die 33%-Regel: negatives Budget reduziert die Basis (offizielles
+    # Kickbase-Beispiel: Teamwert 100 + Kontostand -10 = 90), aber POSITIVES Budget
+    # zaehlt NICHT extra dazu - empirisch bestaetigt (Budget ~58,3 Mio, Teamwert
+    # ~92,7 Mio -> reale Grenze ~89 Mio, passt nur zu "Teamwert + min(Budget,0)",
+    # nicht zu "Teamwert + Budget").
+    basis = teamwert + min(budget, 0)
+    max_gebot = budget + MINUS_GRENZE * basis
+
     return {
         "budget": round(budget, 2),
         "teamwert": round(teamwert, 2),
