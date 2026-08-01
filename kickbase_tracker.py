@@ -61,12 +61,24 @@ STARTBUDGETS = {
 }
 DEFAULT_START_BUDGET = 50_000_000
 
+# Liga-Auswahl: leer lassen (None) -> nimmt automatisch die erste Liga.
+# Sobald du mehrere Ligen hast (z.B. echte Liga + Testliga), hier die
+# gewünschte League-ID eintragen (steht im Log als "Liga gefunden: NAME -> ID").
+LEAGUE_ID_OVERRIDE = None  # z.B. "abc123..."
+
 
 # ---------------------------------------------------------------------------
 # 2) API-ZUGRIFF
 # ---------------------------------------------------------------------------
 
 def login(email: str, password: str) -> str:
+    if email in ("DEINE_EMAIL", "") or password in ("DEIN_PASSWORT", ""):
+        raise RuntimeError(
+            "KICKBASE_EMAIL / KICKBASE_PASSWORD sind nicht gesetzt (noch Platzhalter). "
+            "Bei GitHub Actions: Settings -> Secrets and variables -> Actions pruefen, "
+            "ob beide Secrets exakt so benannt und befuellt sind. Lokal: als Umgebungs-"
+            "variablen setzen."
+        )
     url = "https://api.kickbase.com/v4/user/login"
     data = {"em": email, "pass": password, "loy": False}
     headers = {"Content-Type": "application/json", "Accept": "application/json"}
@@ -83,14 +95,25 @@ def auth_headers(token: str) -> dict:
     }
 
 
-def get_first_league_id(headers: dict) -> str:
+def get_league_id(headers: dict) -> str:
     url = "https://api.kickbase.com/v4/leagues"
     r = requests.get(url, headers=headers)
     r.raise_for_status()
     leagues = r.json()["lins"]
     for l in leagues:
         print(f"Liga gefunden: {l['n']} -> {l['i']}")
-    return leagues[1]["i"]
+
+    if LEAGUE_ID_OVERRIDE:
+        for l in leagues:
+            if l["i"] == LEAGUE_ID_OVERRIDE:
+                print(f"-> nutze konfigurierte Liga: {l['n']}")
+                return l["i"]
+        raise RuntimeError(
+            f"LEAGUE_ID_OVERRIDE='{LEAGUE_ID_OVERRIDE}' wurde nicht unter deinen Ligen gefunden."
+        )
+
+    print(f"-> nutze erste gefundene Liga: {leagues[0]['n']} (keine LEAGUE_ID_OVERRIDE gesetzt)")
+    return leagues[0]["i"]
 
 
 def get_managers(league_id: str, headers: dict) -> list[dict]:
@@ -260,7 +283,7 @@ def run_for_day(target_day: str) -> pd.DataFrame:
     token = login(KICKBASE_EMAIL, KICKBASE_PASSWORD)
     headers = auth_headers(token)
 
-    league_id = get_first_league_id(headers)
+    league_id = get_league_id(headers)
     managers = get_managers(league_id, headers)
 
     state = load_state()
@@ -287,17 +310,23 @@ def run_for_day(target_day: str) -> pd.DataFrame:
         history = state[manager_id]["history"]
 
         if history and history[-1]["date"] == target_day:
-            print(f"[{name}] {target_day} bereits vorhanden, überspringe.")
-            zeilen.append({"Manager": name, **history[-1]})
-            continue
+            # Tag ist noch "offen" (gleiches Zeitfenster, Fenster schließt erst
+            # beim naechsten 22:04-Update) -> neu berechnen, NICHT ueberspringen,
+            # damit neue Transfers seit dem letzten Lauf erfasst werden.
+            netto_transfer = get_netto_transfer_am_tag(transfers_store, manager_id, target_day)
+            prev_budget = history[-2]["budget"] if len(history) >= 2 else start_budget
+            day_result = compute_day(prev_budget, teamwert, netto_transfer)
+            day_result["date"] = target_day
+            history[-1] = day_result  # bestehenden (noch offenen) Eintrag ueberschreiben
+            print(f"[{name}] {target_day}: Eintrag war schon offen, neu berechnet/aktualisiert.")
+        else:
+            netto_transfer = get_netto_transfer_am_tag(transfers_store, manager_id, target_day)
+            prev_budget = last_budget(history, start_budget)
 
-        netto_transfer = get_netto_transfer_am_tag(transfers_store, manager_id, target_day)
-        prev_budget = last_budget(history, start_budget)
+            day_result = compute_day(prev_budget, teamwert, netto_transfer)
+            day_result["date"] = target_day
 
-        day_result = compute_day(prev_budget, teamwert, netto_transfer)
-        day_result["date"] = target_day
-
-        history.append(day_result)
+            history.append(day_result)
         zeilen.append({"Manager": name, **day_result})
 
     save_state(state)
