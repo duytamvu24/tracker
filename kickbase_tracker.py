@@ -90,7 +90,7 @@ def get_first_league_id(headers: dict) -> str:
     leagues = r.json()["lins"]
     for l in leagues:
         print(f"Liga gefunden: {l['n']} -> {l['i']}")
-    return leagues[0]["i"]
+    return leagues[1]["i"]
 
 
 def get_managers(league_id: str, headers: dict) -> list[dict]:
