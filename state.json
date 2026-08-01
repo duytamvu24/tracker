@@ -1,0 +1,30 @@
+{
+  "3310917": {
+    "name": "Duy Tam",
+    "start_budget": 50000000,
+    "history": [
+      {
+        "budget": 58876546.0,
+        "teamwert": 92679573.0,
+        "netto_transfer": 8776546.0,
+        "netto_teamwert": 151556119.0,
+        "max_gebot": 89769737.0,
+        "date": "2026-08-01"
+      }
+    ]
+  },
+  "3428973": {
+    "name": "duytam2",
+    "start_budget": 50000000,
+    "history": [
+      {
+        "budget": 50100000.0,
+        "teamwert": 100218764.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 150318764.0,
+        "max_gebot": 83506254.67,
+        "date": "2026-08-01"
+      }
+    ]
+  }
+}
