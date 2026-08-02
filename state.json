@@ -4,11 +4,11 @@
     "start_budget": 50000000,
     "history": [
       {
-        "budget": 57110316.0,
-        "teamwert": 93673185.0,
-        "netto_transfer": 7010316.0,
-        "netto_teamwert": 150783501.0,
-        "max_gebot": 88022467.05,
+        "budget": -28879143.0,
+        "teamwert": 116662644.0,
+        "netto_transfer": -78979143.0,
+        "netto_teamwert": 87783501.0,
+        "max_gebot": 89412.33,
         "date": "2026-08-02"
       }
     ],
@@ -19,11 +19,11 @@
     "start_budget": 50000000,
     "history": [
       {
-        "budget": 73369059.0,
-        "teamwert": 76850089.0,
-        "netto_transfer": 23269059.0,
-        "netto_teamwert": 150219148.0,
-        "max_gebot": 98729588.37,
+        "budget": 159358518.0,
+        "teamwert": 53860630.0,
+        "netto_transfer": 109258518.0,
+        "netto_teamwert": 213219148.0,
+        "max_gebot": 177132525.9,
         "date": "2026-08-02"
       }
     ],
