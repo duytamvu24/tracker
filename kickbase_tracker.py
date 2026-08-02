@@ -56,12 +56,6 @@ MINUS_GRENZE = 0.33         # exakt 33,00% - empirisch bestaetigt (Abweichung nu
 STATE_FILE = "state.json"
 CONFIG_FILE = "config.json"
 
-# Beim Reset (after_reset=1) wird angenommen, dass Teamwert+Budget in Summe
-# exakt diesem Wert entspricht (Kickbase-Standard: 100 Mio Startkader + 50 Mio
-# Cash = 150 Mio Netto-Teamwert). Budget wird dann als 150 Mio - aktueller
-# Teamwert bestimmt, statt geschaetzt zu werden.
-NETTO_TEAMWERT_START = 150_000_000
-
 
 # Startbudget pro Manager -> HIER die echten Werte deiner Liga eintragen.
 # Key = manager_id (wird beim ersten Lauf ausgegeben, dann hier ergänzen).
@@ -361,10 +355,13 @@ def run_for_day(target_day: str) -> pd.DataFrame:
         history = state[manager_id]["history"]
 
         if after_reset:
-            # Budget exakt aus der Invariante Teamwert+Budget = 150 Mio ermitteln,
-            # alle bisherigen Transfers/Historie verwerfen, Schwelle setzen -
-            # ab jetzt zaehlen nur noch Transfers NACH diesem Zeitpunkt.
-            budget = NETTO_TEAMWERT_START - teamwert
+            # KORRIGIERT: Es gibt keine feste 150-Mio-Summe aus Teamwert+Budget!
+            # Laut offizieller Kickbase-Doku ist nur das BUDGET exakt fix (30/50/80 Mio,
+            # vom Liga-Admin gewaehlt), waehrend der Teamwert nur "ungefaehr" 100 Mio
+            # betraegt (zufaellig ausgeloster Kader, variiert pro Manager).
+            # -> Budget einfach auf den bekannten, exakten Startwert setzen,
+            #    Teamwert live von der API uebernehmen (kein Rueckrechnen noetig).
+            budget = start_budget
             day_result = compute_day(prev_budget=budget, teamwert=teamwert, netto_transfer=0.0)
             # compute_day addiert LOGIN_BONUS, den wollen wir beim Reset selbst nicht:
             day_result["budget"] = round(budget, 2)
@@ -375,8 +372,8 @@ def run_for_day(target_day: str) -> pd.DataFrame:
 
             state[manager_id]["history"] = [day_result]
             state[manager_id]["reset_threshold"] = jetzt_iso
-            print(f"[{name}] RESET: Budget neu berechnet = {budget:,.0f} € "
-                  f"(Teamwert {teamwert:,.0f} €), Schwelle = {jetzt_iso}")
+            print(f"[{name}] RESET: Budget gesetzt auf exakten Startwert = {budget:,.0f} € "
+                  f"(Teamwert lt. API {teamwert:,.0f} €), Schwelle = {jetzt_iso}")
         else:
             reset_threshold = state[manager_id].get("reset_threshold")
             if history and history[-1]["date"] == target_day:
