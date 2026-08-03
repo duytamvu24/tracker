@@ -376,6 +376,7 @@ def run_for_day(target_day: str) -> pd.DataFrame:
 
             state[manager_id]["history"] = [day_result]
             state[manager_id]["reset_threshold"] = jetzt_iso
+            state[manager_id]["start_budget"] = budget  # tatsaechlicher (ggf. aufgestockter) Wert merken
             if fehlbetrag > 0:
                 print(f"[{name}] RESET: Teamwert {teamwert:,.0f} € < {SQUAD_TARGET:,.0f} € -> "
                       f"Fehlbetrag {fehlbetrag:,.0f} € aufs Budget draufgelegt. "
@@ -385,19 +386,20 @@ def run_for_day(target_day: str) -> pd.DataFrame:
                       f"normales Startbudget = {budget:,.0f} €, Schwelle = {jetzt_iso}")
         else:
             reset_threshold = state[manager_id].get("reset_threshold")
+            effektives_start_budget = state[manager_id].get("start_budget", start_budget)
             if history and history[-1]["date"] == target_day:
                 # Tag ist noch "offen" (gleiches Zeitfenster, Fenster schließt erst
                 # beim naechsten 22:04-Update) -> neu berechnen, NICHT ueberspringen,
                 # damit neue Transfers seit dem letzten Lauf erfasst werden.
                 netto_transfer = get_netto_transfer_am_tag(transfers_store, manager_id, target_day, reset_threshold)
-                prev_budget = history[-2]["budget"] if len(history) >= 2 else start_budget
+                prev_budget = history[-2]["budget"] if len(history) >= 2 else effektives_start_budget
                 day_result = compute_day(prev_budget, teamwert, netto_transfer)
                 day_result["date"] = target_day
                 history[-1] = day_result  # bestehenden (noch offenen) Eintrag ueberschreiben
                 print(f"[{name}] {target_day}: Eintrag war schon offen, neu berechnet/aktualisiert.")
             else:
                 netto_transfer = get_netto_transfer_am_tag(transfers_store, manager_id, target_day, reset_threshold)
-                prev_budget = last_budget(history, start_budget)
+                prev_budget = last_budget(history, effektives_start_budget)
 
                 day_result = compute_day(prev_budget, teamwert, netto_transfer)
                 day_result["date"] = target_day
