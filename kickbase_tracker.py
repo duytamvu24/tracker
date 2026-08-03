@@ -65,6 +65,10 @@ STARTBUDGETS = {
 }
 DEFAULT_START_BUDGET = 50_000_000
 
+# Ziel-Kaderwert fuer den Reset: liegt der zufaellig ausgeloste Startkader
+# darunter, wird der Fehlbetrag automatisch aufs Startbudget draufgelegt.
+SQUAD_TARGET = 100_000_000
+
 # Liga-Auswahl: leer lassen (None) -> nimmt automatisch die erste Liga.
 # Sobald du mehrere Ligen hast (z.B. echte Liga + Testliga), hier die
 # gewünschte League-ID eintragen (steht im Log als "Liga gefunden: NAME -> ID").
@@ -355,13 +359,13 @@ def run_for_day(target_day: str) -> pd.DataFrame:
         history = state[manager_id]["history"]
 
         if after_reset:
-            # KORRIGIERT: Es gibt keine feste 150-Mio-Summe aus Teamwert+Budget!
-            # Laut offizieller Kickbase-Doku ist nur das BUDGET exakt fix (30/50/80 Mio,
-            # vom Liga-Admin gewaehlt), waehrend der Teamwert nur "ungefaehr" 100 Mio
-            # betraegt (zufaellig ausgeloster Kader, variiert pro Manager).
-            # -> Budget einfach auf den bekannten, exakten Startwert setzen,
-            #    Teamwert live von der API uebernehmen (kein Rueckrechnen noetig).
-            budget = start_budget
+            # Beobachtung/Hypothese: Liegt der zufaellig ausgeloste Startkader
+            # UNTER dem Zielwert (SQUAD_TARGET, standardmaessig 100 Mio), wird
+            # der Fehlbetrag automatisch aufs Budget draufgelegt (Ausgleich auf
+            # insgesamt 150 Mio bei 50 Mio Startbudget). Liegt der Kader DARUEBER,
+            # bleibt es beim normalen, gewaehlten Startbudget (kein Abzug).
+            fehlbetrag = max(0.0, SQUAD_TARGET - teamwert)
+            budget = start_budget + fehlbetrag
             day_result = compute_day(prev_budget=budget, teamwert=teamwert, netto_transfer=0.0)
             # compute_day addiert LOGIN_BONUS, den wollen wir beim Reset selbst nicht:
             day_result["budget"] = round(budget, 2)
@@ -372,8 +376,13 @@ def run_for_day(target_day: str) -> pd.DataFrame:
 
             state[manager_id]["history"] = [day_result]
             state[manager_id]["reset_threshold"] = jetzt_iso
-            print(f"[{name}] RESET: Budget gesetzt auf exakten Startwert = {budget:,.0f} € "
-                  f"(Teamwert lt. API {teamwert:,.0f} €), Schwelle = {jetzt_iso}")
+            if fehlbetrag > 0:
+                print(f"[{name}] RESET: Teamwert {teamwert:,.0f} € < {SQUAD_TARGET:,.0f} € -> "
+                      f"Fehlbetrag {fehlbetrag:,.0f} € aufs Budget draufgelegt. "
+                      f"Budget = {budget:,.0f} €, Schwelle = {jetzt_iso}")
+            else:
+                print(f"[{name}] RESET: Teamwert {teamwert:,.0f} € >= {SQUAD_TARGET:,.0f} € -> "
+                      f"normales Startbudget = {budget:,.0f} €, Schwelle = {jetzt_iso}")
         else:
             reset_threshold = state[manager_id].get("reset_threshold")
             if history and history[-1]["date"] == target_day:
