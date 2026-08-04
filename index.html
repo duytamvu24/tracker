@@ -238,6 +238,62 @@
   .sim-delta { font-size: 12px; color: var(--gold-bright); margin-left: 6px; }
   .sim-delta.zero { color: var(--chalk-dim); }
 
+  .adjust {
+    margin-top: 20px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 24px;
+    background: var(--card);
+    display: none;
+  }
+  .adjust.visible { display: block; }
+  .adjust-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .adjust-title {
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 13px;
+    color: var(--chalk-dim);
+  }
+  .adjust-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .adjust-row label {
+    font-size: 13px;
+    color: var(--chalk-dim);
+    white-space: nowrap;
+  }
+  .adjust-row input[type="number"] {
+    flex: 1;
+    min-width: 180px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    color: var(--chalk);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 15px;
+    padding: 9px 12px;
+  }
+  .adjust-row input[type="number"]:focus {
+    outline: none;
+    border-color: var(--gold);
+  }
+  .adjust-hint {
+    font-size: 12px;
+    color: var(--chalk-dim);
+    margin-top: 8px;
+  }
+
   .status {
     font-family: 'IBM Plex Mono', monospace;
     color: var(--chalk-dim);
@@ -292,6 +348,22 @@
       <div><div class="stat-label">Neuer Teamwert</div><div class="stat-value" id="sim-teamwert">—</div></div>
       <div><div class="stat-label">Neues Budget</div><div class="stat-value" id="sim-budget">—</div></div>
       <div><div class="stat-label">Neues Max-Gebot</div><div class="stat-value" id="sim-max">—</div></div>
+    </div>
+  </div>
+
+  <div class="adjust visible" id="adjust">
+    <div class="adjust-header">
+      <div class="adjust-title">Manuelle Budget-Anpassung</div>
+    </div>
+    <div class="adjust-row">
+      <label for="adjust-input">Betrag vom Budget abziehen (€, negativ = draufrechnen)</label>
+      <input type="number" id="adjust-input" placeholder="z. B. 5000000 oder -2000000" step="1">
+    </div>
+    <div class="adjust-hint">Wirkt zusätzlich zu evtl. oben abgewählten Spielern.</div>
+    <div class="sim-grid">
+      <div><div class="stat-label">Neues Budget</div><div class="stat-value" id="adj-budget">—</div></div>
+      <div><div class="stat-label">Neuer Netto-Teamwert</div><div class="stat-value" id="adj-netto">—</div></div>
+      <div><div class="stat-label">Neues Max-Gebot</div><div class="stat-value" id="adj-max">—</div></div>
     </div>
   </div>
 
@@ -362,13 +434,19 @@ async function load() {
       tabs.appendChild(tab);
     });
 
+    let currentManager = null;
+    let currentSpieler = [];
+
     function renderSquad(m) {
       const squadEl = document.getElementById('squad');
       const listEl = document.getElementById('squad-list');
       const spieler = squadCache[m.id];
 
+      currentSpieler = spieler || [];
+
       if (!spieler || spieler.length === 0) {
         squadEl.classList.remove('visible');
+        recompute();
         return;
       }
       squadEl.classList.add('visible');
@@ -386,7 +464,7 @@ async function load() {
         const toggle = () => {
           checkbox.checked = !checkbox.checked;
           row.classList.toggle('removed', !checkbox.checked);
-          recompute(m, spieler);
+          recompute();
         };
         row.addEventListener('click', (e) => {
           if (e.target.tagName !== 'INPUT') toggle();
@@ -394,7 +472,7 @@ async function load() {
         checkbox.addEventListener('click', (e) => {
           e.stopPropagation();
           row.classList.toggle('removed', !checkbox.checked);
-          recompute(m, spieler);
+          recompute();
         });
         listEl.appendChild(row);
       });
@@ -402,10 +480,10 @@ async function load() {
       document.getElementById('reset-btn').onclick = () => {
         listEl.querySelectorAll('input').forEach(cb => cb.checked = true);
         listEl.querySelectorAll('.squad-row').forEach(r => r.classList.remove('removed'));
-        recompute(m, spieler);
+        recompute();
       };
 
-      recompute(m, spieler);
+      recompute();
     }
 
     function renderDelta(elId, neu, alt) {
@@ -419,22 +497,35 @@ async function load() {
       }
     }
 
-    function recompute(m, spieler) {
+    function recompute() {
+      if (!currentManager) return;
+      const m = currentManager;
+      const spieler = currentSpieler;
+
       const checkboxes = document.querySelectorAll('#squad-list input');
       let entferntSumme = 0;
       checkboxes.forEach(cb => {
         if (!cb.checked) entferntSumme += spieler[parseInt(cb.dataset.idx, 10)].marktwert;
       });
 
+      const manuellerAbzug = parseFloat(document.getElementById('adjust-input').value) || 0;
+
       const teamwertNeu = m.teamwert - entferntSumme;
-      const budgetNeu = m.budget + entferntSumme;
+      const budgetNeu = m.budget + entferntSumme - manuellerAbzug;
+      const nettoNeu = teamwertNeu + budgetNeu;
       const maxGebotNeu = maxGebot(budgetNeu, teamwertNeu);
 
       document.getElementById('sim-removed').textContent = fmt(entferntSumme);
       renderDelta('sim-teamwert', teamwertNeu, m.teamwert);
       renderDelta('sim-budget', budgetNeu, m.budget);
       renderDelta('sim-max', maxGebotNeu, m.max_gebot);
+
+      renderDelta('adj-budget', budgetNeu, m.budget);
+      renderDelta('adj-netto', nettoNeu, m.netto_teamwert);
+      renderDelta('adj-max', maxGebotNeu, m.max_gebot);
     }
+
+    document.getElementById('adjust-input').addEventListener('input', recompute);
 
     function select(m) {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -450,6 +541,8 @@ async function load() {
       document.getElementById('sb-transfer').textContent = fmt(m.netto_transfer);
       document.getElementById('sb-netto').textContent = fmt(m.netto_teamwert);
 
+      currentManager = m;
+      document.getElementById('adjust-input').value = '';
       renderSquad(m);
     }
 
