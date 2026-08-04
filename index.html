@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Liga-Cockpit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pitch: #0b2e21;
+    --pitch-deep: #072016;
+    --chalk: #f3f6f2;
+    --chalk-dim: #b9c9bf;
+    --gold: #d9a441;
+    --gold-bright: #f0c46b;
+    --line: rgba(243, 246, 242, 0.14);
+    --card: rgba(243, 246, 242, 0.05);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.025) 0 2px, transparent 2px 64px),
+      linear-gradient(180deg, var(--pitch) 0%, var(--pitch-deep) 100%);
+    color: var(--chalk);
+    font-family: 'Inter', system-ui, sans-serif;
+    padding: 32px 20px 64px;
+  }
+
+  .wrap { max-width: 980px; margin: 0 auto; }
+
+  header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 20px;
+    margin-bottom: 28px;
+  }
+
+  h1 {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-size: clamp(28px, 5vw, 40px);
+    margin: 0;
+  }
+  h1 span { color: var(--gold-bright); }
+
+  .meta {
+    font-size: 13px;
+    color: var(--chalk-dim);
+    font-family: 'IBM Plex Mono', monospace;
+    text-align: right;
+  }
+
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .tab {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    font-size: 14px;
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--chalk-dim);
+    padding: 8px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .tab:hover { border-color: var(--gold); color: var(--chalk); }
+  .tab.active {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--pitch-deep);
+  }
+
+  .board {
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--card);
+  }
+
+  table { width: 100%; border-collapse: collapse; }
+  th, td {
+    padding: 14px 16px;
+    text-align: right;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  th:first-child, td:first-child { text-align: left; font-family: 'Inter', sans-serif; }
+  th {
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--chalk-dim);
+    border-bottom: 1px solid var(--line);
+    font-weight: 500;
+  }
+  tbody tr { border-top: 1px solid var(--line); transition: background 0.15s ease; }
+  tbody tr:first-child { border-top: none; }
+  tbody tr.selected { background: rgba(217, 164, 65, 0.1); }
+  .rank {
+    display: inline-flex;
+    width: 20px;
+    color: var(--gold-bright);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .negative { color: #e8836b; }
+  .positive { color: var(--chalk); }
+
+  .scoreboard {
+    margin-top: 28px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 24px;
+    background: var(--card);
+    display: none;
+  }
+  .scoreboard.visible { display: block; }
+  .scoreboard-label {
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 12px;
+    color: var(--chalk-dim);
+    margin-bottom: 6px;
+  }
+  .scoreboard-value {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    font-size: clamp(32px, 7vw, 52px);
+    color: var(--gold-bright);
+    letter-spacing: -0.01em;
+  }
+  .scoreboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+  .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--chalk-dim); margin-bottom: 4px; }
+  .stat-value { font-family: 'IBM Plex Mono', monospace; font-size: 18px; }
+
+  .note {
+    margin-top: 24px;
+    font-size: 12.5px;
+    color: var(--chalk-dim);
+    line-height: 1.6;
+  }
+
+  .squad {
+    margin-top: 20px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 24px;
+    background: var(--card);
+    display: none;
+  }
+  .squad.visible { display: block; }
+  .squad-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .squad-title {
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 13px;
+    color: var(--chalk-dim);
+  }
+  .reset-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 12.5px;
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--chalk-dim);
+    padding: 5px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .reset-btn:hover { border-color: var(--gold); color: var(--chalk); }
+
+  .squad-list {
+    max-height: 320px;
+    overflow-y: auto;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+  }
+  .squad-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--line);
+    font-size: 14px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .squad-row:last-child { border-bottom: none; }
+  .squad-row:hover { background: rgba(255,255,255,0.03); }
+  .squad-row.removed { opacity: 0.4; text-decoration: line-through; }
+  .squad-row input { accent-color: var(--gold); width: 16px; height: 16px; flex-shrink: 0; }
+  .squad-row .p-name { flex: 1; }
+  .squad-row .p-mv { font-family: 'IBM Plex Mono', monospace; color: var(--chalk-dim); }
+
+  .sim-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+  .sim-delta { font-size: 12px; color: var(--gold-bright); margin-left: 6px; }
+  .sim-delta.zero { color: var(--chalk-dim); }
+
+  .status {
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--chalk-dim);
+    padding: 40px 0;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Liga<span>·</span>Cockpit</h1>
+    <div class="meta" id="meta">lädt …</div>
+  </header>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="board">
+    <table>
+      <thead>
+        <tr>
+          <th>Manager</th>
+          <th>Teamwert</th>
+          <th>Budget</th>
+          <th>Netto-Teamwert</th>
+          <th>Max-Gebot</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="scoreboard" id="scoreboard">
+    <div class="scoreboard-label" id="sb-name">—</div>
+    <div class="scoreboard-value" id="sb-max">—</div>
+    <div class="scoreboard-grid">
+      <div><div class="stat-label">Teamwert</div><div class="stat-value" id="sb-teamwert">—</div></div>
+      <div><div class="stat-label">Budget</div><div class="stat-value" id="sb-budget">—</div></div>
+      <div><div class="stat-label">Netto-Transfer</div><div class="stat-value" id="sb-transfer">—</div></div>
+      <div><div class="stat-label">Netto-Teamwert</div><div class="stat-value" id="sb-netto">—</div></div>
+    </div>
+  </div>
+
+  <div class="squad" id="squad">
+    <div class="squad-header">
+      <div class="squad-title">Kader-Simulator — Spieler abwählen, um Verkauf zu simulieren</div>
+      <button class="reset-btn" id="reset-btn">Alles zurücksetzen</button>
+    </div>
+    <div class="squad-list" id="squad-list"></div>
+    <div class="sim-grid">
+      <div><div class="stat-label">Entfernter Wert</div><div class="stat-value" id="sim-removed">0 €</div></div>
+      <div><div class="stat-label">Neuer Teamwert</div><div class="stat-value" id="sim-teamwert">—</div></div>
+      <div><div class="stat-label">Neues Budget</div><div class="stat-value" id="sim-budget">—</div></div>
+      <div><div class="stat-label">Neues Max-Gebot</div><div class="stat-value" id="sim-max">—</div></div>
+    </div>
+  </div>
+
+  <div class="note">
+    Werte für Manager außer dir selbst sind Schätzungen (Login-Bonus wird pauschal angenommen).
+    Aktualisiert sich automatisch bei jedem täglichen Skript-Lauf.
+  </div>
+
+  <div id="loading" class="status">Lade state.json …</div>
+</div>
+
+<script>
+const fmt = n => new Intl.NumberFormat('de-DE', { maximumFractionDigits: 0 }).format(Math.round(n)) + ' €';
+const MINUS_GRENZE = 0.33; // muss mit kickbase_tracker.py MINUS_GRENZE uebereinstimmen
+
+function maxGebot(budget, teamwert) {
+  const basis = teamwert + Math.min(budget, 0);
+  return budget + MINUS_GRENZE * basis;
+}
+
+let squadCache = {};
+
+async function load() {
+  const loadingEl = document.getElementById('loading');
+  try {
+    const res = await fetch('./state.json?t=' + Date.now(), { cache: 'no-store' });
+    if (!res.ok) throw new Error('state.json nicht gefunden (Status ' + res.status + ')');
+    const state = await res.json();
+
+    // squad_cache.json ist optional - falls es fehlt oder fehlschlaegt, laeuft
+    // das Haupt-Dashboard trotzdem, nur der Kader-Simulator bleibt dann leer.
+    try {
+      const squadRes = await fetch('./squad_cache.json?t=' + Date.now(), { cache: 'no-store' });
+      if (squadRes.ok) squadCache = await squadRes.json();
+    } catch (e) { /* squad_cache optional, ignorieren */ }
+
+    const managers = Object.entries(state).map(([id, m]) => {
+      const last = m.history[m.history.length - 1];
+      return { id, name: m.name, ...last };
+    }).sort((a, b) => b.max_gebot - a.max_gebot);
+
+    if (managers.length === 0) throw new Error('Keine Manager in state.json gefunden.');
+
+    document.getElementById('meta').textContent = 'Kickbase-Tag ' + managers[0].date;
+    loadingEl.style.display = 'none';
+
+    const tbody = document.getElementById('tbody');
+    const tabs = document.getElementById('tabs');
+
+    managers.forEach((m, i) => {
+      const tr = document.createElement('tr');
+      tr.id = 'row-' + m.id;
+      tr.innerHTML = `
+        <td><span class="rank">${i + 1}</span>${m.name}</td>
+        <td>${fmt(m.teamwert)}</td>
+        <td class="${m.budget < 0 ? 'negative' : 'positive'}">${fmt(m.budget)}</td>
+        <td>${fmt(m.netto_teamwert)}</td>
+        <td>${fmt(m.max_gebot)}</td>
+      `;
+      tr.addEventListener('click', () => select(m));
+      tbody.appendChild(tr);
+
+      const tab = document.createElement('button');
+      tab.className = 'tab';
+      tab.id = 'tab-' + m.id;
+      tab.textContent = m.name;
+      tab.addEventListener('click', () => select(m));
+      tabs.appendChild(tab);
+    });
+
+    function renderSquad(m) {
+      const squadEl = document.getElementById('squad');
+      const listEl = document.getElementById('squad-list');
+      const spieler = squadCache[m.id];
+
+      if (!spieler || spieler.length === 0) {
+        squadEl.classList.remove('visible');
+        return;
+      }
+      squadEl.classList.add('visible');
+      listEl.innerHTML = '';
+
+      spieler.forEach((s, idx) => {
+        const row = document.createElement('div');
+        row.className = 'squad-row';
+        row.innerHTML = `
+          <input type="checkbox" checked data-idx="${idx}">
+          <span class="p-name">${s.name}</span>
+          <span class="p-mv">${fmt(s.marktwert)}</span>
+        `;
+        const checkbox = row.querySelector('input');
+        const toggle = () => {
+          checkbox.checked = !checkbox.checked;
+          row.classList.toggle('removed', !checkbox.checked);
+          recompute(m, spieler);
+        };
+        row.addEventListener('click', (e) => {
+          if (e.target.tagName !== 'INPUT') toggle();
+        });
+        checkbox.addEventListener('click', (e) => {
+          e.stopPropagation();
+          row.classList.toggle('removed', !checkbox.checked);
+          recompute(m, spieler);
+        });
+        listEl.appendChild(row);
+      });
+
+      document.getElementById('reset-btn').onclick = () => {
+        listEl.querySelectorAll('input').forEach(cb => cb.checked = true);
+        listEl.querySelectorAll('.squad-row').forEach(r => r.classList.remove('removed'));
+        recompute(m, spieler);
+      };
+
+      recompute(m, spieler);
+    }
+
+    function renderDelta(elId, neu, alt) {
+      const el = document.getElementById(elId);
+      const diff = neu - alt;
+      if (Math.abs(diff) < 1) {
+        el.innerHTML = fmt(neu);
+      } else {
+        const vorzeichen = diff > 0 ? '+' : '';
+        el.innerHTML = fmt(neu) + `<span class="sim-delta">${vorzeichen}${fmt(diff)}</span>`;
+      }
+    }
+
+    function recompute(m, spieler) {
+      const checkboxes = document.querySelectorAll('#squad-list input');
+      let entferntSumme = 0;
+      checkboxes.forEach(cb => {
+        if (!cb.checked) entferntSumme += spieler[parseInt(cb.dataset.idx, 10)].marktwert;
+      });
+
+      const teamwertNeu = m.teamwert - entferntSumme;
+      const budgetNeu = m.budget + entferntSumme;
+      const maxGebotNeu = maxGebot(budgetNeu, teamwertNeu);
+
+      document.getElementById('sim-removed').textContent = fmt(entferntSumme);
+      renderDelta('sim-teamwert', teamwertNeu, m.teamwert);
+      renderDelta('sim-budget', budgetNeu, m.budget);
+      renderDelta('sim-max', maxGebotNeu, m.max_gebot);
+    }
+
+    function select(m) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('tbody tr').forEach(t => t.classList.remove('selected'));
+      document.getElementById('tab-' + m.id).classList.add('active');
+      document.getElementById('row-' + m.id).classList.add('selected');
+
+      document.getElementById('scoreboard').classList.add('visible');
+      document.getElementById('sb-name').textContent = m.name + ' — Max-Gebot';
+      document.getElementById('sb-max').textContent = fmt(m.max_gebot);
+      document.getElementById('sb-teamwert').textContent = fmt(m.teamwert);
+      document.getElementById('sb-budget').textContent = fmt(m.budget);
+      document.getElementById('sb-transfer').textContent = fmt(m.netto_transfer);
+      document.getElementById('sb-netto').textContent = fmt(m.netto_teamwert);
+
+      renderSquad(m);
+    }
+
+    select(managers[0]);
+  } catch (err) {
+    loadingEl.textContent = 'Fehler: ' + err.message;
+  }
+}
+
+load();
+</script>
+</body>
+</html>
