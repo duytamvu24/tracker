@@ -72,7 +72,7 @@ SQUAD_TARGET = 100_000_000
 # Liga-Auswahl: leer lassen (None) -> nimmt automatisch die erste Liga.
 # Sobald du mehrere Ligen hast (z.B. echte Liga + Testliga), hier die
 # gewünschte League-ID eintragen (steht im Log als "Liga gefunden: NAME -> ID").
-LEAGUE_ID_OVERRIDE = "11162077"  # z.B. "abc123..."
+LEAGUE_ID_OVERRIDE = "11162077"  # Testliga ("test"). Echte Liga (ESY KICKBASE) waere "5819867"
 
 
 # ---------------------------------------------------------------------------
@@ -402,11 +402,35 @@ def run_for_day(target_day: str) -> pd.DataFrame:
                 history[-1] = day_result  # bestehenden (noch offenen) Eintrag ueberschreiben
                 print(f"[{name}] {target_day}: Eintrag war schon offen, neu berechnet/aktualisiert.")
             else:
-                # WICHTIG: Falls zwischen dem letzten Eintrag und target_day Tage
-                # UEBERSPRUNGEN wurden (Skript an dem Tag nicht gelaufen), muessen
-                # diese Tage einzeln nachgeholt werden - sonst geht deren Netto-
-                # Transfer komplett verloren (er wuerde nie irgendeinem target_day
-                # zugeordnet und damit nie vom Budget abgezogen/draufgerechnet).
+                # SCHRITT 1: Den zuletzt gespeicherten Eintrag "finalisieren" -
+                # er koennte geschrieben worden sein, BEVOR sein Zeitfenster
+                # wirklich geschlossen war (z.B. taeglicher Cronjob kurz nach
+                # 22:04 Uhr, also ganz am ANFANG des neuen Fensters). Transfers,
+                # die spaeter am selben Kickbase-Tag passiert sind, waeren sonst
+                # nie mehr erfasst worden. Der TEAMWERT von damals bleibt dabei
+                # unangetastet (der war schon korrekt live erfasst) - nur der
+                # Netto-Transfer wird gegen das (jetzt vollstaendige) Archiv
+                # neu geprueft.
+                if history:
+                    voriger_tag = history[-1]["date"]
+                    frischer_netto = get_netto_transfer_am_tag(
+                        transfers_store, manager_id, voriger_tag, reset_threshold
+                    )
+                    if abs(frischer_netto - history[-1]["netto_transfer"]) > 0.01:
+                        alter_netto = history[-1]["netto_transfer"]
+                        vorvor_budget = history[-2]["budget"] if len(history) >= 2 else effektives_start_budget
+                        eigener_teamwert = history[-1]["teamwert"]
+                        aktualisiert = compute_day(vorvor_budget, eigener_teamwert, frischer_netto)
+                        aktualisiert["date"] = voriger_tag
+                        history[-1] = aktualisiert
+                        print(f"[{name}] {voriger_tag}: nachtraeglich weitere Transfers gefunden, "
+                              f"Eintrag korrigiert (Netto-Transfer war {alter_netto:,.0f} € "
+                              f"neu: {frischer_netto:,.0f} €).")
+
+                # SCHRITT 2: Falls zwischen dem letzten Eintrag und target_day Tage
+                # UEBERSPRUNGEN wurden (Skript an dem Tag gar nicht gelaufen),
+                # muessen diese Tage einzeln nachgeholt werden - sonst geht deren
+                # Netto-Transfer komplett verloren.
                 if history:
                     letzter_tag = pd.to_datetime(history[-1]["date"])
                     nachzuholende_tage = pd.date_range(
@@ -522,4 +546,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
