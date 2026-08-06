@@ -1,171 +1,237 @@
 {
   "3310917": [
     {
-      "id": null,
+      "id": "10113",
       "name": "Gomis",
-      "marktwert": 4528431
+      "marktwert": 4528431,
+      "position": "ST",
+      "mw_aenderung": 277419
     },
     {
-      "id": null,
+      "id": "1333",
       "name": "Klostermann",
-      "marktwert": 4008692
+      "marktwert": 4008692,
+      "position": "ABW",
+      "mw_aenderung": 194261
     },
     {
-      "id": null,
+      "id": "6176",
       "name": "Seiwald",
-      "marktwert": 14580729
+      "marktwert": 14580729,
+      "position": "MF",
+      "mw_aenderung": 187500
     },
     {
-      "id": null,
+      "id": "10120",
       "name": "Røssing-Lelesiit",
-      "marktwert": 3396480
+      "marktwert": 3396480,
+      "position": "ST",
+      "mw_aenderung": 199767
     },
     {
-      "id": null,
+      "id": "11162",
       "name": "Avdullahu",
-      "marktwert": 13317439
+      "marktwert": 13317439,
+      "position": "MF",
+      "mw_aenderung": 183683
     },
     {
-      "id": null,
+      "id": "2722",
       "name": "Osterhage",
-      "marktwert": 3276334
+      "marktwert": 3276334,
+      "position": "MF",
+      "mw_aenderung": 263765
     },
     {
-      "id": null,
+      "id": "7493",
       "name": "Vermeeren",
-      "marktwert": 2460730
+      "marktwert": 2460730,
+      "position": "MF",
+      "mw_aenderung": 350945
     },
     {
-      "id": null,
+      "id": "1978",
       "name": "Torunarigha",
-      "marktwert": 9987730
+      "marktwert": 9987730,
+      "position": "ABW",
+      "mw_aenderung": 222909
     },
     {
-      "id": null,
+      "id": "9384",
       "name": "Darvich",
-      "marktwert": 6431666
+      "marktwert": 6431666,
+      "position": "MF",
+      "mw_aenderung": 162113
     },
     {
-      "id": null,
+      "id": "524",
       "name": "Baumann",
-      "marktwert": 19943126
+      "marktwert": 19943126,
+      "position": "TW",
+      "mw_aenderung": 86554
     },
     {
-      "id": null,
+      "id": "15589",
       "name": "Otávio",
-      "marktwert": 3383545
+      "marktwert": 3383545,
+      "position": "ABW",
+      "mw_aenderung": 370877
     },
     {
-      "id": null,
+      "id": "8296",
       "name": "Schmahl",
-      "marktwert": 1773543
+      "marktwert": 1773543,
+      "position": "MF",
+      "mw_aenderung": 306959
     },
     {
-      "id": null,
+      "id": "2864",
       "name": "Collins",
-      "marktwert": 12030344
+      "marktwert": 12030344,
+      "position": "ABW",
+      "mw_aenderung": 205555
     },
     {
-      "id": null,
+      "id": "7676",
       "name": "Rieder",
-      "marktwert": 10878155
+      "marktwert": 10878155,
+      "position": "MF",
+      "mw_aenderung": 177421
     },
     {
-      "id": null,
+      "id": "4335",
       "name": "Scherhant",
-      "marktwert": 4844265
+      "marktwert": 4844265,
+      "position": "MF",
+      "mw_aenderung": 160641
     },
     {
-      "id": null,
+      "id": "4318",
       "name": "Oermann",
-      "marktwert": 2689301
+      "marktwert": 2689301,
+      "position": "ABW",
+      "mw_aenderung": 245684
     },
     {
-      "id": null,
+      "id": "7721",
       "name": "Grüll",
-      "marktwert": 2789449
+      "marktwert": 2789449,
+      "position": "MF",
+      "mw_aenderung": 134
     },
     {
-      "id": null,
+      "id": "6292",
       "name": "Hansen",
-      "marktwert": 1671762
+      "marktwert": 1671762,
+      "position": "ABW",
+      "mw_aenderung": 338816
     }
   ],
   "3428973": [
     {
-      "id": null,
+      "id": "619",
       "name": "Stöger",
-      "marktwert": 3424167
+      "marktwert": 3424167,
+      "position": "MF",
+      "mw_aenderung": 294264
     },
     {
-      "id": null,
+      "id": "1553",
       "name": "Haberer",
-      "marktwert": 3785520
+      "marktwert": 3785520,
+      "position": "MF",
+      "mw_aenderung": 218732
     },
     {
-      "id": null,
+      "id": "493",
       "name": "Gregoritsch",
-      "marktwert": 8221271
+      "marktwert": 8221271,
+      "position": "ST",
+      "mw_aenderung": 180714
     },
     {
-      "id": null,
+      "id": "2897",
       "name": "Reitz",
-      "marktwert": 13265491
+      "marktwert": 13265491,
+      "position": "MF",
+      "mw_aenderung": 136985
     },
     {
-      "id": null,
+      "id": "7278",
       "name": "Poreba",
-      "marktwert": 7842112
+      "marktwert": 7842112,
+      "position": "MF",
+      "mw_aenderung": 145537
     },
     {
-      "id": null,
+      "id": "11043",
       "name": "Assignon",
-      "marktwert": 908949
+      "marktwert": 908949,
+      "position": "ABW",
+      "mw_aenderung": -31889
     },
     {
-      "id": null,
+      "id": "6183",
       "name": "Futkeu",
-      "marktwert": 11038643
+      "marktwert": 11038643,
+      "position": "ST",
+      "mw_aenderung": 90778
     },
     {
-      "id": null,
+      "id": "8289",
       "name": "Petersson",
-      "marktwert": 500000
+      "marktwert": 500000,
+      "position": "TW",
+      "mw_aenderung": 0
     },
     {
-      "id": null,
+      "id": "2367",
       "name": "Schmid",
-      "marktwert": 16043426
+      "marktwert": 16043426,
+      "position": "MF",
+      "mw_aenderung": 169047
     },
     {
-      "id": null,
+      "id": "4292",
       "name": "Herold",
-      "marktwert": 9639592
+      "marktwert": 9639592,
+      "position": "ABW",
+      "mw_aenderung": 239035
     },
     {
-      "id": null,
+      "id": "8235",
       "name": "Gantenbein",
-      "marktwert": 1713031
+      "marktwert": 1713031,
+      "position": "ABW",
+      "mw_aenderung": -105646
     },
     {
-      "id": null,
+      "id": "383",
       "name": "Ulreich",
-      "marktwert": 842268
+      "marktwert": 842268,
+      "position": "TW",
+      "mw_aenderung": 183474
     },
     {
-      "id": null,
+      "id": "737",
       "name": "Waldschmidt",
-      "marktwert": 2406606
+      "marktwert": 2406606,
+      "position": "MF",
+      "mw_aenderung": 241962
     },
     {
-      "id": null,
+      "id": "51",
       "name": "Khedira",
-      "marktwert": 4329837
+      "marktwert": 4329837,
+      "position": "MF",
+      "mw_aenderung": 117531
     },
     {
-      "id": null,
+      "id": "3277",
       "name": "Muheim",
-      "marktwert": 7185476
+      "marktwert": 7185476,
+      "position": "ABW",
+      "mw_aenderung": 269342
     }
   ]
 }
