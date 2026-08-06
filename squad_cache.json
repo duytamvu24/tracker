@@ -36,13 +36,6 @@
       "mw_aenderung": 183683
     },
     {
-      "id": "2722",
-      "name": "Osterhage",
-      "marktwert": 3276334,
-      "position": "MF",
-      "mw_aenderung": 263765
-    },
-    {
       "id": "7493",
       "name": "Vermeeren",
       "marktwert": 2460730,
@@ -113,13 +106,6 @@
       "mw_aenderung": 245684
     },
     {
-      "id": "7721",
-      "name": "Grüll",
-      "marktwert": 2789449,
-      "position": "MF",
-      "mw_aenderung": 134
-    },
-    {
       "id": "6292",
       "name": "Hansen",
       "marktwert": 1671762,
@@ -128,6 +114,13 @@
     }
   ],
   "3428973": [
+    {
+      "id": "2722",
+      "name": "Osterhage",
+      "marktwert": 3276334,
+      "position": "MF",
+      "mw_aenderung": 263765
+    },
     {
       "id": "619",
       "name": "Stöger",
@@ -164,13 +157,6 @@
       "mw_aenderung": 145537
     },
     {
-      "id": "11043",
-      "name": "Assignon",
-      "marktwert": 908949,
-      "position": "ABW",
-      "mw_aenderung": -31889
-    },
-    {
       "id": "6183",
       "name": "Futkeu",
       "marktwert": 11038643,
@@ -185,25 +171,11 @@
       "mw_aenderung": 0
     },
     {
-      "id": "2367",
-      "name": "Schmid",
-      "marktwert": 16043426,
-      "position": "MF",
-      "mw_aenderung": 169047
-    },
-    {
       "id": "4292",
       "name": "Herold",
       "marktwert": 9639592,
       "position": "ABW",
       "mw_aenderung": 239035
-    },
-    {
-      "id": "8235",
-      "name": "Gantenbein",
-      "marktwert": 1713031,
-      "position": "ABW",
-      "mw_aenderung": -105646
     },
     {
       "id": "383",
