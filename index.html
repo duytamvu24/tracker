@@ -125,6 +125,54 @@
   }
   .negative { color: #e8836b; }
   .positive { color: var(--chalk); }
+  .mw-up { color: #8fc98a; }
+  .mw-down { color: #e8836b; }
+
+  .pos-badge {
+    display: inline-block;
+    width: 34px;
+    text-align: center;
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--chalk-dim);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 2px 0;
+    flex-shrink: 0;
+  }
+
+  .sort-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .sort-bar span {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--chalk-dim);
+    margin-right: 4px;
+  }
+  .sort-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 12.5px;
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--chalk-dim);
+    padding: 5px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .sort-btn:hover { border-color: var(--gold); color: var(--chalk); }
+  .sort-btn.active { background: var(--gold); border-color: var(--gold); color: var(--pitch-deep); }
+  .sort-arrow { font-size: 10px; }
 
   .scoreboard {
     margin-top: 28px;
@@ -224,8 +272,52 @@
   .squad-row:hover { background: rgba(255,255,255,0.03); }
   .squad-row.removed { opacity: 0.4; text-decoration: line-through; }
   .squad-row input { accent-color: var(--gold); width: 16px; height: 16px; flex-shrink: 0; }
+  .squad-row .p-pos {
+    font-family: 'Oswald', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--pitch-deep);
+    background: var(--chalk-dim);
+    border-radius: 3px;
+    padding: 2px 6px;
+    width: 30px;
+    text-align: center;
+    flex-shrink: 0;
+  }
   .squad-row .p-name { flex: 1; }
-  .squad-row .p-mv { font-family: 'IBM Plex Mono', monospace; color: var(--chalk-dim); }
+  .squad-row .p-mv { font-family: 'IBM Plex Mono', monospace; color: var(--chalk-dim); width: 110px; text-align: right; }
+  .squad-row .p-change { font-family: 'IBM Plex Mono', monospace; width: 100px; text-align: right; }
+  .p-change.up { color: #7fd08a; }
+  .p-change.down { color: #e8836b; }
+  .p-change.flat { color: var(--chalk-dim); }
+
+  .squad-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .squad-controls select {
+    font-family: 'Inter', sans-serif;
+    font-size: 12.5px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--line);
+    color: var(--chalk);
+    border-radius: 999px;
+    padding: 5px 10px;
+  }
+  .sort-dir-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 12.5px;
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--chalk-dim);
+    padding: 5px 10px;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .sort-dir-btn:hover { border-color: var(--gold); color: var(--chalk); }
 
   .sim-grid {
     display: grid;
@@ -340,7 +432,15 @@
   <div class="squad" id="squad">
     <div class="squad-header">
       <div class="squad-title">Kader-Simulator — Spieler abwählen, um Verkauf zu simulieren</div>
-      <button class="reset-btn" id="reset-btn">Alles zurücksetzen</button>
+      <div class="squad-controls">
+        <select id="sort-field">
+          <option value="marktwert">Sortieren: Marktwert</option>
+          <option value="mw_aenderung">Sortieren: Marktwert-Änderung</option>
+          <option value="name">Sortieren: Name</option>
+        </select>
+        <button class="sort-dir-btn" id="sort-dir">↓ absteigend</button>
+        <button class="reset-btn" id="reset-btn">Alles zurücksetzen</button>
+      </div>
     </div>
     <div class="squad-list" id="squad-list"></div>
     <div class="sim-grid">
@@ -436,34 +536,53 @@ async function load() {
 
     let currentManager = null;
     let currentSpieler = [];
+    let entfernteIndices = new Set();
+    let sortField = 'marktwert';
+    let sortDir = 'desc';
 
-    function renderSquad(m) {
-      const squadEl = document.getElementById('squad');
+    function changeSymbol(wert) {
+      if (wert > 0) return { cls: 'up', sign: '+' };
+      if (wert < 0) return { cls: 'down', sign: '' };
+      return { cls: 'flat', sign: '±' };
+    }
+
+    function renderSquadList() {
       const listEl = document.getElementById('squad-list');
-      const spieler = squadCache[m.id];
-
-      currentSpieler = spieler || [];
-
-      if (!spieler || spieler.length === 0) {
-        squadEl.classList.remove('visible');
-        recompute();
-        return;
-      }
-      squadEl.classList.add('visible');
       listEl.innerHTML = '';
 
-      spieler.forEach((s, idx) => {
+      // Sortierte ANSICHT bauen, ohne currentSpieler selbst zu veraendern -
+      // data-idx zeigt weiterhin auf den Original-Index, damit entfernteIndices
+      // und recompute() unabhaengig von der Sortierreihenfolge korrekt bleiben.
+      const indizes = currentSpieler.map((_, i) => i);
+      indizes.sort((a, b) => {
+        const sa = currentSpieler[a][sortField];
+        const sb = currentSpieler[b][sortField];
+        let cmp;
+        if (typeof sa === 'string') cmp = sa.localeCompare(sb);
+        else cmp = sa - sb;
+        return sortDir === 'asc' ? cmp : -cmp;
+      });
+
+      indizes.forEach(idx => {
+        const s = currentSpieler[idx];
+        const entfernt = entfernteIndices.has(idx);
+        const change = changeSymbol(s.mw_aenderung || 0);
+
         const row = document.createElement('div');
-        row.className = 'squad-row';
+        row.className = 'squad-row' + (entfernt ? ' removed' : '');
         row.innerHTML = `
-          <input type="checkbox" checked data-idx="${idx}">
+          <input type="checkbox" ${entfernt ? '' : 'checked'} data-idx="${idx}">
+          <span class="p-pos">${s.position || '?'}</span>
           <span class="p-name">${s.name}</span>
+          <span class="p-change ${change.cls}">${change.sign}${fmt(s.mw_aenderung || 0)}</span>
           <span class="p-mv">${fmt(s.marktwert)}</span>
         `;
         const checkbox = row.querySelector('input');
         const toggle = () => {
-          checkbox.checked = !checkbox.checked;
-          row.classList.toggle('removed', !checkbox.checked);
+          if (entfernteIndices.has(idx)) entfernteIndices.delete(idx);
+          else entfernteIndices.add(idx);
+          checkbox.checked = !entfernteIndices.has(idx);
+          row.classList.toggle('removed', entfernteIndices.has(idx));
           recompute();
         };
         row.addEventListener('click', (e) => {
@@ -471,15 +590,31 @@ async function load() {
         });
         checkbox.addEventListener('click', (e) => {
           e.stopPropagation();
-          row.classList.toggle('removed', !checkbox.checked);
-          recompute();
+          toggle();
         });
         listEl.appendChild(row);
       });
+    }
+
+    function renderSquad(m) {
+      const squadEl = document.getElementById('squad');
+      const spieler = squadCache[m.id];
+
+      currentSpieler = spieler || [];
+      entfernteIndices = new Set();
+
+      if (!spieler || spieler.length === 0) {
+        squadEl.classList.remove('visible');
+        recompute();
+        return;
+      }
+      squadEl.classList.add('visible');
+
+      renderSquadList();
 
       document.getElementById('reset-btn').onclick = () => {
-        listEl.querySelectorAll('input').forEach(cb => cb.checked = true);
-        listEl.querySelectorAll('.squad-row').forEach(r => r.classList.remove('removed'));
+        entfernteIndices = new Set();
+        renderSquadList();
         recompute();
       };
 
@@ -500,12 +635,10 @@ async function load() {
     function recompute() {
       if (!currentManager) return;
       const m = currentManager;
-      const spieler = currentSpieler;
 
-      const checkboxes = document.querySelectorAll('#squad-list input');
       let entferntSumme = 0;
-      checkboxes.forEach(cb => {
-        if (!cb.checked) entferntSumme += spieler[parseInt(cb.dataset.idx, 10)].marktwert;
+      entfernteIndices.forEach(idx => {
+        entferntSumme += currentSpieler[idx].marktwert;
       });
 
       const manuellerAbzug = parseFloat(document.getElementById('adjust-input').value) || 0;
@@ -526,6 +659,17 @@ async function load() {
     }
 
     document.getElementById('adjust-input').addEventListener('input', recompute);
+
+    document.getElementById('sort-field').addEventListener('change', (e) => {
+      sortField = e.target.value;
+      renderSquadList();
+    });
+
+    document.getElementById('sort-dir').addEventListener('click', () => {
+      sortDir = sortDir === 'desc' ? 'asc' : 'desc';
+      document.getElementById('sort-dir').textContent = sortDir === 'desc' ? '↓ absteigend' : '↑ aufsteigend';
+      renderSquadList();
+    });
 
     function select(m) {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
