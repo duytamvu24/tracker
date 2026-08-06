@@ -10,9 +10,9 @@ simuliert, was passiert, wenn ein oder mehrere Spieler entfernt werden
     Neues Budget   = Budget   + Summe(entfernte Marktwerte)
     Neues Max-Gebot = neu berechnet mit der 33%-Regel
 
-WICHTIG: Der /squad-Endpunkt unten ist ein PLATZHALTER (Feldnamen "id"/"n"/"mv"
-sind Annahmen) - bitte an den echten Endpunkt/die echte Antwortstruktur
-anpassen, sobald du sie kennst (siehe TODO in get_squad()).
+Feldnamen sind empirisch bestaetigt (siehe Kommentare in get_squad()):
+pi=Spieler-ID, pn=Name, pos=Position (1=TW,2=ABW,3=MF,4=ST), mv=Marktwert,
+tfhmvt=Marktwert-Aenderung des letzten Updates.
 
 Nutzung (in Jupyter):
 
@@ -31,12 +31,22 @@ import kickbase_tracker as kt
 
 SQUAD_CACHE_FILE = "squad_cache.json"
 
+# Bestaetigt anhand echter Beispieldaten (Spielername -> bekannte Position
+# gegengecheckt, z.B. Goretzka=MF, Pervan/Dahmen=TW, Tietz/Pieringer=ST).
+POSITION_MAP = {1: "TW", 2: "ABW", 3: "MF", 4: "ST"}
+
 
 def get_squad(league_id: str, manager_id: str, headers: dict) -> list[dict]:
     """
-    Holt den Kader eines Managers mit Marktwert pro Spieler.
+    Holt den Kader eines Managers mit Marktwert, Position und letzter
+    Marktwert-Aenderung pro Spieler.
     Bestaetigte Struktur: GET /v4/leagues/{leagueId}/managers/{managerId}/squad
-    -> {"it": [{"pn": "Spielername", "mv": Marktwert, ...}, ...]}
+    -> {"it": [{"pi": id, "pn": Name, "pos": 1-4, "mv": Marktwert,
+                "tfhmvt": letzte Marktwert-Aenderung, ...}, ...]}
+
+    Feld-Bestaetigung (empirisch): "tfhmvt" ist die Marktwert-Aenderung des
+    letzten Updates - das Vorzeichen stimmt bei allen Testdaten exakt mit
+    "mvt" (0=neutral, 1=steigend, 2=fallend) ueberein.
     """
     url = f"https://api.kickbase.com/v4/leagues/{league_id}/managers/{manager_id}/squad"
     r = requests.get(url, headers=headers)
@@ -47,9 +57,11 @@ def get_squad(league_id: str, manager_id: str, headers: dict) -> list[dict]:
     spieler = []
     for p in rohliste:
         spieler.append({
-            "id": p.get("i"),  # falls vorhanden; optional, wird aktuell nicht benoetigt
+            "id": p.get("pi"),
             "name": p["pn"],
             "marktwert": p["mv"],
+            "position": POSITION_MAP.get(p.get("pos"), "?"),
+            "mw_aenderung": p.get("tfhmvt", 0),
         })
     return spieler
 
@@ -106,16 +118,20 @@ def login_and_get_all_squads() -> None:
 
 
 def list_squad(manager_id: str) -> None:
-    """Zeigt den gecachten Kader eines Managers mit Index und Marktwert."""
+    """Zeigt den gecachten Kader eines Managers mit Index, Position, Marktwert
+    und letzter Marktwert-Aenderung."""
     cache = load_squad_cache()
     spieler = cache.get(manager_id)
     if not spieler:
         print(f"Kein gecachter Kader fuer {manager_id}. Erst login_and_get_squad(manager_id) aufrufen.")
         return
 
-    print(f"{'#':<4} {'Spieler':<25} {'Marktwert':>15}")
+    print(f"{'#':<4} {'Pos':<5} {'Spieler':<25} {'Marktwert':>15} {'Änderung':>15}")
     for i, s in enumerate(spieler):
-        print(f"{i:<4} {s['name']:<25} {s['marktwert']:>15,}")
+        aenderung = s.get("mw_aenderung", 0)
+        vorzeichen = "+" if aenderung > 0 else ""
+        print(f"{i:<4} {s.get('position', '?'):<5} {s['name']:<25} "
+              f"{s['marktwert']:>15,} {vorzeichen}{aenderung:>14,}")
     print(f"\nSumme Marktwerte (= Teamwert lt. Kader): {sum(s['marktwert'] for s in spieler):,}")
 
 
