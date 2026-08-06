@@ -52,11 +52,6 @@
     },
     {
       "id": null,
-      "name": "Gadou",
-      "marktwert": 21542479
-    },
-    {
-      "id": null,
       "name": "Otávio",
       "marktwert": 3383545
     },
@@ -89,6 +84,11 @@
       "id": null,
       "name": "Grüll",
       "marktwert": 2789449
+    },
+    {
+      "id": null,
+      "name": "Hansen",
+      "marktwert": 1671762
     }
   ],
   "3428973": [
