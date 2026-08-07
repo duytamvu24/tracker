@@ -1,0 +1,92 @@
+{
+  "2822005": {
+    "name": "Thanh Duy",
+    "start_budget": 50199399.0,
+    "history": [
+      {
+        "budget": 50199399.0,
+        "teamwert": 99800601.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 150000000.0,
+        "max_gebot": 83133597.33,
+        "date": "2026-08-07"
+      }
+    ],
+    "reset_threshold": "2026-08-07T20:49:42.064051+02:00"
+  },
+  "3181699": {
+    "name": "Lam Quy ",
+    "start_budget": 53545352.0,
+    "history": [
+      {
+        "budget": 53545352.0,
+        "teamwert": 96454648.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 150000000.0,
+        "max_gebot": 85375385.84,
+        "date": "2026-08-07"
+      }
+    ],
+    "reset_threshold": "2026-08-07T20:49:42.064051+02:00"
+  },
+  "3181707": {
+    "name": "Tam Dan",
+    "start_budget": 62692212.0,
+    "history": [
+      {
+        "budget": 62692212.0,
+        "teamwert": 87307788.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 150000000.0,
+        "max_gebot": 91503782.04,
+        "date": "2026-08-07"
+      }
+    ],
+    "reset_threshold": "2026-08-07T20:49:42.064051+02:00"
+  },
+  "3308384": {
+    "name": "Tai",
+    "start_budget": 50000000.0,
+    "history": [
+      {
+        "budget": 50000000.0,
+        "teamwert": 100111060.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 150111060.0,
+        "max_gebot": 83036649.8,
+        "date": "2026-08-07"
+      }
+    ],
+    "reset_threshold": "2026-08-07T20:49:42.064051+02:00"
+  },
+  "3310917": {
+    "name": "Duy Tam",
+    "start_budget": 50000000.0,
+    "history": [
+      {
+        "budget": 50000000.0,
+        "teamwert": 100543833.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 150543833.0,
+        "max_gebot": 83179464.89,
+        "date": "2026-08-07"
+      }
+    ],
+    "reset_threshold": "2026-08-07T20:49:42.064051+02:00"
+  },
+  "3458038": {
+    "name": "Dragontrieu ",
+    "start_budget": 50000000.0,
+    "history": [
+      {
+        "budget": 50000000.0,
+        "teamwert": 100392221.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 150392221.0,
+        "max_gebot": 83129432.93,
+        "date": "2026-08-07"
+      }
+    ],
+    "reset_threshold": "2026-08-07T20:49:42.064051+02:00"
+  }
+}
