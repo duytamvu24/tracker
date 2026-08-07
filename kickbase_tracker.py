@@ -72,7 +72,7 @@ SQUAD_TARGET = 100_000_000
 # Liga-Auswahl: leer lassen (None) -> nimmt automatisch die erste Liga.
 # Sobald du mehrere Ligen hast (z.B. echte Liga + Testliga), hier die
 # gewünschte League-ID eintragen (steht im Log als "Liga gefunden: NAME -> ID").
-LEAGUE_ID_OVERRIDE = "11162077"  # Testliga ("test"). Echte Liga (ESY KICKBASE) waere "5819867"
+LEAGUE_ID_OVERRIDE = "5819867"  # Testliga ("test"). Echte Liga (ESY KICKBASE) waere "5819867"
 
 
 # ---------------------------------------------------------------------------
