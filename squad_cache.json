@@ -36,13 +36,6 @@
       "mw_aenderung": 62221
     },
     {
-      "id": "12341",
-      "name": "Ribeiro",
-      "marktwert": 5646465,
-      "position": "ST",
-      "mw_aenderung": -38525
-    },
-    {
       "id": "619",
       "name": "Stöger",
       "marktwert": 4272839,
@@ -141,6 +134,34 @@
       "marktwert": 4214357,
       "position": "MF",
       "mw_aenderung": 110738
+    },
+    {
+      "id": "6197",
+      "name": "Curda",
+      "marktwert": 11400937,
+      "position": "ABW",
+      "mw_aenderung": 45909
+    },
+    {
+      "id": "13438",
+      "name": "Ruoppi",
+      "marktwert": 5924409,
+      "position": "MF",
+      "mw_aenderung": 50203
+    },
+    {
+      "id": "7325",
+      "name": "Baum",
+      "marktwert": 7699825,
+      "position": "ABW",
+      "mw_aenderung": 232275
+    },
+    {
+      "id": "1911",
+      "name": "Donkor",
+      "marktwert": 4502987,
+      "position": "ABW",
+      "mw_aenderung": 285186
     }
   ],
   "3181707": [
@@ -173,13 +194,6 @@
       "mw_aenderung": 89195
     },
     {
-      "id": "3124",
-      "name": "Wimmer",
-      "marktwert": 9320384,
-      "position": "MF",
-      "mw_aenderung": -16382
-    },
-    {
       "id": "13442",
       "name": "Bolin",
       "marktwert": 5909619,
@@ -187,18 +201,11 @@
       "mw_aenderung": 122640
     },
     {
-      "id": "4598",
-      "name": "Juranović",
-      "marktwert": 5209864,
-      "position": "ABW",
-      "mw_aenderung": -58343
-    },
-    {
       "id": "11253",
       "name": "Mickelson",
       "marktwert": 500000,
       "position": "ABW",
-      "mw_aenderung": -53538
+      "mw_aenderung": 0
     },
     {
       "id": "4563",
@@ -373,13 +380,6 @@
       "marktwert": 8985948,
       "position": "MF",
       "mw_aenderung": 93232
-    },
-    {
-      "id": "3029",
-      "name": "Ljubičić",
-      "marktwert": 8819519,
-      "position": "MF",
-      "mw_aenderung": 39444
     },
     {
       "id": "8872",
