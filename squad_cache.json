@@ -371,6 +371,13 @@
       "marktwert": 500000,
       "position": "MF",
       "mw_aenderung": 0
+    },
+    {
+      "id": "9965",
+      "name": "Sakar",
+      "marktwert": 3478296,
+      "position": "MF",
+      "mw_aenderung": 300597
     }
   ],
   "3458038": [
@@ -436,6 +443,27 @@
       "marktwert": 19501695,
       "position": "MF",
       "mw_aenderung": 118865
+    },
+    {
+      "id": "6209",
+      "name": "Treu",
+      "marktwert": 10232640,
+      "position": "ABW",
+      "mw_aenderung": 237161
+    },
+    {
+      "id": "2015",
+      "name": "Obermair",
+      "marktwert": 8341665,
+      "position": "MF",
+      "mw_aenderung": 152441
+    },
+    {
+      "id": "8166",
+      "name": "Chuki",
+      "marktwert": 9889809,
+      "position": "MF",
+      "mw_aenderung": 153304
     }
   ]
 }
