@@ -76,6 +76,13 @@
       "marktwert": 7807234,
       "position": "MF",
       "mw_aenderung": 107561
+    },
+    {
+      "id": "3204",
+      "name": "Conté",
+      "marktwert": 10602752,
+      "position": "ST",
+      "mw_aenderung": 150235
     }
   ],
   "3181699": [
@@ -115,13 +122,6 @@
       "mw_aenderung": 132367
     },
     {
-      "id": "6199",
-      "name": "Machino",
-      "marktwert": 1164396,
-      "position": "ST",
-      "mw_aenderung": -85762
-    },
-    {
       "id": "6290",
       "name": "Bätzner",
       "marktwert": 3529053,
@@ -155,6 +155,34 @@
       "marktwert": 4834108,
       "position": "ABW",
       "mw_aenderung": 331121
+    },
+    {
+      "id": "3350",
+      "name": "Keidel",
+      "marktwert": 2526503,
+      "position": "ABW",
+      "mw_aenderung": 340728
+    },
+    {
+      "id": "2722",
+      "name": "Osterhage",
+      "marktwert": 4172050,
+      "position": "MF",
+      "mw_aenderung": 257733
+    },
+    {
+      "id": "12317",
+      "name": "Adam",
+      "marktwert": 3325509,
+      "position": "ST",
+      "mw_aenderung": 298026
+    },
+    {
+      "id": "6149",
+      "name": "Lehmann",
+      "marktwert": 2074769,
+      "position": "TW",
+      "mw_aenderung": 199200
     }
   ],
   "3181707": [
@@ -220,6 +248,13 @@
       "marktwert": 5639973,
       "position": "ABW",
       "mw_aenderung": 183654
+    },
+    {
+      "id": "7156",
+      "name": "Wöber",
+      "marktwert": 5885344,
+      "position": "ABW",
+      "mw_aenderung": 224194
     }
   ],
   "3308384": [
@@ -299,6 +334,13 @@
       "marktwert": 3636016,
       "position": "ABW",
       "mw_aenderung": 275473
+    },
+    {
+      "id": "60",
+      "name": "Kohr",
+      "marktwert": 7453843,
+      "position": "ABW",
+      "mw_aenderung": 147307
     }
   ],
   "3310917": [
