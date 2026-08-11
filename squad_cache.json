@@ -83,6 +83,13 @@
       "marktwert": 17894659,
       "position": "ABW",
       "mw_aenderung": 151001
+    },
+    {
+      "id": "14917",
+      "name": "Van den Bosch",
+      "marktwert": 12222129,
+      "position": "ABW",
+      "mw_aenderung": 134689
     }
   ],
   "3181699": [
@@ -562,13 +569,6 @@
       "marktwert": 10592902,
       "position": "ABW",
       "mw_aenderung": 59726
-    },
-    {
-      "id": "14917",
-      "name": "Van den Bosch",
-      "marktwert": 12222129,
-      "position": "ABW",
-      "mw_aenderung": 134689
     },
     {
       "id": "4606",
