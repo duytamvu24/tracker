@@ -71,13 +71,6 @@
       "mw_aenderung": 143046
     },
     {
-      "id": "7781",
-      "name": "Sauer",
-      "marktwert": 7834488,
-      "position": "MF",
-      "mw_aenderung": 27254
-    },
-    {
       "id": "3204",
       "name": "Conté",
       "marktwert": 10747511,
@@ -183,6 +176,13 @@
       "marktwert": 2253759,
       "position": "TW",
       "mw_aenderung": 178990
+    },
+    {
+      "id": "1728",
+      "name": "Nyland",
+      "marktwert": 1874291,
+      "position": "TW",
+      "mw_aenderung": 341830
     }
   ],
   "3181707": [
@@ -262,6 +262,20 @@
       "marktwert": 68483403,
       "position": "ST",
       "mw_aenderung": 35687
+    },
+    {
+      "id": "7417",
+      "name": "Aséko",
+      "marktwert": 10404877,
+      "position": "MF",
+      "mw_aenderung": 184975
+    },
+    {
+      "id": "2445",
+      "name": "Funk",
+      "marktwert": 3224368,
+      "position": "TW",
+      "mw_aenderung": 277440
     }
   ],
   "3308384": [
@@ -434,6 +448,20 @@
       "marktwert": 5206977,
       "position": "ABW",
       "mw_aenderung": 373116
+    },
+    {
+      "id": "2967",
+      "name": "El-Faouzi",
+      "marktwert": 13377788,
+      "position": "MF",
+      "mw_aenderung": 184256
+    },
+    {
+      "id": "2471",
+      "name": "Schubert",
+      "marktwert": 4220672,
+      "position": "TW",
+      "mw_aenderung": 251788
     }
   ],
   "3458038": [
@@ -471,13 +499,6 @@
       "marktwert": 7084261,
       "position": "ST",
       "mw_aenderung": 279552
-    },
-    {
-      "id": "75",
-      "name": "Drewes",
-      "marktwert": 500000,
-      "position": "TW",
-      "mw_aenderung": 0
     },
     {
       "id": "8222",
@@ -548,6 +569,13 @@
       "marktwert": 12112000,
       "position": "ABW",
       "mw_aenderung": 145536
+    },
+    {
+      "id": "10122",
+      "name": "Gruber",
+      "marktwert": 12102082,
+      "position": "ABW",
+      "mw_aenderung": 202053
     }
   ]
 }
