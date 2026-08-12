@@ -190,6 +190,13 @@
       "marktwert": 7549521,
       "position": "MF",
       "mw_aenderung": 229654
+    },
+    {
+      "id": "8363",
+      "name": "Yilmaz",
+      "marktwert": 10245007,
+      "position": "ABW",
+      "mw_aenderung": 147446
     }
   ],
   "3181707": [
@@ -529,20 +536,6 @@
       "mw_aenderung": 135736
     },
     {
-      "id": "2275",
-      "name": "Baumgartner",
-      "marktwert": 19869742,
-      "position": "MF",
-      "mw_aenderung": 111719
-    },
-    {
-      "id": "6209",
-      "name": "Treu",
-      "marktwert": 10641051,
-      "position": "ABW",
-      "mw_aenderung": 101356
-    },
-    {
       "id": "2015",
       "name": "Obermair",
       "marktwert": 9014863,
@@ -583,6 +576,20 @@
       "marktwert": 12320464,
       "position": "ABW",
       "mw_aenderung": 218382
+    },
+    {
+      "id": "11170",
+      "name": "Müller",
+      "marktwert": 2255253,
+      "position": "MF",
+      "mw_aenderung": 300305
+    },
+    {
+      "id": "14300",
+      "name": "Okon-Engstler",
+      "marktwert": 3062573,
+      "position": "MF",
+      "mw_aenderung": 252175
     }
   ]
 }
