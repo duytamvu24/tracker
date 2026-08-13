@@ -57,13 +57,6 @@
       "mw_aenderung": 298762
     },
     {
-      "id": "3521",
-      "name": "Elfadli",
-      "marktwert": 4828289,
-      "position": "ABW",
-      "mw_aenderung": -67172
-    },
-    {
       "id": "12321",
       "name": "Simpson-Pusey",
       "marktwert": 10594218,
@@ -204,6 +197,13 @@
       "marktwert": 778070,
       "position": "ABW",
       "mw_aenderung": 223917
+    },
+    {
+      "id": "3759",
+      "name": "Gutiérrez",
+      "marktwert": 18492519,
+      "position": "ABW",
+      "mw_aenderung": 208326
     }
   ],
   "3181707": [
