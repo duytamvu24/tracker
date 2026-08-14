@@ -43,13 +43,6 @@
       "mw_aenderung": 115220
     },
     {
-      "id": "9996",
-      "name": "Covic",
-      "marktwert": 5399556,
-      "position": "MF",
-      "mw_aenderung": -118282
-    },
-    {
       "id": "6751",
       "name": "Pruhs",
       "marktwert": 3065413,
@@ -113,13 +106,6 @@
       "marktwert": 9328357,
       "position": "ABW",
       "mw_aenderung": 225519
-    },
-    {
-      "id": "6197",
-      "name": "Curda",
-      "marktwert": 11736587,
-      "position": "ABW",
-      "mw_aenderung": 72411
     },
     {
       "id": "7325",
@@ -197,6 +183,13 @@
       "marktwert": 18707957,
       "position": "ABW",
       "mw_aenderung": 215438
+    },
+    {
+      "id": "8292",
+      "name": "Castañeda",
+      "marktwert": 9417934,
+      "position": "MF",
+      "mw_aenderung": 238045
     }
   ],
   "3181707": [
@@ -511,6 +504,13 @@
       "marktwert": 11803100,
       "position": "TW",
       "mw_aenderung": 125864
+    },
+    {
+      "id": "13448",
+      "name": "Aouchiche",
+      "marktwert": 14234694,
+      "position": "MF",
+      "mw_aenderung": 174980
     }
   ],
   "3458038": [
