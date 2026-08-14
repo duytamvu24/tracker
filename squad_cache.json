@@ -304,6 +304,13 @@
       "marktwert": 9103202,
       "position": "ABW",
       "mw_aenderung": 242005
+    },
+    {
+      "id": "3336",
+      "name": "Marino",
+      "marktwert": 8692697,
+      "position": "ST",
+      "mw_aenderung": 234764
     }
   ],
   "3308384": [
@@ -357,13 +364,6 @@
       "mw_aenderung": -64245
     },
     {
-      "id": "2764",
-      "name": "Keitel",
-      "marktwert": 4618916,
-      "position": "MF",
-      "mw_aenderung": -233201
-    },
-    {
       "id": "2803",
       "name": "Lemperle",
       "marktwert": 11628475,
@@ -390,6 +390,13 @@
       "marktwert": 14476743,
       "position": "MF",
       "mw_aenderung": 168926
+    },
+    {
+      "id": "15262",
+      "name": "De Cat",
+      "marktwert": 15898840,
+      "position": "MF",
+      "mw_aenderung": 202436
     }
   ],
   "3310917": [
@@ -571,13 +578,6 @@
       "mw_aenderung": 287605
     },
     {
-      "id": "3284",
-      "name": "Rohr",
-      "marktwert": 10736426,
-      "position": "ABW",
-      "mw_aenderung": 60987
-    },
-    {
       "id": "4606",
       "name": "Kuruçay",
       "marktwert": 12484592,
@@ -625,6 +625,13 @@
       "marktwert": 14070132,
       "position": "ABW",
       "mw_aenderung": 128793
+    },
+    {
+      "id": "7239",
+      "name": "Finkgräfe",
+      "marktwert": 4152228,
+      "position": "ABW",
+      "mw_aenderung": 308573
     }
   ]
 }
