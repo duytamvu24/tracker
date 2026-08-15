@@ -129,13 +129,6 @@
       "mw_aenderung": 314408
     },
     {
-      "id": "2722",
-      "name": "Osterhage",
-      "marktwert": 5420696,
-      "position": "MF",
-      "mw_aenderung": 163920
-    },
-    {
       "id": "12317",
       "name": "Adam",
       "marktwert": 4871106,
@@ -148,13 +141,6 @@
       "marktwert": 3289605,
       "position": "TW",
       "mw_aenderung": 339879
-    },
-    {
-      "id": "2876",
-      "name": "Schallenberg",
-      "marktwert": 8162377,
-      "position": "MF",
-      "mw_aenderung": 184047
     },
     {
       "id": "3492",
@@ -190,6 +176,13 @@
       "marktwert": 9646803,
       "position": "MF",
       "mw_aenderung": 228869
+    },
+    {
+      "id": "16378",
+      "name": "Karetsas",
+      "marktwert": 21247347,
+      "position": "MF",
+      "mw_aenderung": 273249
     }
   ],
   "3181707": [
@@ -206,13 +199,6 @@
       "marktwert": 7771041,
       "position": "ST",
       "mw_aenderung": 340337
-    },
-    {
-      "id": "2195",
-      "name": "Dahmen",
-      "marktwert": 15709785,
-      "position": "TW",
-      "mw_aenderung": 74848
     },
     {
       "id": "13442",
@@ -304,6 +290,13 @@
       "marktwert": 8930908,
       "position": "ST",
       "mw_aenderung": 238211
+    },
+    {
+      "id": "12262",
+      "name": "Millgramm",
+      "marktwert": 6644793,
+      "position": "ST",
+      "mw_aenderung": 202423
     }
   ],
   "3308384": [
@@ -327,13 +320,6 @@
       "marktwert": 14059304,
       "position": "ABW",
       "mw_aenderung": 159034
-    },
-    {
-      "id": "2279",
-      "name": "Rönnow",
-      "marktwert": 10044862,
-      "position": "TW",
-      "mw_aenderung": -30264
     },
     {
       "id": "737",
@@ -399,13 +385,6 @@
       "marktwert": 6829050,
       "position": "ABW",
       "mw_aenderung": 224740
-    },
-    {
-      "id": "9598",
-      "name": "Gendrey",
-      "marktwert": 5081051,
-      "position": "ABW",
-      "mw_aenderung": 36543
     },
     {
       "id": "2294",
@@ -604,13 +583,6 @@
       "marktwert": 8152159,
       "position": "ABW",
       "mw_aenderung": 281248
-    },
-    {
-      "id": "14241",
-      "name": "Medina",
-      "marktwert": 14177605,
-      "position": "ABW",
-      "mw_aenderung": 107473
     },
     {
       "id": "7239",
