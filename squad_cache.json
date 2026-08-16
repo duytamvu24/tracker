@@ -229,13 +229,6 @@
       "mw_aenderung": 200309
     },
     {
-      "id": "8301",
-      "name": "Sirch",
-      "marktwert": 6628639,
-      "position": "ABW",
-      "mw_aenderung": 102739
-    },
-    {
       "id": "7226",
       "name": "Kane",
       "marktwert": 68623827,
@@ -304,6 +297,13 @@
       "marktwert": 6811598,
       "position": "ST",
       "mw_aenderung": 166805
+    },
+    {
+      "id": "7278",
+      "name": "Poreba",
+      "marktwert": 9389309,
+      "position": "MF",
+      "mw_aenderung": 158939
     }
   ],
   "3308384": [
