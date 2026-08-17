@@ -36,13 +36,6 @@
       "mw_aenderung": 259109
     },
     {
-      "id": "6750",
-      "name": "Ansah",
-      "marktwert": 10310426,
-      "position": "ST",
-      "mw_aenderung": -19592
-    },
-    {
       "id": "6751",
       "name": "Pruhs",
       "marktwert": 3718683,
@@ -64,13 +57,6 @@
       "mw_aenderung": 22639
     },
     {
-      "id": "15376",
-      "name": "Estève",
-      "marktwert": 17747803,
-      "position": "ABW",
-      "mw_aenderung": -290445
-    },
-    {
       "id": "14917",
       "name": "Van den Bosch",
       "marktwert": 12950192,
@@ -90,6 +76,13 @@
       "marktwert": 20511856,
       "position": "ST",
       "mw_aenderung": 66846
+    },
+    {
+      "id": "11631",
+      "name": "Burger",
+      "marktwert": 22850507,
+      "position": "MF",
+      "mw_aenderung": 166665
     }
   ],
   "3181699": [
@@ -183,16 +176,23 @@
       "marktwert": 53300314,
       "position": "ST",
       "mw_aenderung": 36000
+    },
+    {
+      "id": "7493",
+      "name": "Vermeeren",
+      "marktwert": 5949543,
+      "position": "MF",
+      "mw_aenderung": 272466
+    },
+    {
+      "id": "11556",
+      "name": "Massengo",
+      "marktwert": 9433233,
+      "position": "MF",
+      "mw_aenderung": 134573
     }
   ],
   "3181707": [
-    {
-      "id": "2491",
-      "name": "Skarke",
-      "marktwert": 5428173,
-      "position": "MF",
-      "mw_aenderung": 79504
-    },
     {
       "id": "12763",
       "name": "Latte Lath",
