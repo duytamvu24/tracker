@@ -157,13 +157,6 @@
       "mw_aenderung": 418991
     },
     {
-      "id": "8292",
-      "name": "Castañeda",
-      "marktwert": 10253417,
-      "position": "MF",
-      "mw_aenderung": 55371
-    },
-    {
       "id": "16378",
       "name": "Karetsas",
       "marktwert": 22417712,
@@ -185,13 +178,6 @@
       "mw_aenderung": 240989
     },
     {
-      "id": "11556",
-      "name": "Massengo",
-      "marktwert": 9641002,
-      "position": "MF",
-      "mw_aenderung": 94994
-    },
-    {
       "id": "1225",
       "name": "Zingerle",
       "marktwert": 500000,
@@ -204,6 +190,13 @@
       "marktwert": 3182741,
       "position": "ST",
       "mw_aenderung": 159239
+    },
+    {
+      "id": "3559",
+      "name": "Ulrich",
+      "marktwert": 4978291,
+      "position": "MF",
+      "mw_aenderung": 272085
     }
   ],
   "3181707": [
@@ -311,6 +304,13 @@
       "marktwert": 2961405,
       "position": "MF",
       "mw_aenderung": -20425
+    },
+    {
+      "id": "1223",
+      "name": "Friedrich",
+      "marktwert": 969121,
+      "position": "ABW",
+      "mw_aenderung": 39854
     }
   ],
   "3308384": [
@@ -436,13 +436,6 @@
       "mw_aenderung": 202102
     },
     {
-      "id": "6148",
-      "name": "Pinckert",
-      "marktwert": 10360832,
-      "position": "ABW",
-      "mw_aenderung": 87251
-    },
-    {
       "id": "6158",
       "name": "Schnellbacher",
       "marktwert": 4478722,
@@ -492,11 +485,25 @@
       "mw_aenderung": 32417
     },
     {
-      "id": "11099",
-      "name": "Bellingham",
-      "marktwert": 19589489,
+      "id": "3218",
+      "name": "Backhaus",
+      "marktwert": 17029582,
+      "position": "TW",
+      "mw_aenderung": 129447
+    },
+    {
+      "id": "2783",
+      "name": "Tapsoba",
+      "marktwert": 32339409,
+      "position": "ABW",
+      "mw_aenderung": 68244
+    },
+    {
+      "id": "3281",
+      "name": "Reis",
+      "marktwert": 4078051,
       "position": "MF",
-      "mw_aenderung": 66961
+      "mw_aenderung": 64615
     }
   ],
   "3458038": [
@@ -548,13 +555,6 @@
       "marktwert": 5280698,
       "position": "MF",
       "mw_aenderung": 339569
-    },
-    {
-      "id": "8001",
-      "name": "Lochoshvili",
-      "marktwert": 10379963,
-      "position": "ABW",
-      "mw_aenderung": 185959
     },
     {
       "id": "1964",
@@ -618,6 +618,13 @@
       "marktwert": 10050794,
       "position": "ABW",
       "mw_aenderung": 352450
+    },
+    {
+      "id": "2030",
+      "name": "Tietz",
+      "marktwert": 12567700,
+      "position": "ST",
+      "mw_aenderung": 191602
     }
   ]
 }
