@@ -129,13 +129,6 @@
       "mw_aenderung": 209306
     },
     {
-      "id": "3492",
-      "name": "Hoffmeier",
-      "marktwert": 8365093,
-      "position": "ABW",
-      "mw_aenderung": 173471
-    },
-    {
       "id": "8296",
       "name": "Schmahl",
       "marktwert": 5693304,
@@ -297,6 +290,20 @@
       "marktwert": 6663226,
       "position": "ABW",
       "mw_aenderung": 239166
+    },
+    {
+      "id": "43",
+      "name": "Weiser",
+      "marktwert": 4630012,
+      "position": "ABW",
+      "mw_aenderung": -43240
+    },
+    {
+      "id": "2651",
+      "name": "Pedersen",
+      "marktwert": 6039427,
+      "position": "ABW",
+      "mw_aenderung": 129429
     }
   ],
   "3308384": [
@@ -376,6 +383,13 @@
       "marktwert": 25585117,
       "position": "MF",
       "mw_aenderung": 55528
+    },
+    {
+      "id": "16948",
+      "name": "Konstantelias",
+      "marktwert": 17691558,
+      "position": "MF",
+      "mw_aenderung": 186996
     }
   ],
   "3310917": [
@@ -490,6 +504,13 @@
       "marktwert": 1208879,
       "position": "MF",
       "mw_aenderung": 338629
+    },
+    {
+      "id": "3081",
+      "name": "Vidović",
+      "marktwert": 4794791,
+      "position": "MF",
+      "mw_aenderung": 253986
     }
   ],
   "3458038": [
@@ -550,13 +571,6 @@
       "mw_aenderung": 184053
     },
     {
-      "id": "7498",
-      "name": "Boey",
-      "marktwert": 3233383,
-      "position": "ABW",
-      "mw_aenderung": 339238
-    },
-    {
       "id": "4199",
       "name": "García",
       "marktwert": 38521588,
@@ -604,6 +618,13 @@
       "marktwert": 3479348,
       "position": "MF",
       "mw_aenderung": 63754
+    },
+    {
+      "id": "2725",
+      "name": "Bornauw",
+      "marktwert": 9410410,
+      "position": "ABW",
+      "mw_aenderung": 8874022
     }
   ]
 }
