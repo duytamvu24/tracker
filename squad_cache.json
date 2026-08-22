@@ -69,6 +69,13 @@
       "marktwert": 3518679,
       "position": "ABW",
       "mw_aenderung": 402456
+    },
+    {
+      "id": "2120",
+      "name": "Nartey",
+      "marktwert": 8922534,
+      "position": "MF",
+      "mw_aenderung": 320153
     }
   ],
   "3181699": [
@@ -408,13 +415,6 @@
       "mw_aenderung": 174348
     },
     {
-      "id": "15472",
-      "name": "Daka",
-      "marktwert": 12049313,
-      "position": "ST",
-      "mw_aenderung": 89926
-    },
-    {
       "id": "6158",
       "name": "Schnellbacher",
       "marktwert": 5367551,
@@ -457,13 +457,6 @@
       "mw_aenderung": 27121
     },
     {
-      "id": "3218",
-      "name": "Backhaus",
-      "marktwert": 17311807,
-      "position": "TW",
-      "mw_aenderung": 68640
-    },
-    {
       "id": "2783",
       "name": "Tapsoba",
       "marktwert": 32484016,
@@ -499,13 +492,6 @@
       "marktwert": 9940642,
       "position": "ST",
       "mw_aenderung": 233613
-    },
-    {
-      "id": "859",
-      "name": "Gyamerah",
-      "marktwert": 7456278,
-      "position": "ABW",
-      "mw_aenderung": 190975
     },
     {
       "id": "11170",
@@ -550,13 +536,6 @@
       "mw_aenderung": 366877
     },
     {
-      "id": "10049",
-      "name": "Behrens",
-      "marktwert": 10613199,
-      "position": "ABW",
-      "mw_aenderung": 173332
-    },
-    {
       "id": "2030",
       "name": "Tietz",
       "marktwert": 13127682,
@@ -599,11 +578,18 @@
       "mw_aenderung": 325273
     },
     {
-      "id": "7737",
-      "name": "Veerman",
-      "marktwert": 17673419,
+      "id": "3129",
+      "name": "Itakura",
+      "marktwert": 9879933,
+      "position": "ABW",
+      "mw_aenderung": -3727864
+    },
+    {
+      "id": "6081",
+      "name": "Uzun",
+      "marktwert": 28000587,
       "position": "MF",
-      "mw_aenderung": 150432
+      "mw_aenderung": 83342
     }
   ]
 }
