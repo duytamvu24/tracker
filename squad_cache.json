@@ -43,13 +43,6 @@
       "mw_aenderung": 159425
     },
     {
-      "id": "11886",
-      "name": "Rômulo",
-      "marktwert": 20405009,
-      "position": "ST",
-      "mw_aenderung": -343418
-    },
-    {
       "id": "11631",
       "name": "Burger",
       "marktwert": 23792102,
@@ -69,6 +62,13 @@
       "marktwert": 3925875,
       "position": "ABW",
       "mw_aenderung": 407196
+    },
+    {
+      "id": "7224",
+      "name": "Castello Jr.",
+      "marktwert": 18496411,
+      "position": "ABW",
+      "mw_aenderung": 89109
     }
   ],
   "3181699": [
@@ -250,13 +250,6 @@
       "mw_aenderung": -64593
     },
     {
-      "id": "1991",
-      "name": "Upamecano",
-      "marktwert": 33994323,
-      "position": "ABW",
-      "mw_aenderung": 33032
-    },
-    {
       "id": "357",
       "name": "Grahl",
       "marktwert": 500000,
@@ -292,13 +285,6 @@
       "marktwert": 15026803,
       "position": "ABW",
       "mw_aenderung": 89448
-    },
-    {
-      "id": "737",
-      "name": "Waldschmidt",
-      "marktwert": 5543046,
-      "position": "MF",
-      "mw_aenderung": -500762
     },
     {
       "id": "2749",
@@ -569,6 +555,20 @@
       "marktwert": 5925286,
       "position": "MF",
       "mw_aenderung": 275707
+    },
+    {
+      "id": "2232",
+      "name": "Mwene",
+      "marktwert": 8059685,
+      "position": "ABW",
+      "mw_aenderung": 227042
+    },
+    {
+      "id": "1767",
+      "name": "Huth",
+      "marktwert": 500000,
+      "position": "TW",
+      "mw_aenderung": 0
     }
   ]
 }
