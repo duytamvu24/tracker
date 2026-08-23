@@ -15,13 +15,6 @@
       "mw_aenderung": 235054
     },
     {
-      "id": "6751",
-      "name": "Pruhs",
-      "marktwert": 4729141,
-      "position": "TW",
-      "mw_aenderung": 39940
-    },
-    {
       "id": "12321",
       "name": "Simpson-Pusey",
       "marktwert": 12130690,
@@ -99,13 +92,6 @@
       "marktwert": 6538101,
       "position": "ABW",
       "mw_aenderung": 237660
-    },
-    {
-      "id": "1728",
-      "name": "Nyland",
-      "marktwert": 5179027,
-      "position": "TW",
-      "mw_aenderung": 39968
     },
     {
       "id": "13433",
@@ -243,13 +229,6 @@
       "mw_aenderung": 263324
     },
     {
-      "id": "43",
-      "name": "Weiser",
-      "marktwert": 4519893,
-      "position": "ABW",
-      "mw_aenderung": -64593
-    },
-    {
       "id": "357",
       "name": "Grahl",
       "marktwert": 500000,
@@ -262,6 +241,20 @@
       "marktwert": 7697909,
       "position": "MF",
       "mw_aenderung": 302789
+    },
+    {
+      "id": "173",
+      "name": "Tah",
+      "marktwert": 37026341,
+      "position": "ABW",
+      "mw_aenderung": 10622
+    },
+    {
+      "id": "11956",
+      "name": "Fernández",
+      "marktwert": 7230357,
+      "position": "MF",
+      "mw_aenderung": 345710
     }
   ],
   "3308384": [
@@ -334,6 +327,20 @@
       "marktwert": 18041690,
       "position": "MF",
       "mw_aenderung": 173138
+    },
+    {
+      "id": "1996",
+      "name": "Friedl",
+      "marktwert": 13366286,
+      "position": "ABW",
+      "mw_aenderung": 125237
+    },
+    {
+      "id": "9440",
+      "name": "Mane",
+      "marktwert": 3253614,
+      "position": "ABW",
+      "mw_aenderung": -110835
     }
   ],
   "3310917": [
@@ -466,13 +473,6 @@
       "mw_aenderung": 181869
     },
     {
-      "id": "7239",
-      "name": "Finkgräfe",
-      "marktwert": 6645578,
-      "position": "ABW",
-      "mw_aenderung": 142617
-    },
-    {
       "id": "15211",
       "name": "Gadou",
       "marktwert": 24586219,
@@ -569,6 +569,13 @@
       "marktwert": 500000,
       "position": "TW",
       "mw_aenderung": 0
+    },
+    {
+      "id": "7275",
+      "name": "Santos",
+      "marktwert": 8399891,
+      "position": "TW",
+      "mw_aenderung": -249173
     }
   ]
 }
