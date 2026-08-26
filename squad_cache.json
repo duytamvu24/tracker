@@ -299,11 +299,11 @@
       "mw_aenderung": 179853
     },
     {
-      "id": "78",
-      "name": "Hofmann",
-      "marktwert": 1135553,
-      "position": "MF",
-      "mw_aenderung": -31652
+      "id": "12284",
+      "name": "Kosugi",
+      "marktwert": 9546934,
+      "position": "ABW",
+      "mw_aenderung": 343397
     }
   ],
   "3308384": [
@@ -613,18 +613,18 @@
       "mw_aenderung": 220200
     },
     {
-      "id": "2552",
-      "name": "Bülter",
-      "marktwert": 8205972,
-      "position": "ST",
-      "mw_aenderung": 214959
-    },
-    {
       "id": "11949",
       "name": "Nandja",
       "marktwert": 1251654,
       "position": "ABW",
       "mw_aenderung": 366286
+    },
+    {
+      "id": "2074",
+      "name": "Hack",
+      "marktwert": 10152695,
+      "position": "MF",
+      "mw_aenderung": 186856
     }
   ]
 }
