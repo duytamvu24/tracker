@@ -157,25 +157,18 @@
       "mw_aenderung": 235100
     },
     {
+      "id": "357",
+      "name": "Grahl",
+      "marktwert": 500000,
+      "position": "TW",
+      "mw_aenderung": 0
+    },
+    {
       "id": "4335",
       "name": "Scherhant",
       "marktwert": 7100654,
       "position": "MF",
       "mw_aenderung": 246583
-    },
-    {
-      "id": "1809",
-      "name": "Wolf",
-      "marktwert": 4433107,
-      "position": "MF",
-      "mw_aenderung": 425436
-    },
-    {
-      "id": "6745",
-      "name": "Boniface",
-      "marktwert": 6590224,
-      "position": "ST",
-      "mw_aenderung": 193585
     },
     {
       "id": "4654",
@@ -185,11 +178,25 @@
       "mw_aenderung": 226627
     },
     {
+      "id": "8355",
+      "name": "Banks",
+      "marktwert": 5929619,
+      "position": "ABW",
+      "mw_aenderung": 260132
+    },
+    {
       "id": "849",
       "name": "Kleindienst",
       "marktwert": 18691532,
       "position": "ST",
       "mw_aenderung": 145896
+    },
+    {
+      "id": "3318",
+      "name": "Königsdörffer",
+      "marktwert": 6248390,
+      "position": "ST",
+      "mw_aenderung": 225821
     }
   ],
   "3181707": [
@@ -213,13 +220,6 @@
       "marktwert": 68831759,
       "position": "ST",
       "mw_aenderung": 9667
-    },
-    {
-      "id": "3364",
-      "name": "Klaus",
-      "marktwert": 5237059,
-      "position": "TW",
-      "mw_aenderung": 27534
     },
     {
       "id": "15613",
@@ -257,13 +257,6 @@
       "mw_aenderung": 226854
     },
     {
-      "id": "357",
-      "name": "Grahl",
-      "marktwert": 500000,
-      "position": "TW",
-      "mw_aenderung": 0
-    },
-    {
       "id": "11008",
       "name": "Banzuzi",
       "marktwert": 9051349,
@@ -278,6 +271,13 @@
       "mw_aenderung": 339538
     },
     {
+      "id": "1809",
+      "name": "Wolf",
+      "marktwert": 4433107,
+      "position": "MF",
+      "mw_aenderung": 425436
+    },
+    {
       "id": "237",
       "name": "Neuer",
       "marktwert": 13764324,
@@ -285,18 +285,18 @@
       "mw_aenderung": 96741
     },
     {
-      "id": "8355",
-      "name": "Banks",
-      "marktwert": 5929619,
-      "position": "ABW",
-      "mw_aenderung": 260132
-    },
-    {
       "id": "12284",
       "name": "Kosugi",
       "marktwert": 9868000,
       "position": "ABW",
       "mw_aenderung": 321066
+    },
+    {
+      "id": "2855",
+      "name": "Ache",
+      "marktwert": 14894314,
+      "position": "ST",
+      "mw_aenderung": 111054
     }
   ],
   "3308384": [
@@ -497,6 +497,13 @@
       "marktwert": 29629517,
       "position": "ABW",
       "mw_aenderung": 117449
+    },
+    {
+      "id": "3470",
+      "name": "Caci",
+      "marktwert": 10976864,
+      "position": "ABW",
+      "mw_aenderung": 136630
     }
   ],
   "3458038": [
