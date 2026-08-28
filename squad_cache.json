@@ -15,13 +15,6 @@
       "mw_aenderung": 211906
     },
     {
-      "id": "12321",
-      "name": "Simpson-Pusey",
-      "marktwert": 12634720,
-      "position": "ABW",
-      "mw_aenderung": 38169
-    },
-    {
       "id": "3304",
       "name": "Matanović",
       "marktwert": 19681184,
@@ -178,13 +171,6 @@
       "mw_aenderung": 205285
     },
     {
-      "id": "4654",
-      "name": "Kömür",
-      "marktwert": 6257022,
-      "position": "MF",
-      "mw_aenderung": 145880
-    },
-    {
       "id": "8355",
       "name": "Banks",
       "marktwert": 6188958,
@@ -215,13 +201,6 @@
       "mw_aenderung": 144312
     },
     {
-      "id": "11253",
-      "name": "Mickelson",
-      "marktwert": 5247434,
-      "position": "ABW",
-      "mw_aenderung": 114139
-    },
-    {
       "id": "7226",
       "name": "Kane",
       "marktwert": 68838736,
@@ -248,13 +227,6 @@
       "marktwert": 5266253,
       "position": "MF",
       "mw_aenderung": 233662
-    },
-    {
-      "id": "1223",
-      "name": "Friedrich",
-      "marktwert": 3353828,
-      "position": "ABW",
-      "mw_aenderung": 102177
     },
     {
       "id": "10134",
@@ -297,20 +269,6 @@
       "marktwert": 10160605,
       "position": "ABW",
       "mw_aenderung": 292605
-    },
-    {
-      "id": "2855",
-      "name": "Ache",
-      "marktwert": 14986329,
-      "position": "ST",
-      "mw_aenderung": 92015
-    },
-    {
-      "id": "2144",
-      "name": "Koch",
-      "marktwert": 23831401,
-      "position": "ABW",
-      "mw_aenderung": 42593
     }
   ],
   "3308384": [
@@ -443,13 +401,6 @@
       "mw_aenderung": 144595
     },
     {
-      "id": "15313",
-      "name": "Erevbenagie",
-      "marktwert": 5925937,
-      "position": "ST",
-      "mw_aenderung": -252548
-    },
-    {
       "id": "2977",
       "name": "Noll",
       "marktwert": 12953339,
@@ -518,6 +469,13 @@
       "marktwert": 11103442,
       "position": "ABW",
       "mw_aenderung": 126578
+    },
+    {
+      "id": "11957",
+      "name": "Ben Seghir",
+      "marktwert": 1086392,
+      "position": "MF",
+      "mw_aenderung": 100239
     }
   ],
   "3458038": [
@@ -571,13 +529,6 @@
       "mw_aenderung": 164862
     },
     {
-      "id": "2718",
-      "name": "Skhiri",
-      "marktwert": 5715161,
-      "position": "MF",
-      "mw_aenderung": 283471
-    },
-    {
       "id": "3129",
       "name": "Itakura",
       "marktwert": 11031006,
@@ -590,13 +541,6 @@
       "marktwert": 28566231,
       "position": "MF",
       "mw_aenderung": 84960
-    },
-    {
-      "id": "9384",
-      "name": "Darvich",
-      "marktwert": 7221093,
-      "position": "MF",
-      "mw_aenderung": 203867
     },
     {
       "id": "2232",
@@ -632,6 +576,13 @@
       "marktwert": 7035198,
       "position": "MF",
       "mw_aenderung": 279018
+    },
+    {
+      "id": "11010",
+      "name": "Diks",
+      "marktwert": 17728558,
+      "position": "ABW",
+      "mw_aenderung": 74905
     }
   ]
 }
