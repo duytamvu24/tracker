@@ -76,6 +76,13 @@
       "marktwert": 12420309,
       "position": "ST",
       "mw_aenderung": 227567
+    },
+    {
+      "id": "4596",
+      "name": "Gruda",
+      "marktwert": 20734133,
+      "position": "MF",
+      "mw_aenderung": 214185
     }
   ],
   "3181699": [
@@ -183,6 +190,13 @@
       "marktwert": 500000,
       "position": "TW",
       "mw_aenderung": 0
+    },
+    {
+      "id": "1856",
+      "name": "Sabitzer",
+      "marktwert": 6359421,
+      "position": "MF",
+      "mw_aenderung": -193124
     }
   ],
   "3181707": [
@@ -199,13 +213,6 @@
       "marktwert": 68854027,
       "position": "ST",
       "mw_aenderung": 10590
-    },
-    {
-      "id": "15613",
-      "name": "Hashioka",
-      "marktwert": 10389877,
-      "position": "ABW",
-      "mw_aenderung": -190192
     },
     {
       "id": "2373",
@@ -262,6 +269,13 @@
       "marktwert": 13295210,
       "position": "TW",
       "mw_aenderung": 89819
+    },
+    {
+      "id": "1671",
+      "name": "Prömel",
+      "marktwert": 14329446,
+      "position": "MF",
+      "mw_aenderung": 154687
     }
   ],
   "3308384": [
@@ -308,13 +322,6 @@
       "mw_aenderung": 36709
     },
     {
-      "id": "16948",
-      "name": "Konstantelias",
-      "marktwert": 19469683,
-      "position": "MF",
-      "mw_aenderung": 193823
-    },
-    {
       "id": "1996",
       "name": "Friedl",
       "marktwert": 13764965,
@@ -341,6 +348,13 @@
       "marktwert": 5551546,
       "position": "MF",
       "mw_aenderung": -241598
+    },
+    {
+      "id": "6176",
+      "name": "Seiwald",
+      "marktwert": 18137449,
+      "position": "MF",
+      "mw_aenderung": 83796
     }
   ],
   "3310917": [
@@ -357,13 +371,6 @@
       "marktwert": 11985601,
       "position": "MF",
       "mw_aenderung": 149597
-    },
-    {
-      "id": "15589",
-      "name": "Otávio",
-      "marktwert": 10360185,
-      "position": "ABW",
-      "mw_aenderung": 31357
     },
     {
       "id": "16369",
@@ -536,11 +543,18 @@
       "mw_aenderung": 94555
     },
     {
-      "id": "13806",
-      "name": "Seol",
-      "marktwert": 3091722,
+      "id": "6668",
+      "name": "Minjae",
+      "marktwert": 11050778,
       "position": "ABW",
-      "mw_aenderung": -148849
+      "mw_aenderung": 208728
+    },
+    {
+      "id": "14890",
+      "name": "Vogt",
+      "marktwert": 1074637,
+      "position": "ST",
+      "mw_aenderung": 221764
     }
   ]
 }
