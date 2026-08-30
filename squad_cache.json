@@ -229,13 +229,6 @@
       "mw_aenderung": -56702
     },
     {
-      "id": "10134",
-      "name": "Schmetgens",
-      "marktwert": 8238097,
-      "position": "ABW",
-      "mw_aenderung": -95581
-    },
-    {
       "id": "11008",
       "name": "Banzuzi",
       "marktwert": 10341168,
@@ -276,6 +269,13 @@
       "marktwert": 14498231,
       "position": "MF",
       "mw_aenderung": 168785
+    },
+    {
+      "id": "1590",
+      "name": "Zentner",
+      "marktwert": 14492773,
+      "position": "TW",
+      "mw_aenderung": 109443
     }
   ],
   "3308384": [
@@ -455,6 +455,13 @@
       "marktwert": 13148586,
       "position": "MF",
       "mw_aenderung": 232031
+    },
+    {
+      "id": "3754",
+      "name": "Vázquez",
+      "marktwert": 6996508,
+      "position": "ABW",
+      "mw_aenderung": 346301
     }
   ],
   "3458038": [
