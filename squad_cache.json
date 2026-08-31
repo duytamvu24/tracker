@@ -164,20 +164,6 @@
       "mw_aenderung": 109180
     },
     {
-      "id": "3307",
-      "name": "Bachmann",
-      "marktwert": 754353,
-      "position": "MF",
-      "mw_aenderung": -109813
-    },
-    {
-      "id": "10120",
-      "name": "Røssing-Lelesiit",
-      "marktwert": 730234,
-      "position": "ST",
-      "mw_aenderung": -105610
-    },
-    {
       "id": "7269",
       "name": "Tella",
       "marktwert": 5244709,
@@ -185,18 +171,25 @@
       "mw_aenderung": 80442
     },
     {
-      "id": "383",
-      "name": "Ulreich",
-      "marktwert": 500000,
-      "position": "TW",
-      "mw_aenderung": 0
-    },
-    {
       "id": "1856",
       "name": "Sabitzer",
       "marktwert": 6247003,
       "position": "MF",
       "mw_aenderung": -112418
+    },
+    {
+      "id": "4",
+      "name": "Blaswich",
+      "marktwert": 1956334,
+      "position": "TW",
+      "mw_aenderung": 214323
+    },
+    {
+      "id": "1889",
+      "name": "Jatta",
+      "marktwert": 7366848,
+      "position": "MF",
+      "mw_aenderung": 260685
     }
   ],
   "3181707": [
@@ -299,13 +292,6 @@
       "marktwert": 10212944,
       "position": "ST",
       "mw_aenderung": 230354
-    },
-    {
-      "id": "60",
-      "name": "Kohr",
-      "marktwert": 10130266,
-      "position": "ABW",
-      "mw_aenderung": -508904
     },
     {
       "id": "1685",
@@ -462,6 +448,13 @@
       "marktwert": 6996508,
       "position": "ABW",
       "mw_aenderung": 346301
+    },
+    {
+      "id": "2255",
+      "name": "Burkardt",
+      "marktwert": 26825588,
+      "position": "ST",
+      "mw_aenderung": 2961
     }
   ],
   "3458038": [
