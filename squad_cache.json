@@ -190,6 +190,13 @@
       "marktwert": 7366848,
       "position": "MF",
       "mw_aenderung": 260685
+    },
+    {
+      "id": "17179",
+      "name": "Nakuzola",
+      "marktwert": 1329506,
+      "position": "ABW",
+      "mw_aenderung": 336518
     }
   ],
   "3181707": [
@@ -213,13 +220,6 @@
       "marktwert": 22944041,
       "position": "ABW",
       "mw_aenderung": 145073
-    },
-    {
-      "id": "3187",
-      "name": "Schäfer",
-      "marktwert": 5178965,
-      "position": "MF",
-      "mw_aenderung": -56702
     },
     {
       "id": "11008",
@@ -269,6 +269,13 @@
       "marktwert": 14492773,
       "position": "TW",
       "mw_aenderung": 109443
+    },
+    {
+      "id": "1811",
+      "name": "Gouweleeuw",
+      "marktwert": 8310059,
+      "position": "ABW",
+      "mw_aenderung": -225384
     }
   ],
   "3308384": [
@@ -341,6 +348,13 @@
       "marktwert": 18272223,
       "position": "MF",
       "mw_aenderung": 134774
+    },
+    {
+      "id": "8307",
+      "name": "Sano",
+      "marktwert": 16876955,
+      "position": "MF",
+      "mw_aenderung": 184465
     }
   ],
   "3310917": [
@@ -448,13 +462,6 @@
       "marktwert": 6996508,
       "position": "ABW",
       "mw_aenderung": 346301
-    },
-    {
-      "id": "2255",
-      "name": "Burkardt",
-      "marktwert": 26825588,
-      "position": "ST",
-      "mw_aenderung": 2961
     },
     {
       "id": "12294",
