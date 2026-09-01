@@ -336,13 +336,6 @@
       "mw_aenderung": 294813
     },
     {
-      "id": "2939",
-      "name": "Dinkçi",
-      "marktwert": 4924766,
-      "position": "MF",
-      "mw_aenderung": -347322
-    },
-    {
       "id": "6176",
       "name": "Seiwald",
       "marktwert": 18436380,
@@ -555,13 +548,6 @@
       "marktwert": 11498982,
       "position": "ABW",
       "mw_aenderung": 230720
-    },
-    {
-      "id": "14890",
-      "name": "Vogt",
-      "marktwert": 1625348,
-      "position": "ST",
-      "mw_aenderung": 285049
     }
   ]
 }
