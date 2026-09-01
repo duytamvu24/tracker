@@ -276,6 +276,13 @@
       "marktwert": 786326,
       "position": "MF",
       "mw_aenderung": 135858
+    },
+    {
+      "id": "14911",
+      "name": "Lippmann",
+      "marktwert": 765596,
+      "position": "ABW",
+      "mw_aenderung": -102120
     }
   ],
   "3308384": [
@@ -455,6 +462,13 @@
       "marktwert": 6797694,
       "position": "MF",
       "mw_aenderung": 390825
+    },
+    {
+      "id": "2522",
+      "name": "Raum",
+      "marktwert": 34653142,
+      "position": "ABW",
+      "mw_aenderung": 72805
     }
   ],
   "3458038": [
@@ -548,6 +562,13 @@
       "marktwert": 11498982,
       "position": "ABW",
       "mw_aenderung": 230720
+    },
+    {
+      "id": "3228",
+      "name": "Njinmah",
+      "marktwert": 6921386,
+      "position": "ST",
+      "mw_aenderung": 270409
     }
   ]
 }
