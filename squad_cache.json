@@ -190,6 +190,13 @@
       "marktwert": 9106723,
       "position": "ST",
       "mw_aenderung": 331490
+    },
+    {
+      "id": "11958",
+      "name": "Castro-Montes",
+      "marktwert": 9738863,
+      "position": "MF",
+      "mw_aenderung": 247293
     }
   ],
   "3181707": [
@@ -243,13 +250,6 @@
       "mw_aenderung": 140443
     },
     {
-      "id": "9513",
-      "name": "Hein",
-      "marktwert": 13322613,
-      "position": "TW",
-      "mw_aenderung": -78571
-    },
-    {
       "id": "1671",
       "name": "Prömel",
       "marktwert": 14876480,
@@ -276,6 +276,13 @@
       "marktwert": 920920,
       "position": "MF",
       "mw_aenderung": 134594
+    },
+    {
+      "id": "3019",
+      "name": "Atubolu",
+      "marktwert": 11820803,
+      "position": "TW",
+      "mw_aenderung": 279205
     }
   ],
   "3308384": [
@@ -487,13 +494,6 @@
       "mw_aenderung": 16577
     },
     {
-      "id": "2030",
-      "name": "Tietz",
-      "marktwert": 15043818,
-      "position": "ST",
-      "mw_aenderung": 165917
-    },
-    {
       "id": "1639",
       "name": "Amiri",
       "marktwert": 34464589,
@@ -569,6 +569,20 @@
       "marktwert": 1486192,
       "position": "MF",
       "mw_aenderung": 377020
+    },
+    {
+      "id": "3176",
+      "name": "Ibrahimović",
+      "marktwert": 4368056,
+      "position": "MF",
+      "mw_aenderung": 381828
+    },
+    {
+      "id": "10131",
+      "name": "Stalmach",
+      "marktwert": 2038410,
+      "position": "MF",
+      "mw_aenderung": 296735
     }
   ]
 }
