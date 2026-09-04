@@ -228,12 +228,20 @@
         "date": "2026-09-03"
       },
       {
-        "budget": -519000.0,
+        "budget": 4553622.0,
         "teamwert": 185139819.0,
-        "netto_transfer": 0.0,
-        "netto_teamwert": 184620819.0,
-        "max_gebot": 60405870.27,
+        "netto_transfer": 5072622.0,
+        "netto_teamwert": 189693441.0,
+        "max_gebot": 65649762.27,
         "date": "2026-09-04"
+      },
+      {
+        "budget": 4653622.0,
+        "teamwert": 182085901.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 186739523.0,
+        "max_gebot": 64741969.33,
+        "date": "2026-09-05"
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00"
@@ -467,12 +475,20 @@
         "date": "2026-09-03"
       },
       {
-        "budget": -26484131.0,
+        "budget": -684723.0,
         "teamwert": 219608377.0,
-        "netto_transfer": 10945795.0,
-        "netto_teamwert": 193124246.0,
-        "max_gebot": 37246870.18,
+        "netto_transfer": 36745203.0,
+        "netto_teamwert": 218923654.0,
+        "max_gebot": 71560082.82,
         "date": "2026-09-04"
+      },
+      {
+        "budget": 1744492.0,
+        "teamwert": 192145554.0,
+        "netto_transfer": 2329215.0,
+        "netto_teamwert": 193890046.0,
+        "max_gebot": 65152524.82,
+        "date": "2026-09-05"
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00"
@@ -706,12 +722,20 @@
         "date": "2026-09-03"
       },
       {
-        "budget": -15735374.0,
+        "budget": -405350.0,
         "teamwert": 197257337.0,
-        "netto_transfer": 25777846.0,
-        "netto_teamwert": 181521963.0,
-        "max_gebot": 44166873.79,
+        "netto_transfer": 41107870.0,
+        "netto_teamwert": 196851987.0,
+        "max_gebot": 64555805.71,
         "date": "2026-09-04"
+      },
+      {
+        "budget": -305350.0,
+        "teamwert": 182423264.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 182117914.0,
+        "max_gebot": 59793561.62,
+        "date": "2026-09-05"
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00"
@@ -945,12 +969,20 @@
         "date": "2026-09-03"
       },
       {
-        "budget": -12689234.0,
+        "budget": 4840328.0,
         "teamwert": 186440340.0,
-        "netto_transfer": 0.0,
-        "netto_teamwert": 173751106.0,
-        "max_gebot": 44648630.98,
+        "netto_transfer": 17529562.0,
+        "netto_teamwert": 191280668.0,
+        "max_gebot": 66365640.2,
         "date": "2026-09-04"
+      },
+      {
+        "budget": 4940328.0,
+        "teamwert": 167983435.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 172923763.0,
+        "max_gebot": 60374861.55,
+        "date": "2026-09-05"
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00"
@@ -1184,12 +1216,20 @@
         "date": "2026-09-03"
       },
       {
-        "budget": -42014825.0,
+        "budget": -277698.0,
         "teamwert": 252148767.0,
-        "netto_transfer": -11846827.0,
-        "netto_teamwert": 210133942.0,
-        "max_gebot": 27329375.86,
+        "netto_transfer": 29890300.0,
+        "netto_teamwert": 251871069.0,
+        "max_gebot": 82839754.77,
         "date": "2026-09-04"
+      },
+      {
+        "budget": -177698.0,
+        "teamwert": 211578859.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 211401161.0,
+        "max_gebot": 69584685.13,
+        "date": "2026-09-05"
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00"
@@ -1423,12 +1463,20 @@
         "date": "2026-09-03"
       },
       {
-        "budget": -48995790.0,
+        "budget": 473407.0,
         "teamwert": 232887233.0,
-        "netto_transfer": 6001014.0,
-        "netto_teamwert": 183891443.0,
-        "max_gebot": 11688386.19,
+        "netto_transfer": 55470211.0,
+        "netto_teamwert": 233360640.0,
+        "max_gebot": 77326193.89,
         "date": "2026-09-04"
+      },
+      {
+        "budget": 573407.0,
+        "teamwert": 182921573.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 183494980.0,
+        "max_gebot": 60937526.09,
+        "date": "2026-09-05"
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00"
