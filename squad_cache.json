@@ -71,11 +71,25 @@
       "mw_aenderung": -9135
     },
     {
+      "id": "15193",
+      "name": "Rots",
+      "marktwert": 7593345,
+      "position": "ABW",
+      "mw_aenderung": 158000
+    },
+    {
       "id": "14899",
       "name": "Prates",
       "marktwert": 3818133,
       "position": "ABW",
       "mw_aenderung": 411177
+    },
+    {
+      "id": "2854",
+      "name": "Demirović",
+      "marktwert": 16181075,
+      "position": "ST",
+      "mw_aenderung": 160322
     }
   ],
   "3181699": [
@@ -171,13 +185,6 @@
       "mw_aenderung": 287867
     },
     {
-      "id": "15193",
-      "name": "Rots",
-      "marktwert": 7593345,
-      "position": "ABW",
-      "mw_aenderung": 158000
-    },
-    {
       "id": "9995",
       "name": "Mokwa",
       "marktwert": 6422669,
@@ -190,6 +197,13 @@
       "marktwert": 10315645,
       "position": "ABW",
       "mw_aenderung": 208727
+    },
+    {
+      "id": "2852",
+      "name": "Philipp",
+      "marktwert": 500000,
+      "position": "TW",
+      "mw_aenderung": 0
     }
   ],
   "3181707": [
@@ -571,11 +585,18 @@
       "mw_aenderung": 255307
     },
     {
-      "id": "6085",
-      "name": "Seimen",
-      "marktwert": 5902773,
-      "position": "TW",
-      "mw_aenderung": -115160
+      "id": "2967",
+      "name": "El-Faouzi",
+      "marktwert": 12583580,
+      "position": "MF",
+      "mw_aenderung": -7953
+    },
+    {
+      "id": "3759",
+      "name": "Gutiérrez",
+      "marktwert": 22456528,
+      "position": "ABW",
+      "mw_aenderung": 148123
     }
   ]
 }
