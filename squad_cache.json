@@ -369,6 +369,13 @@
       "marktwert": 816808,
       "position": "ABW",
       "mw_aenderung": -37185
+    },
+    {
+      "id": "15376",
+      "name": "Estève",
+      "marktwert": 10501376,
+      "position": "ABW",
+      "mw_aenderung": 228166
     }
   ],
   "3310917": [
@@ -406,20 +413,6 @@
       "marktwert": 26058783,
       "position": "ST",
       "mw_aenderung": 70744
-    },
-    {
-      "id": "3027",
-      "name": "Pieringer",
-      "marktwert": 4455045,
-      "position": "ST",
-      "mw_aenderung": 101939
-    },
-    {
-      "id": "12294",
-      "name": "Amaimouni",
-      "marktwert": 8647859,
-      "position": "MF",
-      "mw_aenderung": 104229
     },
     {
       "id": "2522",
@@ -490,6 +483,13 @@
       "marktwert": 12017397,
       "position": "MF",
       "mw_aenderung": 179768
+    },
+    {
+      "id": "9698",
+      "name": "Fábio Silva",
+      "marktwert": 9020403,
+      "position": "ST",
+      "mw_aenderung": 362713
     }
   ],
   "3458038": [
@@ -569,13 +569,6 @@
       "marktwert": 1937595,
       "position": "ST",
       "mw_aenderung": 206383
-    },
-    {
-      "id": "2967",
-      "name": "El-Faouzi",
-      "marktwert": 12634825,
-      "position": "MF",
-      "mw_aenderung": 21926
     },
     {
       "id": "3759",
