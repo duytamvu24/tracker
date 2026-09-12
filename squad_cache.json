@@ -176,6 +176,13 @@
       "marktwert": 27008285,
       "position": "ABW",
       "mw_aenderung": -41938
+    },
+    {
+      "id": "3166",
+      "name": "Topp",
+      "marktwert": 648541,
+      "position": "ST",
+      "mw_aenderung": 75043
     }
   ],
   "3181707": [
@@ -262,6 +269,13 @@
       "marktwert": 3832794,
       "position": "MF",
       "mw_aenderung": -103077
+    },
+    {
+      "id": "7774",
+      "name": "Konoplia",
+      "marktwert": 2223230,
+      "position": "ABW",
+      "mw_aenderung": 5157
     }
   ],
   "3308384": [
@@ -420,6 +434,20 @@
       "marktwert": 24663153,
       "position": "ABW",
       "mw_aenderung": 213540
+    },
+    {
+      "id": "8166",
+      "name": "Chuki",
+      "marktwert": 8489554,
+      "position": "MF",
+      "mw_aenderung": 266159
+    },
+    {
+      "id": "12367",
+      "name": "Spalt",
+      "marktwert": 688072,
+      "position": "MF",
+      "mw_aenderung": 188072
     }
   ],
   "3458038": [
@@ -513,6 +541,13 @@
       "marktwert": 12791114,
       "position": "ABW",
       "mw_aenderung": 183812
+    },
+    {
+      "id": "6172",
+      "name": "Adamu",
+      "marktwert": 4671162,
+      "position": "ST",
+      "mw_aenderung": -76435
     }
   ]
 }
