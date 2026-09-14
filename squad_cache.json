@@ -168,7 +168,7 @@
       "name": "Gantenbein",
       "marktwert": 500000,
       "position": "ABW",
-      "mw_aenderung": -12311
+      "mw_aenderung": 0
     },
     {
       "id": "1664",
@@ -197,6 +197,13 @@
       "marktwert": 13486843,
       "position": "ST",
       "mw_aenderung": 147217
+    },
+    {
+      "id": "6292",
+      "name": "Hansen",
+      "marktwert": 6866770,
+      "position": "ABW",
+      "mw_aenderung": 212074
     }
   ],
   "3181707": [
@@ -355,13 +362,6 @@
       "marktwert": 19541083,
       "position": "MF",
       "mw_aenderung": 229154
-    },
-    {
-      "id": "3190",
-      "name": "Chabot",
-      "marktwert": 22225497,
-      "position": "ABW",
-      "mw_aenderung": -456009
     }
   ],
   "3310917": [
