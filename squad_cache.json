@@ -111,6 +111,13 @@
       "marktwert": 10069645,
       "position": "MF",
       "mw_aenderung": 266909
+    },
+    {
+      "id": "3209",
+      "name": "Engelhardt",
+      "marktwert": 12499376,
+      "position": "MF",
+      "mw_aenderung": 180002
     }
   ],
   "3181699": [
@@ -148,13 +155,6 @@
       "marktwert": 18767982,
       "position": "MF",
       "mw_aenderung": 131455
-    },
-    {
-      "id": "9995",
-      "name": "Mokwa",
-      "marktwert": 10558810,
-      "position": "ST",
-      "mw_aenderung": -99284
     },
     {
       "id": "1664",
@@ -232,6 +232,13 @@
       "marktwert": 19264464,
       "position": "MF",
       "mw_aenderung": 240246
+    },
+    {
+      "id": "15256",
+      "name": "Wójcik",
+      "marktwert": 1997383,
+      "position": "ABW",
+      "mw_aenderung": 363454
     }
   ],
   "3181707": [
