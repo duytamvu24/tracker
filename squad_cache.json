@@ -36,13 +36,6 @@
       "mw_aenderung": 151886
     },
     {
-      "id": "15193",
-      "name": "Rots",
-      "marktwert": 10595272,
-      "position": "ABW",
-      "mw_aenderung": 17880
-    },
-    {
       "id": "9684",
       "name": "Claude-Maurice",
       "marktwert": 10545607,
@@ -371,13 +364,6 @@
       "mw_aenderung": 221815
     },
     {
-      "id": "2803",
-      "name": "Lemperle",
-      "marktwert": 12886098,
-      "position": "ST",
-      "mw_aenderung": -880906
-    },
-    {
       "id": "1685",
       "name": "Kimmich",
       "marktwert": 59557034,
@@ -446,6 +432,20 @@
       "marktwert": 8129176,
       "position": "MF",
       "mw_aenderung": 169865
+    },
+    {
+      "id": "7282",
+      "name": "Deman",
+      "marktwert": 11612631,
+      "position": "ABW",
+      "mw_aenderung": 179573
+    },
+    {
+      "id": "1873",
+      "name": "Kobel",
+      "marktwert": 18311877,
+      "position": "TW",
+      "mw_aenderung": 36526
     }
   ],
   "3310917": [
@@ -560,13 +560,6 @@
       "marktwert": 17461879,
       "position": "MF",
       "mw_aenderung": 131129
-    },
-    {
-      "id": "2358",
-      "name": "Krauß",
-      "marktwert": 8037307,
-      "position": "MF",
-      "mw_aenderung": 182754
     }
   ],
   "3458038": [
@@ -641,13 +634,6 @@
       "mw_aenderung": 442930
     },
     {
-      "id": "12321",
-      "name": "Simpson-Pusey",
-      "marktwert": 10965720,
-      "position": "ABW",
-      "mw_aenderung": 138702
-    },
-    {
       "id": "9507",
       "name": "Nusa",
       "marktwert": 27785832,
@@ -688,6 +674,13 @@
       "marktwert": 2407520,
       "position": "MF",
       "mw_aenderung": 304445
+    },
+    {
+      "id": "2725",
+      "name": "Bornauw",
+      "marktwert": 4773561,
+      "position": "ABW",
+      "mw_aenderung": 33407
     }
   ]
 }
