@@ -36,13 +36,6 @@
       "mw_aenderung": 180686
     },
     {
-      "id": "2141",
-      "name": "Baku",
-      "marktwert": 19220590,
-      "position": "ABW",
-      "mw_aenderung": -788651
-    },
-    {
       "id": "8374",
       "name": "Terrier",
       "marktwert": 5901246,
@@ -97,6 +90,13 @@
       "marktwert": 12655850,
       "position": "MF",
       "mw_aenderung": 156474
+    },
+    {
+      "id": "2006",
+      "name": "Posch",
+      "marktwert": 11626221,
+      "position": "ABW",
+      "mw_aenderung": 183804
     }
   ],
   "3181699": [
@@ -646,13 +646,6 @@
       "marktwert": 2040835,
       "position": "MF",
       "mw_aenderung": 299763
-    },
-    {
-      "id": "17203",
-      "name": "Moffi",
-      "marktwert": 5774823,
-      "position": "ST",
-      "mw_aenderung": 203860
     },
     {
       "id": "9224",
