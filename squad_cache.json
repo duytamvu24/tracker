@@ -143,20 +143,6 @@
       "mw_aenderung": 339556
     },
     {
-      "id": "2822",
-      "name": "Silas",
-      "marktwert": 3798204,
-      "position": "ST",
-      "mw_aenderung": 179470
-    },
-    {
-      "id": "12158",
-      "name": "Vozar",
-      "marktwert": 3537313,
-      "position": "MF",
-      "mw_aenderung": 167386
-    },
-    {
       "id": "461",
       "name": "Chandler",
       "marktwert": 4568465,
@@ -211,6 +197,13 @@
       "marktwert": 18678653,
       "position": "ST",
       "mw_aenderung": 203903
+    },
+    {
+      "id": "1590",
+      "name": "Zentner",
+      "marktwert": 7228958,
+      "position": "TW",
+      "mw_aenderung": -143083
     }
   ],
   "3181707": [
@@ -527,11 +520,18 @@
       "mw_aenderung": 173941
     },
     {
-      "id": "10024",
-      "name": "Schmied",
-      "marktwert": 5919568,
+      "id": "2897",
+      "name": "Reitz",
+      "marktwert": 10000591,
+      "position": "MF",
+      "mw_aenderung": 327074
+    },
+    {
+      "id": "14425",
+      "name": "Møller Wolfe",
+      "marktwert": 5039169,
       "position": "ABW",
-      "mw_aenderung": 21536
+      "mw_aenderung": 119218
     }
   ],
   "3458038": [
