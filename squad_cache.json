@@ -285,13 +285,6 @@
       "mw_aenderung": 41102
     },
     {
-      "id": "2449",
-      "name": "Hwang",
-      "marktwert": 8372037,
-      "position": "ST",
-      "mw_aenderung": 73998
-    },
-    {
       "id": "7417",
       "name": "Aséko",
       "marktwert": 9464255,
@@ -313,13 +306,6 @@
       "mw_aenderung": 286293
     },
     {
-      "id": "2702",
-      "name": "Martel",
-      "marktwert": 8160479,
-      "position": "MF",
-      "mw_aenderung": 37170
-    },
-    {
       "id": "2887",
       "name": "Dōan",
       "marktwert": 14172412,
@@ -334,13 +320,6 @@
       "mw_aenderung": 209782
     },
     {
-      "id": "17288",
-      "name": "Regeer",
-      "marktwert": 10780583,
-      "position": "MF",
-      "mw_aenderung": -19499
-    },
-    {
       "id": "3069",
       "name": "Nmecha",
       "marktwert": 27200109,
@@ -353,6 +332,13 @@
       "marktwert": 9955897,
       "position": "MF",
       "mw_aenderung": 107599
+    },
+    {
+      "id": "3204",
+      "name": "Conté",
+      "marktwert": 10186134,
+      "position": "ST",
+      "mw_aenderung": 148071
     }
   ],
   "3308384": [
@@ -485,13 +471,6 @@
       "mw_aenderung": 43293
     },
     {
-      "id": "14926",
-      "name": "Soylu",
-      "marktwert": 6013395,
-      "position": "MF",
-      "mw_aenderung": 91121
-    },
-    {
       "id": "3120",
       "name": "Bischof",
       "marktwert": 16640881,
@@ -546,6 +525,13 @@
       "marktwert": 14305285,
       "position": "MF",
       "mw_aenderung": 92403
+    },
+    {
+      "id": "14251",
+      "name": "Saibari",
+      "marktwert": 27863274,
+      "position": "ST",
+      "mw_aenderung": 37416
     }
   ],
   "3458038": [
@@ -655,18 +641,18 @@
       "mw_aenderung": 72564
     },
     {
-      "id": "1225",
-      "name": "Zingerle",
-      "marktwert": 500000,
-      "position": "TW",
-      "mw_aenderung": 0
-    },
-    {
       "id": "4296",
       "name": "Pejčinović",
       "marktwert": 7309124,
       "position": "ST",
       "mw_aenderung": 278825
+    },
+    {
+      "id": "2015",
+      "name": "Obermair",
+      "marktwert": 5461268,
+      "position": "MF",
+      "mw_aenderung": 256356
     }
   ]
 }
