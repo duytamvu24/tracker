@@ -397,7 +397,49 @@
   :root { --good: #8fc98a; --bad: #e8836b; --mid: var(--gold-bright); }
 
   .players { margin-bottom: 32px; }
-  .players[hidden] { display: none; }
+  .players[hidden], .topbar[hidden], #view-budget[hidden] { display: none; }
+
+  /* Suchleiste + Ansichtswechsel bleiben beim Scrollen oben */
+  .topbar {
+    position: sticky; top: 0; z-index: 30;
+    margin: -8px -20px 20px; padding: 10px 20px 12px;
+    background: rgba(9, 38, 27, 0.94);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+  }
+  .topbar .search-wrap { margin-bottom: 10px; }
+  .view-switch {
+    display: grid; grid-template-columns: 1fr 1fr;
+    border: 1px solid var(--line); border-radius: 999px; padding: 3px;
+    background: rgba(255,255,255,0.03);
+  }
+  .vs-btn {
+    font-family: 'Oswald', sans-serif; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.04em; font-size: 14px;
+    background: transparent; border: none; color: var(--chalk-dim);
+    padding: 9px 10px; border-radius: 999px; cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .vs-btn.active { background: var(--gold); color: var(--pitch-deep); }
+
+  .mk-controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .mk-sort { display: flex; flex-wrap: wrap; gap: 6px; }
+  .details-btn { margin-left: auto; }
+  .mk-group { margin-bottom: 14px; }
+  .mk-group-head {
+    width: 100%; display: flex; align-items: center; gap: 8px;
+    background: transparent; border: none; color: var(--chalk);
+    font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 0.05em; font-size: 13px;
+    padding: 8px 2px; cursor: pointer; text-align: left;
+  }
+  .mk-group-head .caret { display: inline-block; transition: transform 0.15s ease; color: var(--gold-bright); }
+  .mk-group.open .mk-group-head .caret { transform: rotate(90deg); }
+  .mk-count { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--pitch-deep); background: var(--chalk-dim); border-radius: 999px; padding: 0 7px; letter-spacing: 0; }
+  .mk-hint { margin-left: auto; font-family: 'Inter', sans-serif; text-transform: none; letter-spacing: 0; font-size: 11.5px; color: var(--chalk-dim); }
+  .mk-group:not(.open) .market-list { display: none; }
+  .mk-mini { grid-column: 2 / 4; font-size: 12px; color: var(--chalk-dim); font-family: 'IBM Plex Mono', monospace; margin-top: -2px; }
+  .compact .mk-sub { display: none; }
+  .compact .mk-row { padding-top: 9px; padding-bottom: 9px; }
   .search-wrap { position: relative; margin-bottom: 22px; }
   .search-wrap input {
     width: 100%;
@@ -583,16 +625,34 @@
     <div class="meta" id="meta">lädt …</div>
   </header>
 
-  <section class="players" id="players" hidden>
+  <div class="topbar" id="topbar" hidden>
     <div class="search-wrap">
       <input type="search" id="player-search" placeholder="Spieler suchen …" autocomplete="off"
              autocorrect="off" spellcheck="false" aria-label="Spieler suchen" aria-controls="search-results">
       <div class="dropdown" id="search-results" role="listbox"></div>
     </div>
+    <div class="view-switch" role="tablist" aria-label="Ansicht">
+      <button class="vs-btn" role="tab" data-view="markt" id="vs-markt">Transfermarkt</button>
+      <button class="vs-btn" role="tab" data-view="budget" id="vs-budget">Budgets</button>
+    </div>
+  </div>
+
+  <section class="players" id="view-markt" hidden>
     <div class="section-title"><span>Transfermarkt</span><span id="market-meta"></span></div>
-    <div class="market-list" id="market-list"></div>
+    <div class="mk-controls">
+      <div class="mk-sort" role="group" aria-label="Sortieren">
+        <button class="sort-btn" data-sort="ablauf">Ablauf</button>
+        <button class="sort-btn" data-sort="mw">Marktwert</button>
+        <button class="sort-btn" data-sort="ap">Punkte</button>
+        <button class="sort-btn" data-sort="form">Form</button>
+        <button class="sort-btn" data-sort="pl">Preis-Leistung</button>
+      </div>
+      <button class="sort-btn details-btn" id="details-btn" aria-pressed="true"></button>
+    </div>
+    <div id="market-list"></div>
   </section>
 
+  <div id="view-budget">
   <div class="tabs" id="tabs"></div>
 
   <div class="board">
@@ -665,6 +725,7 @@
   </div>
 
   <div id="loading" class="status">Lade state.json …</div>
+  </div><!-- /view-budget -->
 </div>
 
 <script>
@@ -990,42 +1051,168 @@ load();
     return h >= 24 ? `${Math.floor(h / 24)} T ${h % 24} h` : `${h} h ${min} min`;
   }
 
+  // Einstellungen (Sortierung, Details, Ansicht) im Browser merken - rein
+  // komfort; ohne localStorage (privates Fenster) laeuft alles mit Standardwerten.
+  const pref = {
+    get(k, d) { try { const v = localStorage.getItem('cockpit.' + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem('cockpit.' + k, JSON.stringify(v)); } catch (e) { /* egal */ } },
+  };
+
+  // Sortierfelder: Standardrichtung + Wert-Funktion. Erneutes Tippen kehrt die Richtung um.
+  const SORT = {
+    ablauf: { dir: 'asc', label: 'Ablauf', val: (m, s) => endeMs(m) },
+    mw:     { dir: 'desc', label: 'Marktwert', val: (m, s) => s.mv },
+    ap:     { dir: 'desc', label: 'Punkte', val: (m, s) => s.ap },
+    form:   { dir: 'desc', label: 'Form', val: (m, s) => s.form },
+    pl:     { dir: 'desc', label: 'Preis-Leistung', val: (m, s) => s.pl },
+  };
+  let sortKey = SORT[pref.get('sort', 'ablauf')] ? pref.get('sort', 'ablauf') : 'ablauf';
+  let sortDir = pref.get('sortDir', SORT[sortKey].dir);
+  let details = pref.get('details', true);
+  const offeneGruppen = new Set(pref.get('gruppen', ['kickbase', 'manager']));
+
+  function endeMs(m) {
+    return m.ablauf_s ? new Date(D.stand).getTime() + m.ablauf_s * 1000 : null;
+  }
+
+  function vergleich(a, b) {
+    const f = SORT[sortKey].val;
+    let va = f(a.m, a.s), vb = f(b.m, b.s);
+    // Abgelaufene Angebote beim Ablauf-Sortieren nach hinten
+    if (sortKey === 'ablauf') {
+      const jetzt = Date.now();
+      if (va !== null && va <= jetzt) va = null;
+      if (vb !== null && vb <= jetzt) vb = null;
+    }
+    // Fehlende Werte immer ans Ende, unabhaengig von der Richtung
+    if (va === null || va === undefined) return (vb === null || vb === undefined) ? (b.s.mv - a.s.mv) : 1;
+    if (vb === null || vb === undefined) return -1;
+    return sortDir === 'asc' ? va - vb : vb - va;
+  }
+
+  function zeile({ m, s }) {
+    const chips = s.naechste.map(n => {
+      const c = level(team(n.geg).pl, n.fk);
+      return `<span class="chip ${c}" title="${esc(team(n.geg).n)}">${n.h ? '' : '@'}${esc(team(n.geg).sy)}</span>`;
+    }).join('');
+    const formPfeil = s.form === null ? '' : s.form > s.ap * 1.1 ? ' ↑' : s.form < s.ap * 0.9 ? ' ↓' : ' →';
+    const zeit = restzeit(m);
+    // Angebote von Managern: Wunschpreis kann vom Marktwert abweichen -> extra anzeigen
+    const wunsch = m.preis && Math.abs(m.preis - s.mv) > 1 ? ` · will ${mio(m.preis)}` : '';
+    const kurz = zeit ? `<span class="mk-time ${zeit === 'abgelaufen' ? 'dim' : ''}">⏱ ${esc(zeit)}</span>`
+      : `<span class="mk-time">${esc(m.verkaeufer)}${wunsch}</span>`;
+    return `
+      <div class="mk-row" data-id="${esc(s.id)}" role="button" tabindex="0">
+        <span class="pos-badge">${esc(s.pos)}</span>
+        <span class="mk-name">${esc(s.n)} <span class="dd-team">${esc(team(s.tid).sy)}</span></span>
+        <span class="mk-price">${mio(s.mv)}</span>
+        <span class="mk-mini">Ø ${num(s.ap)} · ${kurz}</span>
+        <div class="mk-sub">
+          <span>Form <b>${num(s.form)}${formPfeil}</b></span>
+          <span>Pkt/Mio <b>${num(s.pl, 1)}</b></span>
+          <span class="opp-chips">${chips}</span>
+          ${zeit ? '' : `<span>von <b>${esc(m.verkaeufer)}</b></span>`}
+        </div>
+      </div>`;
+  }
+
+  function gruppe(key, titel, eintraege, hinweis) {
+    if (!eintraege.length) return '';
+    const offen = offeneGruppen.has(key);
+    return `
+      <div class="mk-group ${offen ? 'open' : ''}" data-group="${key}">
+        <button class="mk-group-head" aria-expanded="${offen}">
+          <span class="caret">▸</span><span>${titel}</span><span class="mk-count">${eintraege.length}</span>
+          ${hinweis ? `<span class="mk-hint">${hinweis}</span>` : ''}
+        </button>
+        <div class="market-list">${eintraege.map(zeile).join('')}</div>
+      </div>`;
+  }
+
   function renderMarkt() {
     const liste = document.getElementById('market-list');
-    const eintraege = D.markt.map(m => ({ m, s: byId.get(m.id) })).filter(x => x.s)
-      .sort((a, b) => (b.s.ap || 0) - (a.s.ap || 0));
+    const alle = D.markt.map(m => ({ m, s: byId.get(m.id) })).filter(x => x.s);
     document.getElementById('market-meta').textContent =
-      `${eintraege.length} Spieler · Stand ${new Date(D.stand).toLocaleString('de-DE', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}`;
-    if (!eintraege.length) {
-      liste.innerHTML = '<div class="dd-empty">Aktuell keine Spieler auf dem Transfermarkt.</div>';
+      `Stand ${new Date(D.stand).toLocaleString('de-DE', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}`;
+
+    // Sortier-Knöpfe + Details-Knopf aktualisieren
+    document.querySelectorAll('.mk-sort .sort-btn').forEach(b => {
+      const aktiv = b.dataset.sort === sortKey;
+      b.classList.toggle('active', aktiv);
+      b.innerHTML = SORT[b.dataset.sort].label + (aktiv ? ` <span class="sort-arrow">${sortDir === 'asc' ? '▲' : '▼'}</span>` : '');
+      b.setAttribute('aria-pressed', aktiv);
+    });
+    const db = document.getElementById('details-btn');
+    db.textContent = details ? 'Details ausblenden' : 'Details einblenden';
+    db.setAttribute('aria-pressed', details);
+    liste.classList.toggle('compact', !details);
+
+    if (!alle.length) {
+      liste.innerHTML = '<div class="dd-empty market-list">Aktuell keine Spieler auf dem Transfermarkt.</div>';
       return;
     }
-    liste.innerHTML = eintraege.map(({ m, s }) => {
-      const chips = s.naechste.map(n => {
-        const c = level(team(n.geg).pl, n.fk);
-        return `<span class="chip ${c}" title="${esc(team(n.geg).n)}">${n.h ? '' : '@'}${esc(team(n.geg).sy)}</span>`;
-      }).join('');
-      const formPfeil = s.form === null ? '' : s.form > s.ap * 1.1 ? ' ↑' : s.form < s.ap * 0.9 ? ' ↓' : ' →';
-      const zeit = restzeit(m);
-      return `
-        <div class="mk-row" data-id="${esc(s.id)}" role="button" tabindex="0">
-          <span class="pos-badge">${esc(s.pos)}</span>
-          <span class="mk-name">${esc(s.n)} <span class="dd-team">${esc(team(s.tid).sy)}</span></span>
-          <span class="mk-price">${mio(m.preis)}</span>
-          <div class="mk-sub">
-            <span>Ø <b>${num(s.ap)}</b></span>
-            <span>Form <b>${num(s.form)}${formPfeil}</b></span>
-            <span>Pkt/Mio <b>${num(s.pl, 1)}</b></span>
-            <span class="opp-chips">${chips}</span>
-            ${zeit ? `<span>⏱ ${esc(zeit)}</span>` : ''}
-          </div>
-        </div>`;
-    }).join('');
-    liste.querySelectorAll('.mk-row').forEach(row => {
-      row.addEventListener('click', () => oeffne(row.dataset.id));
-      row.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); oeffne(row.dataset.id); } });
-    });
+    // Kickbase-Angebote zuerst, Angebote anderer Manager immer ganz am Ende
+    const kickbase = alle.filter(x => x.m.verkaeufer === 'Kickbase').sort(vergleich);
+    const manager = alle.filter(x => x.m.verkaeufer !== 'Kickbase').sort(vergleich);
+    liste.innerHTML =
+      gruppe('kickbase', 'Von Kickbase', kickbase, '') +
+      gruppe('manager', 'Von Managern', manager, sortKey === 'ablauf' ? 'kein Ablauf · nach Marktwert' : '');
   }
+
+  // Ereignisse einmalig per Delegation (Liste wird bei jedem Sortieren neu gebaut)
+  const marktListe = document.getElementById('market-list');
+  marktListe.addEventListener('click', e => {
+    const kopf = e.target.closest('.mk-group-head');
+    if (kopf) {
+      const g = kopf.parentElement, key = g.dataset.group;
+      const offen = !g.classList.contains('open');
+      g.classList.toggle('open', offen);
+      kopf.setAttribute('aria-expanded', offen);
+      offen ? offeneGruppen.add(key) : offeneGruppen.delete(key);
+      pref.set('gruppen', [...offeneGruppen]);
+      return;
+    }
+    const row = e.target.closest('.mk-row');
+    if (row) oeffne(row.dataset.id);
+  });
+  marktListe.addEventListener('keydown', e => {
+    const row = e.target.closest('.mk-row');
+    if (row && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); oeffne(row.dataset.id); }
+  });
+  document.querySelectorAll('.mk-sort .sort-btn').forEach(b => b.addEventListener('click', () => {
+    const k = b.dataset.sort;
+    if (k === sortKey) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+    else { sortKey = k; sortDir = SORT[k].dir; }
+    pref.set('sort', sortKey); pref.set('sortDir', sortDir);
+    renderMarkt();
+  }));
+  document.getElementById('details-btn').addEventListener('click', () => {
+    details = !details;
+    pref.set('details', details);
+    renderMarkt();
+  });
+
+  // ---------------- Ansicht: Transfermarkt <-> Budgets ----------------
+  function zeigeAnsicht(view) {
+    const markt = view === 'markt';
+    document.getElementById('view-markt').hidden = !markt;
+    document.getElementById('view-budget').hidden = markt;
+    document.querySelectorAll('.vs-btn').forEach(b => {
+      const aktiv = b.dataset.view === view;
+      b.classList.toggle('active', aktiv);
+      b.setAttribute('aria-selected', aktiv);
+    });
+    pref.set('ansicht', view);
+  }
+  function wechsleAnsicht(view) {
+    zeigeAnsicht(view);
+    // nach oben springen, aber nur so weit, dass die Suchleiste oben klebt
+    // (offsetTop der klebenden Leiste ist beim Scrollen verfaelscht -> Unterkante des Headers nehmen)
+    const h = document.querySelector('header');
+    const top = h.offsetTop + h.offsetHeight + parseFloat(getComputedStyle(h).marginBottom || 0) - 8;
+    if (window.scrollY > top) window.scrollTo({ top, behavior: 'instant' });
+  }
+  document.querySelectorAll('.vs-btn').forEach(b => b.addEventListener('click', () => wechsleAnsicht(b.dataset.view)));
 
   // ---------------- Popup ----------------
   const modal = document.getElementById('modal');
@@ -1208,8 +1395,9 @@ load();
       D = daten;
       byId = new Map(D.spieler.map(s => [s.id, s]));
       marktById = new Map(D.markt.map(m => [m.id, m]));
-      document.getElementById('players').hidden = false;
+      document.getElementById('topbar').hidden = false;
       renderMarkt();
+      zeigeAnsicht(pref.get('ansicht', 'markt') === 'budget' ? 'budget' : 'markt');
     })
     .catch(() => { /* spieler_daten.json fehlt noch -> Bereich bleibt ausgeblendet */ });
 })();
