@@ -392,6 +392,188 @@
     padding: 40px 0;
     text-align: center;
   }
+
+  /* ---------- Spieler-Analyse: Suche, Transfermarkt, Popup ---------- */
+  :root { --good: #8fc98a; --bad: #e8836b; --mid: var(--gold-bright); }
+
+  .players { margin-bottom: 32px; }
+  .players[hidden] { display: none; }
+  .search-wrap { position: relative; margin-bottom: 22px; }
+  .search-wrap input {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--chalk);
+    font-family: 'Inter', sans-serif;
+    font-size: 16px; /* >=16px verhindert Auto-Zoom auf iOS */
+    padding: 12px 18px 12px 42px;
+  }
+  .search-wrap input:focus { outline: none; border-color: var(--gold); }
+  .search-wrap::before {
+    content: '';
+    position: absolute; left: 17px; top: 50%;
+    width: 11px; height: 11px;
+    border: 2px solid var(--chalk-dim); border-radius: 50%;
+    transform: translateY(-62%);
+    pointer-events: none;
+  }
+  .search-wrap::after {
+    content: '';
+    position: absolute; left: 28px; top: 56%;
+    width: 2px; height: 7px; background: var(--chalk-dim);
+    transform: rotate(-45deg);
+    pointer-events: none;
+  }
+  .dropdown {
+    position: absolute; left: 0; right: 0; top: calc(100% + 6px);
+    background: #0d3527;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    max-height: 60vh; overflow-y: auto;
+    z-index: 20;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.45);
+    display: none;
+  }
+  .dropdown.open { display: block; }
+  .dd-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .dd-item:last-child { border-bottom: none; }
+  .dd-item:hover, .dd-item.active { background: rgba(217,164,65,0.12); }
+  .dd-item .dd-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .dd-item .dd-team { color: var(--chalk-dim); font-size: 12px; margin-left: 4px; }
+  .dd-item .dd-val { font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--chalk-dim); text-align: right; }
+  .dd-empty { padding: 14px; color: var(--chalk-dim); font-size: 13px; }
+
+  .section-title {
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 13px;
+    color: var(--chalk-dim);
+    margin: 0 0 10px;
+    display: flex; justify-content: space-between; align-items: baseline; gap: 8px;
+  }
+  #market-meta { font-family: 'IBM Plex Mono', monospace; text-transform: none; letter-spacing: 0; font-size: 11.5px; text-align: right; }
+  .market-list { border: 1px solid var(--line); border-radius: 4px; background: var(--card); }
+  .mk-row {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+    gap: 4px 12px;
+    align-items: center;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+  }
+  .mk-row:last-child { border-bottom: none; }
+  .mk-row:hover { background: rgba(255,255,255,0.03); }
+  .mk-name { font-weight: 600; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mk-sub { grid-column: 2 / 4; display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--chalk-dim); }
+  .mk-sub b { color: var(--chalk); font-weight: 600; font-family: 'IBM Plex Mono', monospace; }
+  .mk-price { font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: var(--gold-bright); text-align: right; white-space: nowrap; }
+  .opp-chips { display: inline-flex; gap: 4px; }
+  .chip {
+    font-family: 'Oswald', sans-serif; font-size: 10.5px; font-weight: 600; letter-spacing: 0.03em;
+    padding: 1px 6px; border-radius: 3px; border: 1px solid currentColor;
+  }
+  .lv-good { color: var(--good); }
+  .lv-mid { color: var(--mid); }
+  .lv-bad { color: var(--bad); }
+
+  /* Popup: Bottom-Sheet auf dem Handy, zentriert ab Tablet */
+  body.modal-open { overflow: hidden; }
+  .modal { position: fixed; inset: 0; z-index: 100; display: none; }
+  .modal.open { display: block; }
+  .modal-backdrop {
+    position: absolute; inset: 0;
+    background: rgba(2, 12, 8, 0.72);
+    backdrop-filter: blur(2px);
+    animation: fade 0.15s ease;
+  }
+  .sheet {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    max-height: 90vh; overflow-y: auto; overscroll-behavior: contain;
+    background: linear-gradient(180deg, #0e3a2a 0%, var(--pitch-deep) 100%);
+    border: 1px solid var(--line); border-bottom: none;
+    border-radius: 16px 16px 0 0;
+    padding: 10px 18px calc(28px + env(safe-area-inset-bottom));
+    animation: slide 0.2s ease;
+  }
+  .sheet-grip { width: 40px; height: 4px; border-radius: 2px; background: var(--line); margin: 0 auto 10px; }
+  @media (min-width: 700px) {
+    .sheet {
+      left: 50%; right: auto; top: 50%; bottom: auto;
+      width: min(640px, 92vw); max-height: 86vh;
+      transform: translate(-50%, -50%);
+      border-radius: 10px; border-bottom: 1px solid var(--line);
+      padding: 22px 26px 26px;
+      animation: fade 0.15s ease;
+    }
+    .sheet-grip { display: none; }
+  }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes slide { from { transform: translateY(40px); opacity: 0.4; } to { transform: none; opacity: 1; } }
+
+  .sheet-head { display: flex; align-items: flex-start; gap: 12px; position: sticky; top: -10px; z-index: 2; padding: 4px 0 12px; background: #0e3a2a; }
+  .sheet-title { flex: 1; min-width: 0; }
+  .sheet-title h2 { font-family: 'Oswald', sans-serif; font-size: 24px; margin: 0; letter-spacing: 0.02em; line-height: 1.15; }
+  .sheet-title .sub { color: var(--chalk-dim); font-size: 13px; margin-top: 3px; }
+  .close-btn {
+    flex-shrink: 0; width: 38px; height: 38px; border-radius: 50%;
+    border: 1px solid var(--line); background: rgba(255,255,255,0.06);
+    color: var(--chalk); font-size: 22px; line-height: 1; cursor: pointer;
+  }
+  .close-btn:hover { border-color: var(--gold); }
+  .status-chip { display: inline-block; margin-top: 6px; font-size: 12px; padding: 3px 9px; border-radius: 999px; background: rgba(232,131,107,0.15); color: var(--bad); }
+
+  .blk { border-top: 1px solid var(--line); padding: 16px 0 4px; }
+  .blk h3 {
+    font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 0.06em;
+    font-size: 12.5px; color: var(--gold-bright); margin: 0 0 12px; font-weight: 600;
+  }
+  .kgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); gap: 14px 12px; }
+  .kgrid .stat-value { font-size: 17px; }
+  .kgrid .hint { font-size: 11.5px; color: var(--chalk-dim); margin-top: 2px; }
+  .summary { font-size: 13px; color: var(--chalk-dim); margin: 10px 0 0; line-height: 1.5; }
+  .summary b { color: var(--chalk); }
+
+  .gtable { width: 100%; border-collapse: collapse; }
+  .gtable td { padding: 7px 4px; font-size: 13px; font-family: 'IBM Plex Mono', monospace; text-align: left; white-space: nowrap; border-top: 1px solid var(--line); }
+  .gtable tr:first-child td { border-top: none; }
+  .gtable td.num { text-align: right; }
+  .gtable .opp { font-family: 'Inter', sans-serif; }
+  .gtable .dim { color: var(--chalk-dim); }
+  .bar-cell { width: 34%; }
+  .pbar { height: 8px; border-radius: 4px; background: var(--good); min-width: 2px; }
+  .pbar.neg { background: var(--bad); }
+
+  .next-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+  .next-card { border: 1px solid var(--line); border-radius: 6px; padding: 11px 12px; background: var(--card); }
+  .next-card .nc-top { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--chalk-dim); }
+  .next-card .nc-opp { font-family: 'Oswald', sans-serif; font-size: 18px; margin: 4px 0 6px; }
+  .next-card .nc-row { display: flex; justify-content: space-between; font-size: 12.5px; padding: 2px 0; }
+  .next-card .nc-row span:last-child { font-family: 'IBM Plex Mono', monospace; }
+
+  .stack { display: flex; height: 14px; border-radius: 7px; overflow: hidden; background: rgba(255,255,255,0.06); margin: 4px 0 10px; }
+  .stack div { height: 100%; }
+  .c-scorer { background: var(--gold-bright); }
+  .c-team { background: #6fb7a0; }
+  .c-aktion { background: #9fb3c8; }
+  .legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; font-size: 12.5px; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+  .legend b { font-family: 'IBM Plex Mono', monospace; }
+
+  .dim { color: var(--chalk-dim); }
+  .bidders { display: grid; gap: 6px; }
+  .bidder { display: flex; justify-content: space-between; font-size: 13px; padding: 6px 10px; border-radius: 4px; background: var(--card); }
+  .bidder span:last-child { font-family: 'IBM Plex Mono', monospace; }
+  .bidder.no { opacity: 0.45; }
+  .bidder.me { outline: 1px solid var(--gold); }
 </style>
 </head>
 <body>
@@ -400,6 +582,16 @@
     <h1>Liga<span>·</span>Cockpit</h1>
     <div class="meta" id="meta">lädt …</div>
   </header>
+
+  <section class="players" id="players" hidden>
+    <div class="search-wrap">
+      <input type="search" id="player-search" placeholder="Spieler suchen …" autocomplete="off"
+             autocorrect="off" spellcheck="false" aria-label="Spieler suchen" aria-controls="search-results">
+      <div class="dropdown" id="search-results" role="listbox"></div>
+    </div>
+    <div class="section-title"><span>Transfermarkt</span><span id="market-meta"></span></div>
+    <div class="market-list" id="market-list"></div>
+  </section>
 
   <div class="tabs" id="tabs"></div>
 
@@ -697,6 +889,330 @@ async function load() {
 }
 
 load();
+</script>
+
+<div class="modal" id="modal" aria-hidden="true">
+  <div class="modal-backdrop" id="modal-backdrop"></div>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-name" id="sheet"></div>
+</div>
+
+<script>
+/* =====================================================================
+   Spieler-Analyse: Suche, Transfermarkt-Liste und Spieler-Popup.
+   Daten kommen aus spieler_daten.json (erzeugt von spieler_analyse.py).
+   ===================================================================== */
+(() => {
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const num = (n, d = 0) => (n === null || n === undefined || Number.isNaN(n)) ? '–'
+    : new Intl.NumberFormat('de-DE', { minimumFractionDigits: d, maximumFractionDigits: d }).format(n);
+  const mio = n => n ? num(n / 1e6, 1) + ' Mio' : '–';
+  const euro = n => n === null || n === undefined ? '–' : num(n) + ' €';
+  const signed = (n, f = num) => (n > 0 ? '+' : '') + f(n);
+
+  let D = null;            // komplette Datei
+  let byId = new Map();    // Spieler-ID -> Spieler
+  let marktById = new Map();
+
+  const team = tid => (D.teams[tid] || { n: '?', sy: '?', pl: null });
+
+  // Schwierigkeit eines Gegners: Tabellenplatz, korrigiert um den Gegner-Faktor
+  // (wie viele Punkte er Spielern dieser Position zugesteht).
+  function level(platz, faktor) {
+    if (!platz) return 'lv-mid';
+    let score = platz;                                   // 1 = schwer, 18 = leicht
+    if (faktor) score += (faktor - 1) * 20;              // +10 % Faktor ~ 2 Plätze leichter
+    return score <= 6 ? 'lv-bad' : score <= 12 ? 'lv-mid' : 'lv-good';
+  }
+  const levelText = c => ({ 'lv-bad': 'schwer', 'lv-mid': 'mittel', 'lv-good': 'leicht' }[c]);
+
+  // ---------------- Suche ----------------
+  const input = document.getElementById('player-search');
+  const dd = document.getElementById('search-results');
+  let treffer = [], aktiv = -1;
+  const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+
+  function suche() {
+    const q = norm(input.value.trim());
+    if (!q) { dd.classList.remove('open'); return; }
+    treffer = D.spieler
+      .filter(s => norm(s.n + ' ' + s.vn + ' ' + team(s.tid).n + ' ' + team(s.tid).sy).includes(q))
+      .sort((a, b) => {
+        const an = norm(a.n).startsWith(q) ? 0 : 1, bn = norm(b.n).startsWith(q) ? 0 : 1;
+        return an - bn || b.mv - a.mv;
+      })
+      .slice(0, 15);
+    aktiv = -1;
+    dd.innerHTML = treffer.length ? treffer.map((s, i) => `
+      <div class="dd-item" role="option" data-i="${i}">
+        <span class="pos-badge">${esc(s.pos)}</span>
+        <span class="dd-name">${esc(s.n)}<span class="dd-team">${esc(team(s.tid).sy)}</span>${marktById.has(s.id) ? ' <span class="chip lv-mid">Markt</span>' : ''}</span>
+        <span class="dd-val">Ø ${num(s.ap)}<br>${mio(s.mv)}</span>
+      </div>`).join('') : '<div class="dd-empty">Kein Spieler gefunden</div>';
+    dd.classList.add('open');
+  }
+  function waehle(i) {
+    const s = treffer[i];
+    if (!s) return;
+    dd.classList.remove('open');
+    input.blur();
+    oeffne(s.id);
+  }
+  input.addEventListener('input', suche);
+  input.addEventListener('focus', suche);
+  input.addEventListener('keydown', e => {
+    const items = dd.querySelectorAll('.dd-item');
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      aktiv = Math.max(0, Math.min(items.length - 1, aktiv + (e.key === 'ArrowDown' ? 1 : -1)));
+      items.forEach((el, i) => el.classList.toggle('active', i === aktiv));
+      items[aktiv]?.scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'Enter') {
+      waehle(aktiv >= 0 ? aktiv : 0);
+    } else if (e.key === 'Escape') {
+      dd.classList.remove('open');
+    }
+  });
+  dd.addEventListener('click', e => {
+    const item = e.target.closest('.dd-item');
+    if (item) waehle(+item.dataset.i);
+  });
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.search-wrap')) dd.classList.remove('open');
+  });
+
+  // ---------------- Transfermarkt-Liste ----------------
+  function restzeit(m) {
+    if (!m.ablauf_s) return null;
+    const ende = new Date(D.stand).getTime() + m.ablauf_s * 1000;
+    const sek = Math.round((ende - Date.now()) / 1000);
+    if (sek <= 0) return 'abgelaufen';
+    const h = Math.floor(sek / 3600), min = Math.floor((sek % 3600) / 60);
+    return h >= 24 ? `${Math.floor(h / 24)} T ${h % 24} h` : `${h} h ${min} min`;
+  }
+
+  function renderMarkt() {
+    const liste = document.getElementById('market-list');
+    const eintraege = D.markt.map(m => ({ m, s: byId.get(m.id) })).filter(x => x.s)
+      .sort((a, b) => (b.s.ap || 0) - (a.s.ap || 0));
+    document.getElementById('market-meta').textContent =
+      `${eintraege.length} Spieler · Stand ${new Date(D.stand).toLocaleString('de-DE', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}`;
+    if (!eintraege.length) {
+      liste.innerHTML = '<div class="dd-empty">Aktuell keine Spieler auf dem Transfermarkt.</div>';
+      return;
+    }
+    liste.innerHTML = eintraege.map(({ m, s }) => {
+      const chips = s.naechste.map(n => {
+        const c = level(team(n.geg).pl, n.fk);
+        return `<span class="chip ${c}" title="${esc(team(n.geg).n)}">${n.h ? '' : '@'}${esc(team(n.geg).sy)}</span>`;
+      }).join('');
+      const formPfeil = s.form === null ? '' : s.form > s.ap * 1.1 ? ' ↑' : s.form < s.ap * 0.9 ? ' ↓' : ' →';
+      const zeit = restzeit(m);
+      return `
+        <div class="mk-row" data-id="${esc(s.id)}" role="button" tabindex="0">
+          <span class="pos-badge">${esc(s.pos)}</span>
+          <span class="mk-name">${esc(s.n)} <span class="dd-team">${esc(team(s.tid).sy)}</span></span>
+          <span class="mk-price">${mio(m.preis)}</span>
+          <div class="mk-sub">
+            <span>Ø <b>${num(s.ap)}</b></span>
+            <span>Form <b>${num(s.form)}${formPfeil}</b></span>
+            <span>Pkt/Mio <b>${num(s.pl, 1)}</b></span>
+            <span class="opp-chips">${chips}</span>
+            ${zeit ? `<span>⏱ ${esc(zeit)}</span>` : ''}
+          </div>
+        </div>`;
+    }).join('');
+    liste.querySelectorAll('.mk-row').forEach(row => {
+      row.addEventListener('click', () => oeffne(row.dataset.id));
+      row.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); oeffne(row.dataset.id); } });
+    });
+  }
+
+  // ---------------- Popup ----------------
+  const modal = document.getElementById('modal');
+  const sheet = document.getElementById('sheet');
+  let offen = false;
+
+  function kennzahl(label, wert, hint = '') {
+    return `<div><div class="stat-label">${label}</div><div class="stat-value">${wert}</div>${hint ? `<div class="hint">${hint}</div>` : ''}</div>`;
+  }
+
+  function blockMarkt(s, m) {
+    const mgr = D.manager || [];
+    const rows = mgr.map(x => {
+      const kann = x.max !== null && x.max >= m.preis;
+      return `<div class="bidder ${kann ? '' : 'no'} ${x.ich ? 'me' : ''}">
+        <span>${esc(x.n)}${x.ich ? ' (du)' : ''}</span><span>${mio(x.max)}</span></div>`;
+    }).join('');
+    const anzahl = mgr.filter(x => x.max !== null && x.max >= m.preis).length;
+    const zeit = restzeit(m);
+    return `<div class="blk"><h3>Auf dem Transfermarkt</h3>
+      <div class="kgrid">
+        ${kennzahl('Preis', mio(m.preis))}
+        ${kennzahl('Ablauf', esc(zeit || '–'))}
+        ${kennzahl('Verkäufer', esc(m.verkaeufer || '–'))}
+        ${m.gebote !== null && m.gebote !== undefined ? kennzahl('Gebote', num(m.gebote)) : ''}
+      </div>
+      <p class="summary"><b>${anzahl} von ${mgr.length}</b> Managern können laut Tracker mindestens den Preis bieten (Max-Gebot):</p>
+      <div class="bidders" style="margin-top:8px">${rows}</div></div>`;
+  }
+
+  function blockKennzahlen(s) {
+    const formHint = s.form === null ? '' : s.form > s.ap * 1.1 ? '↑ besser als Ø' : s.form < s.ap * 0.9 ? '↓ schwächer als Ø' : '→ wie Ø';
+    const konstanz = s.streuung === null ? '–' : `± ${num(s.streuung)}`;
+    return `<div class="blk"><h3>Kennzahlen</h3><div class="kgrid">
+      ${kennzahl('Ø Punkte', num(s.ap), `${num(s.tp)} gesamt`)}
+      ${kennzahl('Form (letzte 3)', num(s.form), formHint)}
+      ${kennzahl('Punkte / 90 Min', num(s.p90), 'pro voller Spielzeit')}
+      ${kennzahl('Einsätze', `${num(s.einsaetze)} / ${num(s.team_spiele)}`, `Startelf-Quote ${s.startquote === null ? '–' : num(s.startquote) + ' %'}`)}
+      ${kennzahl('Ø Minuten', num(s.min_schnitt), `${num(s.min)} Min gesamt`)}
+      ${kennzahl('Preis-Leistung', num(s.pl, 1) + ' Pkt/Mio', s.pl_rang === undefined ? '' : `besser als ${num(s.pl_rang)} % (${esc(s.pos)})`)}
+      ${kennzahl('Konstanz', konstanz, s.min_p === null ? '' : `min ${num(s.min_p)} · max ${num(s.max_p)}`)}
+      ${kennzahl('Spiele ≥ 100 Pkt', s.ueber100 === null ? '–' : num(s.ueber100) + ' %')}
+      ${kennzahl('Tore / Vorlagen', `${num(s.g)} / ${num(s.a)}`)}
+      ${kennzahl('Marktwert', mio(s.mv), s.mvd ? `<span class="${s.mvd > 0 ? 'mw-up' : 'mw-down'}">${signed(s.mvd, euro)} zuletzt</span>` : '')}
+    </div></div>`;
+  }
+
+  function blockVergangen(s) {
+    if (!s.spiele.length) return `<div class="blk"><h3>Bisherige Spiele</h3><p class="summary">Noch keine Spiele in dieser Saison.</p></div>`;
+    const max = Math.max(50, ...s.spiele.map(x => Math.abs(x.p)));
+    const rows = s.spiele.slice().reverse().map(x => {
+      const t = team(x.geg);
+      const breite = Math.round(100 * Math.abs(x.p) / max);
+      return `<tr>
+        <td class="dim">ST ${num(x.tag)}</td>
+        <td class="opp">${x.h ? 'vs' : '@'} ${esc(t.sy)} <span class="dim">(${t.pl ?? '–'}.)</span></td>
+        <td class="dim">${esc(x.erg || '')}</td>
+        <td class="num dim">${x.min ? x.min + "'" : '–'}</td>
+        <td class="num">${x.min ? num(x.p) : '<span class="dim">–</span>'}</td>
+        <td class="bar-cell">${x.min ? `<div class="pbar ${x.p < 0 ? 'neg' : ''}" style="width:${breite}%"></div>` : ''}</td>
+      </tr>`;
+    }).join('');
+    const vergleich = (s.vs_oben !== null || s.vs_unten !== null)
+      ? `<p class="summary">Ø gegen Top-Hälfte (Platz 1–9): <b>${num(s.vs_oben)}</b> · gegen Platz 10–18: <b>${num(s.vs_unten)}</b>
+         <br><span>Tabellenplätze = aktueller Stand der Gegner.</span></p>` : '';
+    return `<div class="blk"><h3>Bisherige Spiele</h3><table class="gtable"><tbody>${rows}</tbody></table>${vergleich}</div>`;
+  }
+
+  function blockNaechste(s) {
+    if (!s.naechste.length) return '';
+    const karten = s.naechste.map(n => {
+      const t = team(n.geg);
+      const c = level(t.pl, n.fk);
+      const datum = n.dt ? new Date(n.dt).toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' }) : '';
+      const fk = n.fk ? signed(Math.round((n.fk - 1) * 100)) + ' %' : '–';
+      return `<div class="next-card">
+        <div class="nc-top"><span>ST ${num(n.tag)} · ${esc(datum)}</span><span class="${c}">${levelText(c)}</span></div>
+        <div class="nc-opp">${n.h ? 'vs' : '@'} ${esc(t.n)}</div>
+        <div class="nc-row"><span>Tabellenplatz</span><span>${t.pl ?? '–'}.</span></div>
+        <div class="nc-row"><span>Gegentore / Spiel</span><span>${num(t.ggt_schnitt, 1)}</span></div>
+        <div class="nc-row"><span>Punkte für ${esc(s.pos)}</span><span class="${n.fk > 1.05 ? 'lv-good' : n.fk < 0.95 ? 'lv-bad' : ''}">${fk}</span></div>
+        ${n.sieg !== null && n.sieg !== undefined ? `<div class="nc-row"><span>Siegchance</span><span>${num(n.sieg)} %</span></div>` : ''}
+      </div>`;
+    }).join('');
+    const fazit = s.naechste_pl === null ? '' : (() => {
+      const c = level(s.naechste_pl, s.naechste_fk);
+      return `<p class="summary">Ø Tabellenplatz der nächsten ${s.naechste.length} Gegner: <b>${num(s.naechste_pl, 1)}</b>
+        · Programm: <b class="${c}">${levelText(c)}</b>
+        ${s.naechste_fk ? `· Gegner lassen gegen ${esc(s.pos)} im Schnitt <b>${signed(Math.round((s.naechste_fk - 1) * 100))} %</b> Punkte zu` : ''}</p>`;
+    })();
+    return `<div class="blk"><h3>Nächste ${s.naechste.length} Gegner</h3><div class="next-grid">${karten}</div>${fazit}
+      <p class="summary">„Punkte für ${esc(s.pos)}“: wie viele Kickbase-Punkte Spieler dieser Position gegen den Gegner im Vergleich zum Liga-Schnitt holen.</p></div>`;
+  }
+
+  function blockHerkunft(s) {
+    const h = s.herkunft;
+    if (!h) {
+      return `<div class="blk"><h3>Punkte-Herkunft</h3><p class="summary">Wird für Spieler auf dem Transfermarkt berechnet
+        (braucht pro Spiel eine eigene Abfrage).</p></div>`;
+    }
+    const gesamt = h.scorer + h.team + h.aktion;
+    const basis = Math.max(1, Math.abs(h.scorer) + Math.abs(h.team) + Math.abs(h.aktion));
+    const pct = x => Math.max(0, Math.round(100 * x / basis));
+    const grund = h.team + h.aktion;
+    const anteilGrund = gesamt > 0 ? Math.round(100 * grund / gesamt) : null;
+    const urteil = anteilGrund === null ? '' : anteilGrund >= 75 ? 'sehr verlässlich – lebt kaum von Toren/Vorlagen'
+      : anteilGrund >= 60 ? 'verlässlich – solide Grundpunkte' : 'scorer-abhängig – schwankt mit Toren/Vorlagen';
+    const proSpiel = n => s.herkunft.spiele.length ? num(n / s.herkunft.spiele.length) : '–';
+    return `<div class="blk"><h3>Punkte-Herkunft</h3>
+      <div class="stack" title="Scorer / Team-Bonus / Spielaktionen">
+        <div class="c-scorer" style="width:${pct(h.scorer)}%"></div>
+        <div class="c-team" style="width:${pct(h.team)}%"></div>
+        <div class="c-aktion" style="width:${pct(h.aktion)}%"></div>
+      </div>
+      <div class="legend">
+        <span><i class="c-scorer"></i>Scorer: <b>${num(h.scorer)}</b> <span class="dim">(Ø ${proSpiel(h.scorer)})</span></span>
+        <span><i class="c-team"></i>Team-Bonus: <b>${num(h.team)}</b> <span class="dim">(Ø ${proSpiel(h.team)})</span></span>
+        <span><i class="c-aktion"></i>Spielaktionen: <b>${num(h.aktion)}</b> <span class="dim">(Ø ${proSpiel(h.aktion)})</span></span>
+      </div>
+      ${anteilGrund === null ? '' : `<p class="summary"><b>${anteilGrund} %</b> Grundpunkte (Team-Bonus + Spielaktionen) → <b>${urteil}</b>.</p>`}
+      <p class="summary">Scorer = Tore, Vorlagen, Elfmeter. Team-Bonus = Startelf, Spielminuten, Sieg/Niederlage, Zu-Null, Team-Tore/Gegentore.
+      Spielaktionen = Pässe, Zweikämpfe, Schüsse, Paraden, Fehler usw.</p></div>`;
+  }
+
+  function render(s) {
+    const t = team(s.tid);
+    const m = marktById.get(s.id);
+    const verletzt = s.stxt || (s.st && s.st !== 0);
+    sheet.innerHTML = `
+      <div class="sheet-grip"></div>
+      <div class="sheet-head">
+        <span class="pos-badge" style="margin-top:6px">${esc(s.pos)}</span>
+        <div class="sheet-title">
+          <h2 id="sheet-name">${esc(s.vn ? s.vn + ' ' : '')}${esc(s.n)}</h2>
+          <div class="sub">${esc(t.n)} · ${t.pl ?? '–'}. Platz · ${mio(s.mv)}</div>
+          ${verletzt ? `<span class="status-chip">${esc(s.stxt || 'Status: nicht fit / fraglich')}</span>` : ''}
+        </div>
+        <button class="close-btn" id="close-btn" aria-label="Schließen">×</button>
+      </div>
+      ${m ? blockMarkt(s, m) : ''}
+      ${blockKennzahlen(s)}
+      ${blockVergangen(s)}
+      ${blockNaechste(s)}
+      ${blockHerkunft(s)}`;
+    sheet.querySelector('#close-btn').addEventListener('click', schliesse);
+    sheet.scrollTop = 0;
+  }
+
+  function oeffne(id) {
+    const s = byId.get(id);
+    if (!s) return;
+    render(s);
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-open');
+    if (!offen) history.pushState({ spielerPopup: true }, '');  // "Zurück" auf dem Handy schließt das Popup
+    offen = true;
+    sheet.querySelector('#close-btn').focus({ preventScroll: true });
+  }
+
+  function schliesseUI() {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('modal-open');
+    offen = false;
+  }
+  function schliesse() {
+    if (!offen) return;
+    if (history.state && history.state.spielerPopup) history.back();  // löst popstate -> schliesseUI aus
+    else schliesseUI();
+  }
+  window.addEventListener('popstate', () => { if (offen) schliesseUI(); });
+  document.getElementById('modal-backdrop').addEventListener('click', schliesse);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && offen) schliesse(); });
+
+  // ---------------- Laden ----------------
+  fetch('./spieler_daten.json?t=' + Date.now(), { cache: 'no-store' })
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(daten => {
+      D = daten;
+      byId = new Map(D.spieler.map(s => [s.id, s]));
+      marktById = new Map(D.markt.map(m => [m.id, m]));
+      document.getElementById('players').hidden = false;
+      renderMarkt();
+    })
+    .catch(() => { /* spieler_daten.json fehlt noch -> Bereich bleibt ausgeblendet */ });
+})();
 </script>
 </body>
 </html>

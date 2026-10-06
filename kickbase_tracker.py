@@ -65,6 +65,23 @@ STARTBUDGETS = {
 }
 DEFAULT_START_BUDGET = 50_000_000
 
+# Korrigierte Startbudgets fuer die LAUFENDE Saison (nach dem Reset).
+# Diese Werte ueberschreiben das beim Reset geschaetzte start_budget in state.json.
+# Die komplette Budget-Kette wird danach automatisch neu berechnet.
+# Ermittelt aus dem Abgleich mit dem echten App-Budget am 06.10.2026:
+#   Duy Tam:     Tracker -45.212.629 / App -40.259.629 -> +4.953.000
+#   Dragontrieu: Tracker -49.116.123 / App -45.716.123 -> +3.400.000
+# NACH DEM NAECHSTEN SAISON-RESET LEEREN!
+START_BUDGET_OVERRIDES = {
+    "3310917": 54_953_000,   # Duy Tam
+    "3458038": 53_400_000,   # Dragontrieu
+}
+
+# Deine eigene Manager-ID. Fuer dich liefert die API das ECHTE Budget
+# (/me/budget) - der Tracker vergleicht es jeden Lauf mit seiner Berechnung
+# und schreibt das Ergebnis als "budget_abgleich" in state.json.
+EIGENE_MANAGER_ID = "3310917"   # Duy Tam
+
 # Ziel-Kaderwert fuer den Reset: liegt der zufaellig ausgeloste Startkader
 # darunter, wird der Fehlbetrag automatisch aufs Startbudget draufgelegt.
 SQUAD_TARGET = 100_000_000
@@ -147,6 +164,19 @@ def get_managers(league_id: str, headers: dict) -> list[dict]:
     return managers
 
 
+def get_eigenes_budget(league_id: str, headers: dict) -> float | None:
+    """Echtes Budget des eingeloggten Users (GET /v4/leagues/{id}/me/budget -> "b").
+    Gibt None zurueck, falls der Abruf scheitert - der Tracker laeuft dann normal weiter."""
+    try:
+        url = f"https://api.kickbase.com/v4/leagues/{league_id}/me/budget"
+        r = requests.get(url, headers=headers, timeout=20)
+        r.raise_for_status()
+        return float(r.json()["b"])
+    except Exception as e:  # noqa: BLE001 - reiner Zusatz-Check, darf nie den Lauf abbrechen
+        print(f"Hinweis: eigenes Budget (/me/budget) nicht abrufbar: {e}")
+        return None
+
+
 def kickbase_day(dt: pd.Timestamp):
     """Ordnet einen Zeitstempel dem Kickbase-Tag zu (Grenze 22:04 Uhr)."""
     if dt.time() < pd.Timestamp("22:04").time():
@@ -190,8 +220,33 @@ def save_transfers_store(store: dict) -> None:
 
 
 def _transfer_key(t: dict) -> str:
-    """Eindeutiger Schlüssel pro Transfer, um Duplikate beim Mergen zu erkennen."""
-    return f"{t['dt']}|{t['pn']}|{t['trp']}|{t['tty']}"
+    """Eindeutiger Schlüssel pro Transfer, um Duplikate beim Mergen zu erkennen.
+
+    Bewusst OHNE Spielername: Kickbase aendert manchmal die Schreibweise
+    (z.B. "Maksimovic" -> "Maksimović", "Guiu" -> "Marc Guiu"). Mit Namen im
+    Schluessel wurde derselbe Transfer dann ein zweites Mal archiviert.
+    Zeitstempel (sekundengenau) + Preis + Typ ist pro Manager eindeutig genug."""
+    return f"{t['dt']}|{t['trp']}|{t['tty']}"
+
+
+def dedupe_transfers_store(store: dict) -> None:
+    """Bereinigt das Archiv einmalig von Duplikaten, die durch Namensaenderungen
+    entstanden sind (alter Schluessel enthielt den Namen). Idempotent - kann
+    bei jedem Lauf aufgerufen werden."""
+    for manager_id, manager_store in store.items():
+        bereinigt = {}
+        for t in manager_store.values():
+            key = _transfer_key(t)
+            if key in bereinigt:
+                # Duplikat: einen gesetzten "excluded"-Toggle uebernehmen
+                if t.get("excluded"):
+                    bereinigt[key]["excluded"] = True
+                print(f"  -> Duplikat entfernt (Manager {manager_id}): "
+                      f"{t['dt']} {t['pn']} {t['trp']:,} € (tty {t['tty']}), "
+                      f"behalten als '{bereinigt[key]['pn']}'")
+                continue
+            bereinigt[key] = dict(t)
+        store[manager_id] = bereinigt
 
 
 def fetch_and_archive_transfers(league_id: str, manager_id: str, headers: dict, store: dict) -> None:
@@ -317,6 +372,30 @@ def compute_day(prev_budget: float, teamwert: float, netto_transfer: float) -> d
     }
 
 
+def recompute_history(history: list, start_budget: float, store: dict,
+                      manager_id: str, reset_threshold: str | None) -> None:
+    """Berechnet die KOMPLETTE Budget-Kette ab Startbudget neu aus dem Archiv.
+
+    Vorher wurde nur der jeweils letzte Eintrag nachkorrigiert. Taucht ein
+    Transfer erst spaeter im Archiv auf (oder wird ein Startbudget korrigiert),
+    wurden aeltere Tage nie aktualisiert und der Fehler lief dauerhaft mit.
+    Der gespeicherte Teamwert je Tag bleibt unveraendert (der ist nicht
+    rueckwirkend abrufbar)."""
+    tagesgewinne = get_tagesgewinn_aus_archiv(store, manager_id, reset_threshold)
+    netto_je_tag = {
+        pd.Timestamp(row.Tag).date().isoformat(): float(row.Gewinn)
+        for row in tagesgewinne.itertuples(index=False)
+    }
+
+    budget = start_budget
+    for eintrag in history:
+        netto = netto_je_tag.get(eintrag["date"], 0.0)
+        neu = compute_day(budget, eintrag["teamwert"], netto)
+        neu["date"] = eintrag["date"]
+        eintrag.update(neu)
+        budget = neu["budget"]
+
+
 # ---------------------------------------------------------------------------
 # 4) HAUPTABLAUF
 # ---------------------------------------------------------------------------
@@ -331,6 +410,7 @@ def run_for_day(target_day: str) -> pd.DataFrame:
 
     state = load_state()
     transfers_store = load_transfers_store()
+    dedupe_transfers_store(transfers_store)
     config = load_config()
     after_reset = config.get("after_reset", 0) == 1
     if after_reset:
@@ -367,6 +447,10 @@ def run_for_day(target_day: str) -> pd.DataFrame:
             # der Fehlbetrag automatisch aufs Budget draufgelegt (Ausgleich auf
             # insgesamt 150 Mio bei 50 Mio Startbudget). Liegt der Kader DARUEBER,
             # bleibt es beim normalen, gewaehlten Startbudget (kein Abzug).
+            # ACHTUNG: In der Saison 2026/27 lag diese Hypothese bei Duy Tam und
+            # Dragontrieu daneben (beide bekamen 50 Mio, real waren es mehr).
+            # -> nach jedem Reset echte Startbudgets pruefen und ggf. in
+            #    START_BUDGET_OVERRIDES eintragen.
             fehlbetrag = max(0.0, SQUAD_TARGET - teamwert)
             budget = start_budget + fehlbetrag
             day_result = compute_day(prev_budget=budget, teamwert=teamwert, netto_transfer=0.0)
@@ -380,6 +464,7 @@ def run_for_day(target_day: str) -> pd.DataFrame:
             state[manager_id]["history"] = [day_result]
             state[manager_id]["reset_threshold"] = jetzt_iso
             state[manager_id]["start_budget"] = budget  # tatsaechlicher (ggf. aufgestockter) Wert merken
+            state[manager_id]["teamwert_bei_reset"] = teamwert  # fuer spaetere Pruefung der Reset-Regel
             if fehlbetrag > 0:
                 print(f"[{name}] RESET: Teamwert {teamwert:,.0f} € < {SQUAD_TARGET:,.0f} € -> "
                       f"Fehlbetrag {fehlbetrag:,.0f} € aufs Budget draufgelegt. "
@@ -389,48 +474,23 @@ def run_for_day(target_day: str) -> pd.DataFrame:
                       f"normales Startbudget = {budget:,.0f} €, Schwelle = {jetzt_iso}")
         else:
             reset_threshold = state[manager_id].get("reset_threshold")
+
+            # Korrigiertes Startbudget (aus Abgleich mit der App) uebernehmen
+            if manager_id in START_BUDGET_OVERRIDES:
+                korrigiert = float(START_BUDGET_OVERRIDES[manager_id])
+                alt = state[manager_id].get("start_budget")
+                if alt is None or abs(alt - korrigiert) > 0.01:
+                    print(f"[{name}] Startbudget korrigiert: {alt or 0:,.0f} € -> {korrigiert:,.0f} €")
+                    state[manager_id]["start_budget"] = korrigiert
+
             effektives_start_budget = state[manager_id].get("start_budget", start_budget)
 
+            # Fehlende Tage (Skript nicht gelaufen) bzw. den heutigen Tag als
+            # Eintrag anlegen. Die Budget-Werte werden danach ohnehin komplett
+            # neu berechnet, hier geht es nur um die Tages-Eintraege + Teamwert.
             if history and history[-1]["date"] == target_day:
-                # Tag ist noch "offen" (gleiches Zeitfenster, Fenster schließt erst
-                # beim naechsten 22:04-Update) -> neu berechnen, NICHT ueberspringen,
-                # damit neue Transfers seit dem letzten Lauf erfasst werden.
-                netto_transfer = get_netto_transfer_am_tag(transfers_store, manager_id, target_day, reset_threshold)
-                prev_budget = history[-2]["budget"] if len(history) >= 2 else effektives_start_budget
-                day_result = compute_day(prev_budget, teamwert, netto_transfer)
-                day_result["date"] = target_day
-                history[-1] = day_result  # bestehenden (noch offenen) Eintrag ueberschreiben
-                print(f"[{name}] {target_day}: Eintrag war schon offen, neu berechnet/aktualisiert.")
+                history[-1]["teamwert"] = teamwert  # offener Tag -> aktuellen Teamwert nehmen
             else:
-                # SCHRITT 1: Den zuletzt gespeicherten Eintrag "finalisieren" -
-                # er koennte geschrieben worden sein, BEVOR sein Zeitfenster
-                # wirklich geschlossen war (z.B. taeglicher Cronjob kurz nach
-                # 22:04 Uhr, also ganz am ANFANG des neuen Fensters). Transfers,
-                # die spaeter am selben Kickbase-Tag passiert sind, waeren sonst
-                # nie mehr erfasst worden. Der TEAMWERT von damals bleibt dabei
-                # unangetastet (der war schon korrekt live erfasst) - nur der
-                # Netto-Transfer wird gegen das (jetzt vollstaendige) Archiv
-                # neu geprueft.
-                if history:
-                    voriger_tag = history[-1]["date"]
-                    frischer_netto = get_netto_transfer_am_tag(
-                        transfers_store, manager_id, voriger_tag, reset_threshold
-                    )
-                    if abs(frischer_netto - history[-1]["netto_transfer"]) > 0.01:
-                        alter_netto = history[-1]["netto_transfer"]
-                        vorvor_budget = history[-2]["budget"] if len(history) >= 2 else effektives_start_budget
-                        eigener_teamwert = history[-1]["teamwert"]
-                        aktualisiert = compute_day(vorvor_budget, eigener_teamwert, frischer_netto)
-                        aktualisiert["date"] = voriger_tag
-                        history[-1] = aktualisiert
-                        print(f"[{name}] {voriger_tag}: nachtraeglich weitere Transfers gefunden, "
-                              f"Eintrag korrigiert (Netto-Transfer war {alter_netto:,.0f} € "
-                              f"neu: {frischer_netto:,.0f} €).")
-
-                # SCHRITT 2: Falls zwischen dem letzten Eintrag und target_day Tage
-                # UEBERSPRUNGEN wurden (Skript an dem Tag gar nicht gelaufen),
-                # muessen diese Tage einzeln nachgeholt werden - sonst geht deren
-                # Netto-Transfer komplett verloren.
                 if history:
                     letzter_tag = pd.to_datetime(history[-1]["date"])
                     nachzuholende_tage = pd.date_range(
@@ -445,20 +505,27 @@ def run_for_day(target_day: str) -> pd.DataFrame:
                           f"({nachzuholende_tage[0].date()} bis {nachzuholende_tage[-2].date()}).")
 
                 for tag_ts in nachzuholende_tage:
-                    tag_str = tag_ts.date().isoformat()
                     # Fuer uebersprungene Vergangenheits-Tage ist der ECHTE historische
-                    # Teamwert nicht mehr abrufbar (nur "jetzt" via API) - wir nutzen
-                    # den aktuellen Wert als Naeherung. Das beeinflusst NUR die
-                    # Anzeige (Netto-Teamwert/Max-Gebot) dieser Alt-Tage, NICHT die
-                    # Budget-Kette selbst (die haengt nur von den Transfer-Betraegen ab).
-                    tag_teamwert = teamwert
+                    # Teamwert nicht mehr abrufbar -> aktueller Wert als Naeherung
+                    # (betrifft nur Netto-Teamwert/Max-Gebot, nicht die Budget-Kette).
+                    history.append({"date": tag_ts.date().isoformat(), "teamwert": teamwert})
 
-                    netto_transfer = get_netto_transfer_am_tag(transfers_store, manager_id, tag_str, reset_threshold)
-                    prev_budget = last_budget(history, effektives_start_budget)
+            # Komplette Kette neu berechnen: erfasst auch Transfers, die erst
+            # spaeter im Archiv aufgetaucht sind, und korrigierte Startbudgets.
+            alte_budgets = {e["date"]: e.get("budget") for e in history}
+            recompute_history(history, effektives_start_budget, transfers_store,
+                              manager_id, reset_threshold)
+            geaendert = [
+                e for e in history
+                if alte_budgets.get(e["date"]) is not None
+                and abs(alte_budgets[e["date"]] - e["budget"]) > 0.01
+            ]
+            if geaendert:
+                erster = geaendert[0]
+                print(f"[{name}] Budget-Kette ab {erster['date']} korrigiert "
+                      f"({len(geaendert)} Tag(e), heute jetzt {history[-1]['budget']:,.0f} €).")
 
-                    day_result = compute_day(prev_budget, tag_teamwert, netto_transfer)
-                    day_result["date"] = tag_str
-                    history.append(day_result)
+            day_result = history[-1]
 
         zeilen.append({"Manager": name, **day_result})
 
@@ -466,6 +533,28 @@ def run_for_day(target_day: str) -> pd.DataFrame:
         config["after_reset"] = 0
         save_config(config)
         print("=== AFTER_RESET abgeschlossen, config.json auf after_reset=0 zurückgesetzt ===")
+
+    # Abgleich: eigenes ECHTES Budget vs. Tracker-Berechnung. Bewusst nur
+    # protokolliert (nicht automatisch korrigiert), damit eine laufende
+    # Abweichung sichtbar bleibt statt still weggerechnet zu werden.
+    if EIGENE_MANAGER_ID in state and state[EIGENE_MANAGER_ID]["history"]:
+        echt = get_eigenes_budget(league_id, headers)
+        if echt is not None:
+            berechnet = state[EIGENE_MANAGER_ID]["history"][-1]["budget"]
+            diff = echt - berechnet
+            state[EIGENE_MANAGER_ID]["budget_abgleich"] = {
+                "date": state[EIGENE_MANAGER_ID]["history"][-1]["date"],
+                "geprueft_um": jetzt_iso,
+                "echt": echt,
+                "tracker": berechnet,
+                "differenz": round(diff, 2),
+            }
+            if abs(diff) <= 1:
+                print(f"Budget-Abgleich OK: Tracker = App = {echt:,.0f} €")
+            else:
+                print(f"WARNUNG Budget-Abgleich: App {echt:,.0f} € vs. Tracker {berechnet:,.0f} € "
+                      f"-> Differenz {diff:+,.0f} €. (Login-Bonus des neuen Tages evtl. noch "
+                      f"nicht abgeholt, sonst Startbudget/Transfers pruefen.)")
 
     save_state(state)
     save_transfers_store(transfers_store)
