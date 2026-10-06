@@ -979,11 +979,11 @@
         "date": "2026-10-05"
       },
       {
-        "budget": 10535335.0,
-        "teamwert": 220363780.0,
-        "netto_transfer": 6765128.0,
-        "netto_teamwert": 230899115.0,
-        "max_gebot": 83255382.4,
+        "budget": -8170953.0,
+        "teamwert": 239002556.0,
+        "netto_transfer": -11941160.0,
+        "netto_teamwert": 230831603.0,
+        "max_gebot": 68003475.99,
         "date": "2026-10-06"
       }
     ],
