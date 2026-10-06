@@ -546,6 +546,13 @@
       "marktwert": 28372742,
       "position": "ABW",
       "mw_aenderung": 41642
+    },
+    {
+      "id": "6148",
+      "name": "Pinckert",
+      "marktwert": 12656692,
+      "position": "ABW",
+      "mw_aenderung": 57640
     }
   ],
   "3458038": [
@@ -592,13 +599,6 @@
       "mw_aenderung": 27300
     },
     {
-      "id": "7269",
-      "name": "Tella",
-      "marktwert": 5710834,
-      "position": "MF",
-      "mw_aenderung": 278611
-    },
-    {
       "id": "6081",
       "name": "Uzun",
       "marktwert": 26448684,
@@ -634,13 +634,6 @@
       "mw_aenderung": 362149
     },
     {
-      "id": "2988",
-      "name": "Leweling",
-      "marktwert": 10280469,
-      "position": "MF",
-      "mw_aenderung": 123833
-    },
-    {
       "id": "2172",
       "name": "Führich",
       "marktwert": 16790776,
@@ -667,6 +660,20 @@
       "marktwert": 7108621,
       "position": "MF",
       "mw_aenderung": 376577
+    },
+    {
+      "id": "2928",
+      "name": "Petkov",
+      "marktwert": 9925421,
+      "position": "MF",
+      "mw_aenderung": 169618
+    },
+    {
+      "id": "3284",
+      "name": "Rohr",
+      "marktwert": 12362365,
+      "position": "ABW",
+      "mw_aenderung": 122522
     }
   ]
 }
