@@ -48,6 +48,13 @@ jobs:
           KICKBASE_PASSWORD: ${{ secrets.KICKBASE_PASSWORD }}
         run: python squad_simulator.py load_all
 
+      - name: Spieler-Analyse aktualisieren
+        continue-on-error: true   # Spieler-Seite ist ein Zusatz - Budget-Daten werden trotzdem gespeichert
+        env:
+          KICKBASE_EMAIL: ${{ secrets.KICKBASE_EMAIL }}
+          KICKBASE_PASSWORD: ${{ secrets.KICKBASE_PASSWORD }}
+        run: python spieler_analyse.py
+
       - name: Geänderte Daten zurückspeichern
         run: |
           git config user.name "kickbase-tracker-bot"
@@ -61,7 +68,7 @@ jobs:
           git fetch origin main
           git reset --soft origin/main
 
-          for f in state.json transfers_store.json config.json squad_cache.json; do
+          for f in state.json transfers_store.json config.json squad_cache.json spieler_daten.json punkte_herkunft_cache.json; do
             [ -f "$f" ] && git add "$f"
           done
           git diff --staged --quiet || git commit -m "Tracker-Update $(date -u +%Y-%m-%d)"
