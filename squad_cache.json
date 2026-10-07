@@ -332,6 +332,13 @@
       "marktwert": 9880142,
       "position": "ABW",
       "mw_aenderung": 312588
+    },
+    {
+      "id": "2366",
+      "name": "Davies",
+      "marktwert": 19874598,
+      "position": "ABW",
+      "mw_aenderung": 171453
     }
   ],
   "3308384": [
@@ -585,13 +592,6 @@
       "mw_aenderung": 0
     },
     {
-      "id": "15181",
-      "name": "Leszczynski",
-      "marktwert": 7967612,
-      "position": "ABW",
-      "mw_aenderung": 91224
-    },
-    {
       "id": "6085",
       "name": "Seimen",
       "marktwert": 10614435,
@@ -653,6 +653,13 @@
       "marktwert": 12476383,
       "position": "ABW",
       "mw_aenderung": 114018
+    },
+    {
+      "id": "8292",
+      "name": "Castañeda",
+      "marktwert": 10774975,
+      "position": "MF",
+      "mw_aenderung": 146983
     }
   ]
 }
