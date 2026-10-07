@@ -225,6 +225,13 @@
       "marktwert": 18765892,
       "position": "ST",
       "mw_aenderung": 127116
+    },
+    {
+      "id": "1704",
+      "name": "Anton",
+      "marktwert": 34370692,
+      "position": "ABW",
+      "mw_aenderung": 14724
     }
   ],
   "3181707": [
@@ -271,13 +278,6 @@
       "mw_aenderung": 65380
     },
     {
-      "id": "7417",
-      "name": "Aséko",
-      "marktwert": 8957848,
-      "position": "MF",
-      "mw_aenderung": -498358
-    },
-    {
       "id": "7774",
       "name": "Konoplia",
       "marktwert": 6766137,
@@ -299,13 +299,6 @@
       "mw_aenderung": 14001
     },
     {
-      "id": "7394",
-      "name": "Amoako",
-      "marktwert": 6045762,
-      "position": "MF",
-      "mw_aenderung": 58321
-    },
-    {
       "id": "3069",
       "name": "Nmecha",
       "marktwert": 27404796,
@@ -320,13 +313,6 @@
       "mw_aenderung": 112805
     },
     {
-      "id": "54",
-      "name": "Can",
-      "marktwert": 3310992,
-      "position": "ABW",
-      "mw_aenderung": 31066
-    },
-    {
       "id": "16564",
       "name": "Nguefack",
       "marktwert": 1697447,
@@ -339,6 +325,13 @@
       "marktwert": 9071894,
       "position": "ABW",
       "mw_aenderung": 288178
+    },
+    {
+      "id": "7616",
+      "name": "ter Horst",
+      "marktwert": 9880142,
+      "position": "ABW",
+      "mw_aenderung": 312588
     }
   ],
   "3308384": [
@@ -506,13 +499,6 @@
       "mw_aenderung": 247848
     },
     {
-      "id": "11967",
-      "name": "Vieira",
-      "marktwert": 14510291,
-      "position": "MF",
-      "mw_aenderung": 64582
-    },
-    {
       "id": "14251",
       "name": "Saibari",
       "marktwert": 27955601,
@@ -532,6 +518,20 @@
       "marktwert": 13885165,
       "position": "TW",
       "mw_aenderung": 92852
+    },
+    {
+      "id": "8001",
+      "name": "Lochoshvili",
+      "marktwert": 8372513,
+      "position": "ABW",
+      "mw_aenderung": 349324
+    },
+    {
+      "id": "1883",
+      "name": "Nicolas",
+      "marktwert": 12765310,
+      "position": "TW",
+      "mw_aenderung": 148882
     }
   ],
   "3458038": [
