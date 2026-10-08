@@ -332,6 +332,27 @@
       "marktwert": 20023167,
       "position": "ABW",
       "mw_aenderung": 148569
+    },
+    {
+      "id": "3041",
+      "name": "Widmer",
+      "marktwert": 511952,
+      "position": "ABW",
+      "mw_aenderung": 11952
+    },
+    {
+      "id": "10004",
+      "name": "Ebnoutalib",
+      "marktwert": 18873139,
+      "position": "ST",
+      "mw_aenderung": 155372
+    },
+    {
+      "id": "7239",
+      "name": "Finkgräfe",
+      "marktwert": 942676,
+      "position": "ABW",
+      "mw_aenderung": 289932
     }
   ],
   "3308384": [
@@ -471,13 +492,6 @@
       "mw_aenderung": 99775
     },
     {
-      "id": "14425",
-      "name": "Møller Wolfe",
-      "marktwert": 6966759,
-      "position": "ABW",
-      "mw_aenderung": 130318
-    },
-    {
       "id": "3081",
       "name": "Vidović",
       "marktwert": 8075131,
@@ -532,6 +546,13 @@
       "marktwert": 6638766,
       "position": "ABW",
       "mw_aenderung": 326662
+    },
+    {
+      "id": "1964",
+      "name": "Götze",
+      "marktwert": 3783483,
+      "position": "ABW",
+      "mw_aenderung": 367545
     }
   ],
   "3458038": [
