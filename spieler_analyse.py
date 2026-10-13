@@ -230,6 +230,137 @@ def sammle_rohdaten(headers: dict) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Punkteprognose (naechste Spieltage)
+# ---------------------------------------------------------------------------
+# Einsatzchance-Faktor je Status-Code und je kommendem Spiel (1., 2., 3.).
+# Codes laut Kickbase-Daten: 0 fit, 1 verletzt, 2 angeschlagen/fraglich,
+# 4 Aufbautraining, 16 gesperrt. Grobe Annahmen, keine offiziellen Werte.
+STATUS_FAKTOR = {
+    0: (1.0, 1.0, 1.0),
+    1: (0.0, 0.25, 0.5),
+    2: (0.6, 0.85, 0.95),
+    4: (0.15, 0.4, 0.65),
+    16: (0.0, 1.0, 1.0),
+}
+
+
+def prognostiziere(spieler: list[dict]) -> None:
+    """Ergaenzt je Spieler 'prog' (erwartete Punkte je der naechsten Spiele),
+    'prog3' (Summe), 'pe' (Einsatzchance) und 'ppt' (Punkte pro Teamspiel).
+
+    Modell (bewusst einfach und nachvollziehbar):
+      Punkte bei Einsatz = 65 % Saisonschnitt + 35 % Form, bei wenigen
+                           Einsaetzen Richtung Positionsschnitt geglaettet
+      Einsatzchance      = halb Saison-Quote (Einsaetze / Teamspiele, also das,
+                           was die GESAMTPUNKTE vom Schnitt unterscheidet),
+                           halb die letzten 2 Teamspiele; dazu der Status
+      x Gegner-Faktor (Punkte, die der Gegner dieser Position zulaesst)
+      x Heim +3 % / Auswaerts -3 %
+    """
+    pos_werte: dict[str, list[float]] = {}
+    for s in spieler:
+        for x in s["spiele"]:
+            if x["min"] > 0:
+                pos_werte.setdefault(s["pos"], []).append(x["p"])
+    pos_schnitt = {k: sum(v) / len(v) for k, v in pos_werte.items() if v}
+
+    for s in spieler:
+        n = s["einsaetze"]
+        ap = s["ap"] or 0
+        form = s["form"] if s["form"] is not None else ap
+        basis = 0.65 * ap + 0.35 * form
+        w = n / (n + 2)  # Glaettung: 1 Einsatz -> 33 % eigener Wert
+        punkte_bei_einsatz = w * basis + (1 - w) * 0.6 * pos_schnitt.get(s["pos"], 0)
+
+        ts = s["team_spiele"] or 0
+        saison = n / ts if ts else 0.5
+        letzte = [x for x in s["spiele"]][-2:]
+        jung = (sum(1 for x in letzte if x["min"] > 0) / len(letzte)) if letzte else saison
+        pe = 0.5 * saison + 0.5 * jung
+
+        sf = STATUS_FAKTOR.get(s["st"] or 0, (0.6, 0.85, 0.95))
+        prog = []
+        for i, nx in enumerate(s["naechste"][:NAECHSTE_SPIELE]):
+            fk = min(1.3, max(0.75, nx.get("fk") or 1.0))
+            heim = 1.03 if nx.get("h") else 0.97
+            prog.append(round(pe * sf[min(i, 2)] * punkte_bei_einsatz * fk * heim))
+        s["prog"] = prog
+        s["prog3"] = sum(prog)
+        s["pe"] = round(100 * pe * sf[0])
+        s["ppt"] = round(s["tp"] / ts) if ts else None
+
+
+# ---------------------------------------------------------------------------
+# Kader + Startelf aller Manager
+# ---------------------------------------------------------------------------
+
+FORMATIONEN = {(3, 4, 3), (3, 5, 2), (3, 6, 1), (4, 2, 4), (4, 3, 3), (4, 4, 2), (4, 5, 1), (5, 2, 3), (5, 3, 2), (5, 4, 1)}
+
+
+def _gueltige_formation(positionen: list) -> bool:
+    """Genau 1 Torwart und eine erlaubte Kickbase-Formation (pos: 1=TW, 2=ABW, 3=MF, 4=ST)."""
+    z = [positionen.count(i) for i in (1, 2, 3, 4)]
+    return z[0] == 1 and (z[1], z[2], z[3]) in FORMATIONEN
+
+
+def lade_manager_teams(headers: dict, league_id: str, state: dict, spieltag: int | None) -> list[dict]:
+    """Kader (GET .../managers/{id}/squad) und aktuelle Startelf je Manager.
+
+    Startelf-Quelle, in dieser Reihenfolge:
+      1. Teamcenter des aktuellen Spieltags (GET .../users/{id}/teamcenter)
+      2. Teamcenter des vorigen Spieltags (Aufstellungen anderer Manager sind
+         vor Anpfiff evtl. verborgen -> letzte bekannte Elf)
+      3. Feld 'lo' (Aufstellungsplatz 0-10) aus dem Kader, falls genau 11
+    Klappt nichts, bleibt 'elf' leer und die Seite schaetzt die beste Elf.
+    """
+    teams = []
+    for mid, m in (state or {}).items():
+        if not m.get("history"):
+            continue
+        squad = api_get(f"/v4/leagues/{league_id}/managers/{mid}/squad", headers) or {}
+        kader_roh = squad.get("it", []) or []
+        kader = [str(p.get("pi")) for p in kader_roh if p.get("pi") is not None]
+
+        elf, quelle = [], "keine"
+        tage = [t for t in (spieltag, (spieltag or 0) - 1) if t and t > 0]
+        for tag in tage:
+            tc = api_get(f"/v4/leagues/{league_id}/users/{mid}/teamcenter", headers, params={"dayNumber": tag})
+            eintraege = (tc or {}).get("us") or []
+            eintrag = next((u for u in eintraege if str(u.get("i")) == str(mid)), eintraege[0] if eintraege else None)
+            lp = [str(x) for x in (eintrag or {}).get("lp") or [] if x not in (None, 0, "0")]
+            lp = [x for x in lp if x in kader]  # inzwischen verkaufte Spieler raus
+            if len(lp) >= 8:
+                elf = lp
+                quelle = "aktuell" if tag == spieltag else f"ST {tag}"
+                break
+        if not elf:
+            lo = [(p.get("lo"), str(p.get("pi"))) for p in kader_roh if isinstance(p.get("lo"), int) and 0 <= p["lo"] <= 10]
+            pos_von = {str(p.get("pi")): p.get("pos") for p in kader_roh}
+            kandidat = [pid for _, pid in sorted(lo)]
+            if len(kandidat) == 11 and _gueltige_formation([pos_von.get(x) for x in kandidat]):
+                elf = kandidat
+                quelle = "kader"
+
+        letzte = m["history"][-1]
+        budget = letzte.get("budget")
+        abgleich = m.get("budget_abgleich") or {}
+        if abgleich.get("echt") is not None and abgleich.get("date") == letzte.get("date"):
+            budget = abgleich["echt"]  # eigenes Budget: echter Wert aus der App
+        teams.append({
+            "id": mid,
+            "n": (m.get("name") or "").strip(),
+            "ich": mid == getattr(kt, "EIGENE_MANAGER_ID", None),
+            "budget": budget,
+            "teamwert": letzte.get("teamwert"),
+            "kader": kader,
+            "elf": elf,
+            "quelle": quelle,
+        })
+        print(f"[{(m.get('name') or '').strip()}] Kader {len(kader)}, Startelf {len(elf)} (Quelle: {quelle})")
+    return teams
+
+
+# ---------------------------------------------------------------------------
 # Analyse
 # ---------------------------------------------------------------------------
 
@@ -320,7 +451,8 @@ def gegner_faktoren(spieler_spiele: dict[str, list[dict]], positionen: dict[str,
     return faktoren
 
 
-def analysiere(roh: dict, markt: dict, herkunft: dict, state: dict) -> dict:
+def analysiere(roh: dict, markt: dict, herkunft: dict, state: dict,
+               manager_teams: list[dict] | None = None) -> dict:
     teams, alle_spiele = baue_teams(roh["tabelle"], roh["spielplan"])
     jetzt = datetime.now(timezone.utc).isoformat()
 
@@ -416,6 +548,8 @@ def analysiere(roh: dict, markt: dict, herkunft: dict, state: dict) -> dict:
             eintrag["herkunft"] = h
         spieler_out.append(eintrag)
 
+    prognostiziere(spieler_out)
+
     # Preis-Leistungs-Rang innerhalb der Position (0-100, hoeher = besser)
     for s in spieler_out:
         werte = pl_werte.get(s["pos"], [])
@@ -454,6 +588,7 @@ def analysiere(roh: dict, markt: dict, herkunft: dict, state: dict) -> dict:
         "manager": manager,
         "markt": markt_out,
         "spieler": spieler_out,
+        "manager_teams": manager_teams or [],
     }
 
 
@@ -521,7 +656,9 @@ def main() -> None:
     print(f"{len(markt_ids)} Spieler auf dem Transfermarkt.")
 
     herkunft = berechne_herkunft(headers, league_id, roh, markt_ids)
-    daten = analysiere(roh, markt, herkunft, kt.load_state())
+    state = kt.load_state()
+    manager_teams = lade_manager_teams(headers, league_id, state, roh["spielplan"].get("day"))
+    daten = analysiere(roh, markt, herkunft, state, manager_teams)
 
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(daten, f, ensure_ascii=False, separators=(",", ":"))

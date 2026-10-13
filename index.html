@@ -397,7 +397,7 @@
   :root { --good: #8fc98a; --bad: #e8836b; --mid: var(--gold-bright); }
 
   .players { margin-bottom: 32px; }
-  .players[hidden], .topbar[hidden], #view-budget[hidden] { display: none; }
+  .players[hidden], .topbar[hidden], #view-budget[hidden], #view-team[hidden] { display: none; }
 
   /* Suchleiste + Ansichtswechsel bleiben beim Scrollen oben */
   .topbar {
@@ -409,7 +409,7 @@
   }
   .topbar .search-wrap { margin-bottom: 10px; }
   .view-switch {
-    display: grid; grid-template-columns: 1fr 1fr;
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
     border: 1px solid var(--line); border-radius: 999px; padding: 3px;
     background: rgba(255,255,255,0.03);
   }
@@ -421,6 +421,63 @@
     transition: background 0.15s ease, color 0.15s ease;
   }
   .vs-btn.active { background: var(--gold); color: var(--pitch-deep); }
+
+  /* ---------- Team-Analyse ---------- */
+  .team-chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 16px; scrollbar-width: none; }
+  .team-chips .tab { white-space: nowrap; flex-shrink: 0; }
+  .tm-card { border: 1px solid var(--line); border-radius: 6px; background: var(--card); padding: 18px; margin-bottom: 16px; }
+  .tm-card h3 { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 0.06em; font-size: 12.5px; color: var(--gold-bright); margin: 0 0 6px; font-weight: 600; }
+  .tm-card .scoreboard-value { font-size: clamp(30px, 9vw, 44px); }
+  .tm-unit { font-size: 0.45em; color: var(--chalk-dim); }
+  .tm-days-big { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 12px; }
+  .tm-days-big .stat-value { font-size: 17px; }
+  .tm-card .scoreboard-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 14px; padding-top: 14px; }
+  .tm-card .scoreboard-grid .stat-value { font-size: 16px; }
+  .tm-hint-card { border-color: rgba(143, 201, 138, 0.45); }
+  .liga-list { padding: 6px 0; }
+  .liga-row { display: grid; grid-template-columns: 96px 1fr 48px; gap: 10px; align-items: center; padding: 6px 14px; font-size: 13px; }
+  .liga-row b { font-family: 'IBM Plex Mono', monospace; text-align: right; }
+  .liga-row.me { color: var(--gold-bright); }
+  .liga-bar { height: 8px; background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden; }
+  .liga-bar span { display: block; height: 100%; background: var(--chalk-dim); border-radius: 4px; }
+  .liga-row.me .liga-bar span { background: var(--gold); }
+
+  .tm-row { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 4px 10px; align-items: center;
+            padding: 10px 12px; border-bottom: 1px solid var(--line); border-left: 3px solid transparent; }
+  .tm-row:last-child { border-bottom: none; }
+  .tm-row.weak { border-left-color: var(--bad); }
+  .tm-row.sell { background: rgba(232, 131, 107, 0.08); }
+  .tm-row.sell .tm-name, .tm-row.sell .tm-prog { opacity: 0.55; }
+  .tm-main { min-width: 0; }
+  .tm-name { font-size: 14.5px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tm-open { cursor: pointer; }
+  .tm-open:hover { color: var(--gold-bright); }
+  .tm-sub { display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 11.5px; color: var(--chalk-dim); margin-top: 4px; align-items: center; }
+  .tm-sub b { color: var(--chalk); font-family: 'IBM Plex Mono', monospace; font-weight: 500; }
+  .tm-prog { text-align: right; font-family: 'IBM Plex Mono', monospace; }
+  .tm-days { display: flex; gap: 6px; font-size: 11px; color: var(--chalk-dim); justify-content: flex-end; }
+  .tm-days span { min-width: 22px; text-align: right; }
+  .tm-sum { font-size: 17px; color: var(--gold-bright); margin-top: 2px; }
+  .sell-btn { font-family: 'Inter', sans-serif; font-size: 11px; border: 1px solid var(--line); background: transparent;
+              color: var(--chalk-dim); border-radius: 999px; padding: 2px 8px; cursor: pointer; white-space: nowrap; }
+  .tm-warn-card { border-color: rgba(232, 131, 107, 0.5); }
+  .tm-warn-card h3 { color: var(--bad); }
+  .sell-btn.on { border-color: var(--bad); color: var(--bad); }
+  .st-dot { font-size: 10.5px; font-weight: 500; color: var(--bad); border: 1px solid currentColor; border-radius: 3px; padding: 0 4px; margin-left: 2px; }
+  .tag-weak, .tag-good { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-left: 6px; }
+  .tag-weak { color: var(--bad); }
+  .tag-good { color: var(--good); }
+  .tm-controls .ctl-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 10px; }
+  .ctl-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--chalk-dim); width: 100%; }
+  .link-btn { background: none; border: none; color: var(--gold-bright); text-decoration: underline; cursor: pointer; font: inherit; padding: 0; }
+  .tm-deals { display: grid; gap: 10px; }
+  .deal { border: 1px solid var(--line); border-radius: 6px; background: var(--card); padding: 12px 14px; }
+  .deal-head { display: flex; align-items: center; gap: 10px; }
+  .deal-swap { flex: 1; min-width: 0; font-size: 14.5px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .deal-gain { font-family: 'IBM Plex Mono', monospace; color: var(--good); font-size: 18px; }
+  .deal-gain::after { content: ' Pkt'; font-size: 11px; color: var(--chalk-dim); }
+  .deal-grid { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 12.5px; margin-top: 8px; color: var(--chalk-dim); }
+  .deal-grid b { color: var(--chalk); font-family: 'IBM Plex Mono', monospace; font-weight: 500; font-size: 12px; }
 
   .mk-controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; margin-bottom: 14px; }
   .mk-sort { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -632,7 +689,8 @@
       <div class="dropdown" id="search-results" role="listbox"></div>
     </div>
     <div class="view-switch" role="tablist" aria-label="Ansicht">
-      <button class="vs-btn" role="tab" data-view="markt" id="vs-markt">Transfermarkt</button>
+      <button class="vs-btn" role="tab" data-view="markt" id="vs-markt">Markt</button>
+      <button class="vs-btn" role="tab" data-view="team" id="vs-team">Team</button>
       <button class="vs-btn" role="tab" data-view="budget" id="vs-budget">Budgets</button>
     </div>
   </div>
@@ -646,10 +704,16 @@
         <button class="sort-btn" data-sort="ap">Punkte</button>
         <button class="sort-btn" data-sort="form">Form</button>
         <button class="sort-btn" data-sort="pl">Preis-Leistung</button>
+        <button class="sort-btn" data-sort="prog">Prognose</button>
       </div>
       <button class="sort-btn details-btn" id="details-btn" aria-pressed="true"></button>
     </div>
     <div id="market-list"></div>
+  </section>
+
+  <section class="players" id="view-team" hidden>
+    <div class="team-chips" id="team-chips" role="tablist" aria-label="Manager"></div>
+    <div id="team-body"></div>
   </section>
 
   <div id="view-budget">
@@ -1065,6 +1129,7 @@ load();
     ap:     { dir: 'desc', label: 'Punkte', val: (m, s) => s.ap },
     form:   { dir: 'desc', label: 'Form', val: (m, s) => s.form },
     pl:     { dir: 'desc', label: 'Preis-Leistung', val: (m, s) => s.pl },
+    prog:   { dir: 'desc', label: 'Prognose', val: (m, s) => s.prog3 ?? null },
   };
   let sortKey = SORT[pref.get('sort', 'ablauf')] ? pref.get('sort', 'ablauf') : 'ablauf';
   let sortDir = pref.get('sortDir', SORT[sortKey].dir);
@@ -1194,9 +1259,9 @@ load();
 
   // ---------------- Ansicht: Transfermarkt <-> Budgets ----------------
   function zeigeAnsicht(view) {
-    const markt = view === 'markt';
-    document.getElementById('view-markt').hidden = !markt;
-    document.getElementById('view-budget').hidden = markt;
+    if (view === 'team' && !(D.manager_teams || []).length) view = 'markt';
+    for (const v of ['markt', 'team', 'budget']) document.getElementById('view-' + v).hidden = v !== view;
+    if (view === 'team') renderTeam();
     document.querySelectorAll('.vs-btn').forEach(b => {
       const aktiv = b.dataset.view === view;
       b.classList.toggle('active', aktiv);
@@ -1213,6 +1278,369 @@ load();
     if (window.scrollY > top) window.scrollTo({ top, behavior: 'instant' });
   }
   document.querySelectorAll('.vs-btn').forEach(b => b.addEventListener('click', () => wechsleAnsicht(b.dataset.view)));
+
+  // =====================================================================
+  // Team-Analyse: Startelf, Prognose, Schwachstellen, Ersatz-Finder
+  // =====================================================================
+  const POS_ORDER = ['TW', 'ABW', 'MF', 'ST'];
+  // Kickbase-Formationen (ABW-MF-ST), Torwart immer 1
+  const FORMATIONEN = [[3,4,3],[3,5,2],[3,6,1],[4,2,4],[4,3,3],[4,4,2],[4,5,1],[5,2,3],[5,3,2],[5,4,1]];
+  const P = id => byId.get(id);
+  const prog = (s, i) => (s && s.prog && s.prog[i]) || 0;
+  const prog3 = s => (s && s.prog3) || 0;
+
+  let teamMid = null;
+  const verkauf = new Set();                       // zum Verkauf markierte Spieler (Simulation)
+  let budgetModus = pref.get('budgetModus', 'null'); // 'null' = Budget bleibt >= 0, 'max' = bis Max-Gebot
+  let aufschlag = pref.get('aufschlag', 5);          // Gebot in % über Marktwert
+  let ersatzSort = pref.get('ersatzSort', 'gain');
+  let ligaOffen = pref.get('ligaOffen', false);
+
+  function maxGebotVon(budget, teamwert) {
+    return budget + MINUS_GRENZE * (teamwert + Math.min(budget, 0));
+  }
+
+  // Beste Elf aus einer Spielerliste nach einer Wert-Funktion (alle Kickbase-Formationen)
+  function besteElf(spieler, wert) {
+    const nachPos = {};
+    POS_ORDER.forEach(p => nachPos[p] = spieler.filter(s => s.pos === p).sort((a, b) => wert(b) - wert(a)));
+    let best = null;
+    for (const [a, m, st] of FORMATIONEN) {
+      if (!nachPos.TW.length || nachPos.ABW.length < a || nachPos.MF.length < m || nachPos.ST.length < st) continue;
+      const elf = [nachPos.TW[0], ...nachPos.ABW.slice(0, a), ...nachPos.MF.slice(0, m), ...nachPos.ST.slice(0, st)];
+      const summe = elf.reduce((x, s) => x + wert(s), 0);
+      if (!best || summe > best.summe) best = { elf, summe, formation: `${a}-${m}-${st}` };
+    }
+    return best;
+  }
+
+  function formationVon(elf) {
+    const z = p => elf.filter(s => s.pos === p).length;
+    return `${z('ABW')}-${z('MF')}-${z('ST')}`;
+  }
+
+  // Kader + Startelf eines Managers aufbereiten
+  function teamKontext(t) {
+    const kader = t.kader.map(P).filter(Boolean);
+    let elf = t.elf.map(P).filter(Boolean).filter(s => t.kader.includes(s.id));
+    let quelle = t.quelle;
+    if (elf.length < 11) {
+      const b = besteElf(kader, s => prog(s, 0));
+      if (b && elf.length < 8) { elf = b.elf; quelle = 'geschätzt'; }
+    }
+    const elfIds = new Set(elf.map(s => s.id));
+    const bank = kader.filter(s => !elfIds.has(s.id));
+    return { t, kader, elf, elfIds, bank, quelle };
+  }
+
+  function spieltagLabels(kader) {
+    const mitSpielen = kader.find(s => s.naechste && s.naechste.length >= 3) || kader[0];
+    return [0, 1, 2].map(i => mitSpielen && mitSpielen.naechste[i] ? `ST ${mitSpielen.naechste[i].tag}` : `+${i + 1}`);
+  }
+
+  const progKlasse = x => x >= 120 ? 'lv-good' : x < 50 ? 'lv-bad' : '';
+
+  function quelleText(q) {
+    if (q === 'aktuell') return 'aktuelle Startelf';
+    if (q === 'kader') return 'Startelf laut Kader-Daten';
+    if (q === 'geschätzt') return 'Startelf nicht abrufbar – beste Elf aus dem Kader geschätzt';
+    if (q && q.startsWith('ST')) return `letzte bekannte Startelf (${q}) – aktuelle ist vor Anpfiff evtl. verborgen`;
+    return q || '';
+  }
+
+  // ---- Ersatz-Finder ----
+  // Punktverlust, wenn ein Spieler verkauft wird: Startelf-Spieler verlieren ihre
+  // Prognose, der beste noch freie Bankspieler derselben Position rückt nach
+  // (jeder Bankspieler kann nur einmal nachrücken und darf nicht selbst verkauft sein).
+  function verlustVon(x, ctx, weg, benutzt) {
+    if (!ctx.elfIds.has(x.id)) return { v: 0, ersatz: null };
+    const kandidaten = ctx.bank.filter(b => b.pos === x.pos && !weg.has(b.id) && !benutzt.has(b.id))
+      .sort((a, b) => prog3(b) - prog3(a));
+    const ersatz = kandidaten[0] || null;
+    return { v: Math.max(0, prog3(x) - (ersatz ? prog3(ersatz) : 0)), ersatz };
+  }
+
+  // Wählt Verkäufe, bis 'reicht(summeMv)' erfüllt ist – möglichst wenig Punktverlust
+  // je eingenommener Million, höchstens 'max' Spieler. Schritt für Schritt, damit
+  // sich Verkäufe derselben Position gegenseitig berücksichtigen.
+  function waehleVerkaeufe(pool, ctx, schonWeg, reicht, max = 3) {
+    const pfad = (startListe) => {
+      const weg = new Set(schonWeg), benutzt = new Set(), gew = [];
+      let sm = 0, verlust = 0;
+      const nimm = x => {
+        const r = verlustVon(x, ctx, weg, benutzt);
+        weg.add(x.id); if (r.ersatz) benutzt.add(r.ersatz.id);
+        gew.push(x); sm += x.mv; verlust += r.v;
+      };
+      startListe.forEach(nimm);
+      while (!reicht(sm) && gew.length < max) {
+        const rest = pool.filter(x => !weg.has(x.id) && !benutzt.has(x.id));
+        if (!rest.length) break;
+        rest.sort((a, b) => verlustVon(a, ctx, weg, benutzt).v / Math.max(a.mv, 1e5)
+                          - verlustVon(b, ctx, weg, benutzt).v / Math.max(b.mv, 1e5));
+        nimm(rest[0]);
+      }
+      return reicht(sm) ? { spieler: gew, verlust, mv: sm } : null;
+    };
+    // Variante A: ein einzelner Spieler, der allein reicht (kleinster Verlust)
+    const einzel = pool.filter(x => reicht(x.mv))
+      .map(x => ({ x, v: verlustVon(x, ctx, new Set(schonWeg), new Set()).v }))
+      .sort((a, b) => a.v - b.v || a.x.mv - b.x.mv)[0];
+    const a = einzel ? { spieler: [einzel.x], verlust: einzel.v, mv: einzel.x.mv } : null;
+    // Variante B: schrittweise nach Verlust pro Mio
+    const b = pfad([]);
+    if (a && b) return a.verlust <= b.verlust ? a : b;
+    return a || b;
+  }
+
+  function ersatzPakete(ctx) {
+    const { t, kader, elf } = ctx;
+    const kaderIds = new Set(t.kader);
+    const freiMv = [...verkauf].reduce((x, id) => x + ((P(id) || {}).mv || 0), 0);
+    const basisBudget = (t.budget || 0) + freiMv;
+    const basisTw = (t.teamwert || 0) - freiMv;
+    const verfuegbar = (b, tw) => budgetModus === 'null' ? b : maxGebotVon(b, tw);
+    const jetzt = Date.now();
+
+    const markt = D.markt.map(m => ({ m, s: P(m.id) }))
+      .filter(x => x.s && !kaderIds.has(x.s.id) && x.s.prog)
+      .filter(x => { const e = endeMs(x.m); return e === null || e > jetzt; });
+
+    const pakete = [];
+    for (const W of elf) {
+      const wSchonVerkauft = verkauf.has(W.id);
+      const b1 = basisBudget + (wSchonVerkauft ? 0 : W.mv);
+      const tw1 = basisTw - (wSchonVerkauft ? 0 : W.mv);
+      const weg = new Set([...verkauf, W.id]);
+      const pool = kader.filter(s => !weg.has(s.id));
+      // W wird durch C ersetzt -> sein Platz ist besetzt, Bankspieler bleiben für andere frei
+
+      for (const { m, s: C } of markt) {
+        if (C.pos !== W.pos) continue;
+        const brutto = prog3(C) - prog3(W);
+        if (brutto < 10) continue;
+        const kosten = Math.round((m.preis || C.mv) * (1 + aufschlag / 100));
+        let extra = { spieler: [], verlust: 0, mv: 0 };
+        if (verfuegbar(b1, tw1) < kosten) {
+          extra = waehleVerkaeufe(pool, ctx, weg, sm => verfuegbar(b1 + sm, tw1 - sm) >= kosten);
+          if (!extra) continue;                       // nicht finanzierbar
+        }
+        const gain = brutto - extra.verlust;
+        if (gain < 10) continue;
+        pakete.push({ W, C, m, gain, brutto, kosten, extra: extra.spieler, verlust: extra.verlust,
+                      budgetNach: b1 + extra.mv - kosten, gproMio: gain / Math.max(kosten / 1e6, 0.5) });
+      }
+    }
+    const key = { gain: p => p.gain, tp: p => p.C.tp, ap: p => p.C.ap, eff: p => p.gproMio }[ersatzSort] || (p => p.gain);
+    pakete.sort((a, b) => key(b) - key(a) || b.gain - a.gain);
+    // Vielfalt: pro raus-Spieler höchstens 2, pro rein-Spieler höchstens 1 Vorschlag
+    const proW = {}, genutzt = new Set(), out = [];
+    for (const p of pakete) {
+      if ((proW[p.W.id] || 0) >= 2 || genutzt.has(p.C.id)) continue;
+      proW[p.W.id] = (proW[p.W.id] || 0) + 1; genutzt.add(p.C.id);
+      out.push(p);
+      if (out.length >= 12) break;
+    }
+    return { pakete: out, anzahl: pakete.length, basisBudget, basisTw, freiMv };
+  }
+
+  // Budget-Ampel: Was muss verkauft werden, damit das Budget bis Anpfiff >= 0 ist?
+  function budgetSanierung(ctx, basisBudget) {
+    if (basisBudget >= 0) return null;
+    const pool = ctx.kader.filter(s => !verkauf.has(s.id));
+    const plan = waehleVerkaeufe(pool, ctx, new Set(verkauf), sm => basisBudget + sm >= 0, 6);
+    return { luecke: -basisBudget, plan };
+  }
+
+  // ---- Darstellung ----
+  function spielerZeile(s, { schwach = false, bankBesser = false, labels }) {
+    const t = team(s.tid);
+    const chips = (s.naechste || []).slice(0, 3).map(n => {
+      const c = level(team(n.geg).pl, n.fk);
+      return `<span class="chip ${c}">${n.h ? '' : '@'}${esc(team(n.geg).sy)}</span>`;
+    }).join('');
+    const status = s.st ? `<span class="st-dot" title="${esc(s.stxt || 'Status ' + s.st)}">${s.st === 1 ? 'verletzt' : s.st === 16 ? 'gesperrt' : s.st === 4 ? 'Aufbau' : 'fraglich'}</span>` : '';
+    const markiert = verkauf.has(s.id);
+    return `
+      <div class="tm-row ${schwach ? 'weak' : ''} ${markiert ? 'sell' : ''}" data-id="${esc(s.id)}">
+        <span class="pos-badge">${esc(s.pos)}</span>
+        <div class="tm-main">
+          <div class="tm-name"><span class="tm-open" role="button" tabindex="0">${esc(s.n)}</span> <span class="dd-team">${esc(t.sy)}</span> ${status}
+            ${schwach ? '<span class="tag-weak">schwach</span>' : ''}${bankBesser ? '<span class="tag-good">↑ Elf</span>' : ''}</div>
+          <div class="tm-sub">
+            <span class="opp-chips">${chips}</span>
+            <span>Ø <b>${num(s.ap)}</b></span><span>Ges. <b>${num(s.tp)}</b></span>
+            <span>Einsatz <b>${num(s.pe)} %</b></span>
+            <button class="sell-btn ${markiert ? 'on' : ''}" data-sell="${esc(s.id)}" aria-pressed="${markiert}" title="Verkauf simulieren">${markiert ? '✓ verkaufen' : 'verkaufen?'}</button>
+          </div>
+        </div>
+        <div class="tm-prog">
+          <div class="tm-days">${(s.prog || []).map((x, i) => `<span class="${progKlasse(x)}" title="${labels[i]}">${num(x)}</span>`).join('')}</div>
+          <div class="tm-sum">${num(prog3(s))}</div>
+        </div>
+      </div>`;
+  }
+
+  function renderTeam() {
+    const teams = D.manager_teams || [];
+    if (!teams.length) return;
+    if (!teamMid || !teams.some(t => t.id === teamMid)) {
+      const gemerkt = pref.get('teamMid', null);
+      teamMid = (teams.find(t => t.id === gemerkt) || teams.find(t => t.ich) || teams[0]).id;
+    }
+    document.getElementById('team-chips').innerHTML = teams.map(t =>
+      `<button class="tab ${t.id === teamMid ? 'active' : ''}" data-mid="${esc(t.id)}">${esc(t.n)}${t.ich ? ' (du)' : ''}</button>`).join('');
+
+    const ctx = teamKontext(teams.find(t => t.id === teamMid));
+    const { t, kader, elf, bank } = ctx;
+    const labels = spieltagLabels(kader);
+    const tage = [0, 1, 2].map(i => elf.reduce((x, s) => x + prog(s, i), 0));
+    const summe = tage.reduce((a, b) => a + b, 0);
+
+    // Liga-Vergleich (Prognose aller Startelfs)
+    const liga = teams.map(x => {
+      const c = teamKontext(x);
+      return { t: x, summe: c.elf.reduce((q, s) => q + prog3(s), 0) };
+    }).sort((a, b) => b.summe - a.summe);
+    const rang = liga.findIndex(x => x.t.id === t.id) + 1;
+    const maxLiga = Math.max(1, ...liga.map(x => x.summe));
+
+    // Schwachstellen: 3 schwächste der Elf (Prognose) + alle mit Status
+    const sortiert = [...elf].sort((a, b) => prog3(a) - prog3(b));
+    const schwach = new Set([...sortiert.slice(0, 3).map(s => s.id), ...elf.filter(s => s.st === 1 || s.st === 4 || s.st === 16).map(s => s.id)]);
+
+    // Aufstellungs-Check: beste Elf für den nächsten Spieltag aus dem Kader
+    const best = besteElf(kader, s => prog(s, 0));
+    const jetztElf0 = tage[0];
+    const rein = best ? best.elf.filter(s => !ctx.elfIds.has(s.id)) : [];
+    const raus = best ? elf.filter(s => !best.elf.includes(s)) : [];
+    const bankBesser = new Set(rein.map(s => s.id));
+
+    const maxJetzt = maxGebotVon(t.budget || 0, t.teamwert || 0);
+    const E = ersatzPakete(ctx);
+    const maxSim = maxGebotVon(E.basisBudget, E.basisTw);
+
+    const nachPos = POS_ORDER.map(p => elf.filter(s => s.pos === p).sort((a, b) => prog3(b) - prog3(a))).flat();
+
+    document.getElementById('team-body').innerHTML = `
+      <div class="tm-card">
+        <div class="scoreboard-label">Prognose Startelf · nächste 3 Spieltage</div>
+        <div class="scoreboard-value">${num(summe)} <span class="tm-unit">Pkt</span></div>
+        <div class="tm-days-big">${tage.map((x, i) => `<div><div class="stat-label">${labels[i]}</div><div class="stat-value">${num(x)}</div></div>`).join('')}
+          <div><div class="stat-label">Liga-Rang</div><div class="stat-value">${rang} / ${liga.length}</div></div></div>
+        <div class="scoreboard-grid">
+          <div><div class="stat-label">Budget</div><div class="stat-value ${t.budget < 0 ? 'negative' : ''}">${mio(t.budget)}</div></div>
+          <div><div class="stat-label">Max-Gebot</div><div class="stat-value">${mio(maxJetzt)}</div></div>
+          <div><div class="stat-label">Formation</div><div class="stat-value">${formationVon(elf)}</div></div>
+        </div>
+        <p class="summary">${esc(quelleText(ctx.quelle))}${t.ich ? '' : ' · Budget ist eine Tracker-Schätzung'}.</p>
+      </div>
+
+      <div class="mk-group ${ligaOffen ? 'open' : ''}" id="liga-group">
+        <button class="mk-group-head" id="liga-head" aria-expanded="${ligaOffen}"><span class="caret">▸</span><span>Liga-Vergleich (Prognose 3 ST)</span></button>
+        <div class="market-list liga-list">${liga.map(x => `
+          <div class="liga-row ${x.t.id === t.id ? 'me' : ''}"><span>${esc(x.t.n)}</span>
+            <span class="liga-bar"><span style="width:${Math.round(100 * x.summe / maxLiga)}%"></span></span><b>${num(x.summe)}</b></div>`).join('')}
+        </div>
+      </div>
+
+      <div class="section-title"><span>Startelf</span><span class="mk-hint">${labels.join(' · ')} · Σ</span></div>
+      <div class="market-list tm-list">${nachPos.map(s => spielerZeile(s, { schwach: schwach.has(s.id), labels })).join('')}</div>
+
+      ${bank.length ? `<div class="section-title" style="margin-top:18px"><span>Bank</span><span class="mk-hint">${bank.length} Spieler</span></div>
+      <div class="market-list tm-list">${bank.sort((a, b) => prog3(b) - prog3(a)).map(s => spielerZeile(s, { bankBesser: bankBesser.has(s.id), labels })).join('')}</div>` : ''}
+
+      ${best && best.summe - jetztElf0 >= 10 ? `
+      <div class="tm-card tm-hint-card">
+        <h3>Aufstellungs-Check · ${labels[0]}</h3>
+        <p class="summary">Beste Elf aus dem Kader (${best.formation}) bringt laut Prognose <b class="lv-good">+${num(best.summe - jetztElf0)} Pkt</b> am nächsten Spieltag.</p>
+        <p class="summary">Rein: <b>${rein.map(s => esc(s.n)).join(', ')}</b><br>Raus: <b>${raus.map(s => esc(s.n)).join(', ')}</b></p>
+      </div>` : ''}
+
+      ${(() => {
+        const san = budgetSanierung(ctx, E.basisBudget);
+        if (!san) return '';
+        return `<div class="tm-card tm-warn-card">
+          <h3>Budget-Ampel · bis Anpfiff ${labels[0]}</h3>
+          <p class="summary">Budget ${E.freiMv ? 'nach markierten Verkäufen ' : ''}<b class="negative">${mio(E.basisBudget)}</b> – mit negativem Budget gibt es am Spieltag
+          laut Kickbase-Regel <b>keine Punkte</b>. Es fehlen <b>${mio(san.luecke)}</b>.</p>
+          ${san.plan ? `<p class="summary">Günstigster Ausgleich: <b>${san.plan.spieler.map(x => esc(x.n) + ' (' + mio(x.mv) + ')').join(', ')}</b>
+            → +${mio(san.plan.mv)}, Prognose-Verlust <b>${num(san.plan.verlust)} Pkt</b> in 3 ST.</p>
+            <button class="sort-btn" id="sanierung-markieren" data-ids="${san.plan.spieler.map(x => esc(x.id)).join(',')}">Diese Verkäufe markieren</button>`
+          : '<p class="summary">Mit bis zu 6 Verkäufen nicht auszugleichen.</p>'}
+        </div>`;
+      })()}
+
+      <div class="section-title" style="margin-top:22px"><span>Ersatz-Finder · Transfermarkt</span></div>
+      <div class="tm-card tm-controls">
+        <div class="ctl-row"><span class="ctl-label">Budget-Regel</span>
+          <button class="sort-btn ${budgetModus === 'null' ? 'active' : ''}" data-modus="null">Budget bleibt ≥ 0</button>
+          <button class="sort-btn ${budgetModus === 'max' ? 'active' : ''}" data-modus="max">bis Max-Gebot</button></div>
+        <div class="ctl-row"><span class="ctl-label">Gebot</span>
+          ${[0, 5, 10, 20].map(a => `<button class="sort-btn ${aufschlag === a ? 'active' : ''}" data-auf="${a}">${a ? '+' + a + ' %' : 'Marktwert'}</button>`).join('')}</div>
+        <div class="ctl-row"><span class="ctl-label">Sortieren</span>
+          ${[['gain', 'Punkte-Plus'], ['tp', 'Gesamtpunkte'], ['ap', 'Ø Punkte'], ['eff', 'Plus pro Mio']].map(([k, l]) =>
+            `<button class="sort-btn ${ersatzSort === k ? 'active' : ''}" data-esort="${k}">${l}</button>`).join('')}</div>
+        <p class="summary">${E.freiMv ? `Markiert zum Verkauf: <b>${[...verkauf].map(id => esc((P(id) || {}).n)).join(', ')}</b> (+${mio(E.freiMv)}) ·
+          <button class="link-btn" id="verkauf-reset">zurücksetzen</button><br>` : 'Tipp: Mit „verkaufen?“ Spieler zum Verkauf markieren – der Erlös fließt ins Budget.<br>'}
+          Verfügbar: Budget <b>${mio(E.basisBudget)}</b> · Max-Gebot <b>${mio(maxSim)}</b> (vor Verkauf des ersetzten Spielers)</p>
+      </div>
+      ${E.pakete.length ? `<div class="tm-deals">${E.pakete.map(p => {
+        const zeit = restzeit(p.m);
+        return `
+        <div class="deal">
+          <div class="deal-head">
+            <span class="pos-badge">${esc(p.W.pos)}</span>
+            <span class="deal-swap"><span class="dim">${esc(p.W.n)}</span> → <span class="tm-open" data-open="${esc(p.C.id)}" role="button" tabindex="0">${esc(p.C.n)}</span> <span class="dd-team">${esc(team(p.C.tid).sy)}</span></span>
+            <span class="deal-gain">+${num(p.gain)}</span>
+          </div>
+          <div class="deal-grid">
+            <span>Prognose</span><b>${num(prog3(p.W))} → ${num(prog3(p.C))}</b>
+            <span>Ø / Gesamt</span><b>${num(p.W.ap)}/${num(p.W.tp)} → ${num(p.C.ap)}/${num(p.C.tp)}</b>
+            <span>Gebot</span><b>${mio(p.kosten)}${p.m.verkaeufer !== 'Kickbase' ? ` <span class="dim">(von ${esc(p.m.verkaeufer)})</span>` : ''}</b>
+            <span>Verkaufen</span><b>${esc(p.W.n)} (${mio(p.W.mv)})${p.extra.map(x => ` + ${esc(x.n)} (${mio(x.mv)}${ctx.elfIds.has(x.id) ? ', Elf' : ''})`).join('')}</b>
+            ${p.verlust ? `<span>Punkte</span><b>+${num(p.brutto)} Tausch − ${num(p.verlust)} durch Zusatzverkauf</b>` : ''}
+            <span>Budget danach</span><b class="${p.budgetNach < 0 ? 'negative' : ''}">${mio(p.budgetNach)}</b>
+            ${zeit ? `<span>Ablauf</span><b>⏱ ${esc(zeit)}</b>` : ''}
+          </div>
+        </div>`; }).join('')}</div>
+        <p class="summary">${E.anzahl} finanzierbare Tauschmöglichkeiten gefunden, die besten ${E.pakete.length} gezeigt (max. 2 je Spieler).
+        „+Pkt“ = Prognose der nächsten 3 Spieltage: Neuer minus Bisheriger, abzüglich Punkte, die durch zusätzliche Verkäufe verloren gehen
+        (Startelf-Spieler werden durch den besten Bankspieler ersetzt). Zusätzliche Verkäufe: wenig Punktverlust pro Million zuerst.</p>`
+      : `<div class="dd-empty market-list">Kein finanzierbarer Ersatz auf dem Markt, der mehr Punkte verspricht.
+          ${budgetModus === 'null' ? 'Versuch „bis Max-Gebot“ oder markiere weitere Spieler zum Verkauf.' : 'Markiere weitere Spieler zum Verkauf.'}</div>`}
+    `;
+  }
+
+  // Ereignisse (Delegation, Inhalt wird bei jeder Änderung neu gebaut)
+  document.getElementById('team-chips').addEventListener('click', e => {
+    const b = e.target.closest('[data-mid]');
+    if (!b) return;
+    teamMid = b.dataset.mid; pref.set('teamMid', teamMid);
+    verkauf.clear();
+    renderTeam();
+  });
+  const teamBody = document.getElementById('team-body');
+  teamBody.addEventListener('click', e => {
+    const el = e.target;
+    const sell = el.closest('[data-sell]');
+    if (sell) { const id = sell.dataset.sell; verkauf.has(id) ? verkauf.delete(id) : verkauf.add(id); renderTeam(); return; }
+    if (el.closest('#verkauf-reset')) { verkauf.clear(); renderTeam(); return; }
+    const san = el.closest('#sanierung-markieren');
+    if (san) { san.dataset.ids.split(',').forEach(id => verkauf.add(id)); renderTeam(); return; }
+    if (el.closest('#liga-head')) { ligaOffen = !ligaOffen; pref.set('ligaOffen', ligaOffen); renderTeam(); return; }
+    const mod = el.closest('[data-modus]');
+    if (mod) { budgetModus = mod.dataset.modus; pref.set('budgetModus', budgetModus); renderTeam(); return; }
+    const auf = el.closest('[data-auf]');
+    if (auf) { aufschlag = +auf.dataset.auf; pref.set('aufschlag', aufschlag); renderTeam(); return; }
+    const es = el.closest('[data-esort]');
+    if (es) { ersatzSort = es.dataset.esort; pref.set('ersatzSort', ersatzSort); renderTeam(); return; }
+    const open = el.closest('[data-open]') || (el.closest('.tm-open') && el.closest('.tm-row'));
+    if (open) oeffne(open.dataset.open || open.dataset.id);
+  });
+  teamBody.addEventListener('keydown', e => {
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('tm-open')) { e.preventDefault(); e.target.click(); }
+  });
 
   // ---------------- Popup ----------------
   const modal = document.getElementById('modal');
@@ -1249,6 +1677,7 @@ load();
     return `<div class="blk"><h3>Kennzahlen</h3><div class="kgrid">
       ${kennzahl('Ø Punkte', num(s.ap), `${num(s.tp)} gesamt`)}
       ${kennzahl('Form (letzte 3)', num(s.form), formHint)}
+      ${s.prog ? kennzahl('Prognose 3 ST', num(s.prog3), s.prog.map(x => num(x)).join(' · ') + ` · Einsatz ${num(s.pe)} %`) : ''}
       ${kennzahl('Punkte / 90 Min', num(s.p90), 'pro voller Spielzeit')}
       ${kennzahl('Einsätze', `${num(s.einsaetze)} / ${num(s.team_spiele)}`, `Startelf-Quote ${s.startquote === null ? '–' : num(s.startquote) + ' %'}`)}
       ${kennzahl('Ø Minuten', num(s.min_schnitt), `${num(s.min)} Min gesamt`)}
@@ -1397,7 +1826,9 @@ load();
       marktById = new Map(D.markt.map(m => [m.id, m]));
       document.getElementById('topbar').hidden = false;
       renderMarkt();
-      zeigeAnsicht(pref.get('ansicht', 'markt') === 'budget' ? 'budget' : 'markt');
+      if (!(D.manager_teams || []).length) document.getElementById('vs-team').hidden = true;
+      const gemerkt = pref.get('ansicht', 'markt');
+      zeigeAnsicht(['markt', 'team', 'budget'].includes(gemerkt) ? gemerkt : 'markt');
     })
     .catch(() => { /* spieler_daten.json fehlt noch -> Bereich bleibt ausgeblendet */ });
 })();
