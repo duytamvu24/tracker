@@ -106,13 +106,6 @@
       "mw_aenderung": 108680
     },
     {
-      "id": "2717",
-      "name": "Skov",
-      "marktwert": 500000,
-      "position": "MF",
-      "mw_aenderung": 0
-    },
-    {
       "id": "2687",
       "name": "Nkunku",
       "marktwert": 24059162,
@@ -232,6 +225,13 @@
       "marktwert": 6600429,
       "position": "ABW",
       "mw_aenderung": 332758
+    },
+    {
+      "id": "6319",
+      "name": "Honorat",
+      "marktwert": 4487397,
+      "position": "MF",
+      "mw_aenderung": 35492
     }
   ],
   "3181707": [
@@ -532,6 +532,13 @@
       "marktwert": 2495270,
       "position": "MF",
       "mw_aenderung": 424650
+    },
+    {
+      "id": "13472",
+      "name": "Reggiani",
+      "marktwert": 3082842,
+      "position": "ABW",
+      "mw_aenderung": 228307
     }
   ],
   "3458038": [
