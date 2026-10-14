@@ -122,13 +122,6 @@
       "mw_aenderung": 163316
     },
     {
-      "id": "3350",
-      "name": "Keidel",
-      "marktwert": 9221148,
-      "position": "ABW",
-      "mw_aenderung": 155868
-    },
-    {
       "id": "16378",
       "name": "Karetsas",
       "marktwert": 26079887,
@@ -634,20 +627,6 @@
       "mw_aenderung": 171753
     },
     {
-      "id": "9600",
-      "name": "Schlager",
-      "marktwert": 3093671,
-      "position": "TW",
-      "mw_aenderung": 294459
-    },
-    {
-      "id": "859",
-      "name": "Gyamerah",
-      "marktwert": 4739723,
-      "position": "ABW",
-      "mw_aenderung": 257170
-    },
-    {
       "id": "513",
       "name": "Götze",
       "marktwert": 3929015,
@@ -674,6 +653,20 @@
       "marktwert": 5003452,
       "position": "MF",
       "mw_aenderung": 350104
+    },
+    {
+      "id": "670",
+      "name": "Karaman",
+      "marktwert": 8211635,
+      "position": "ST",
+      "mw_aenderung": 331993
+    },
+    {
+      "id": "9642",
+      "name": "Matsima",
+      "marktwert": 14714189,
+      "position": "ABW",
+      "mw_aenderung": 223547
     }
   ]
 }
