@@ -322,7 +322,14 @@ def lade_manager_teams(headers: dict, league_id: str, state: dict, spieltag: int
         kader = [str(p.get("pi")) for p in kader_roh if p.get("pi") is not None]
 
         elf, quelle = [], "keine"
-        tage = [t for t in (spieltag, (spieltag or 0) - 1) if t and t > 0]
+        if mid == getattr(kt, "EIGENE_MANAGER_ID", None):
+            # Eigene Elf: immer aktuell abrufbar (auch vor Anpfiff)
+            me = api_get(f"/v4/leagues/{league_id}/teamcenter/myeleven", headers) or {}
+            lp = [str(x.get("i")) for x in me.get("lp") or [] if isinstance(x, dict) and x.get("i")]
+            lp = [x for x in lp if x in kader]
+            if len(lp) >= 8:
+                elf, quelle = lp, "aktuell"
+        tage = [t for t in (spieltag, (spieltag or 0) - 1) if t and t > 0] if not elf else []
         for tag in tage:
             tc = api_get(f"/v4/leagues/{league_id}/users/{mid}/teamcenter", headers, params={"dayNumber": tag})
             eintraege = (tc or {}).get("us") or []

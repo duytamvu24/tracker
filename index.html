@@ -386,6 +386,42 @@
     margin-top: 8px;
   }
 
+  .meta-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+  .refresh-btn { font-family: 'Inter', sans-serif; font-size: 12.5px; background: transparent; border: 1px solid var(--line);
+                 color: var(--chalk-dim); padding: 5px 12px; border-radius: 999px; cursor: pointer; }
+  .refresh-btn:hover { border-color: var(--gold); color: var(--chalk); }
+  .refresh-btn:disabled { opacity: 0.5; cursor: default; }
+  .refresh-status { font-size: 11.5px; color: var(--chalk-dim); text-align: right; max-width: 260px; }
+  .refresh-status a { color: var(--gold-bright); }
+  @media (max-width: 600px) {
+    .meta-wrap { width: 100%; flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+    .meta { text-align: left; }
+    .refresh-status { width: 100%; max-width: none; text-align: left; }
+  }
+  #gh-box .adjust-row label { white-space: normal; }
+  .korr-info { font-size: 12px; color: var(--gold-bright); margin-top: 12px; }
+  .korr { margin-top: 16px; border-top: 1px solid var(--line); padding-top: 12px; }
+  .korr summary { cursor: pointer; font-size: 13px; color: var(--chalk-dim); }
+  .korr summary:hover { color: var(--chalk); }
+  .korr-body { display: grid; gap: 8px; margin-top: 10px; }
+  .korr-body label { font-size: 12.5px; color: var(--chalk-dim); }
+  .korr-body input, .gh-select, #gh-token {
+    background: rgba(255,255,255,0.04); border: 1px solid var(--line); border-radius: 4px; color: var(--chalk);
+    font-family: 'IBM Plex Mono', monospace; font-size: 16px; padding: 9px 12px; min-width: 0; }
+  #gh-token { flex: 1; min-width: 160px; }
+  .korr-body input:focus, #gh-token:focus { outline: none; border-color: var(--gold); }
+  .korr-body .sort-btn { justify-self: start; }
+  .korr-body .sort-btn:disabled { opacity: 0.45; cursor: default; }
+  .korr-preview { font-size: 13px; color: var(--chalk-dim); line-height: 1.6; }
+  .korr-preview b { color: var(--chalk); font-family: 'IBM Plex Mono', monospace; font-weight: 500; }
+  .korr-msg { font-size: 12.5px; }
+  .korr-msg.ok { color: var(--good); } .korr-msg.err { color: var(--bad); }
+  .korr-log { display: grid; gap: 6px; }
+  .korr-eintrag { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; font-size: 13px; padding: 8px 10px; background: var(--card); border-radius: 4px; }
+  .korr-eintrag .k-wert { font-family: 'IBM Plex Mono', monospace; text-align: right; }
+  .korr-eintrag .k-sub { grid-column: 1 / 3; font-size: 11.5px; color: var(--chalk-dim); }
+  .badge-korr { font-size: 10px; color: var(--gold-bright); border: 1px solid currentColor; border-radius: 3px; padding: 0 4px; margin-left: 6px; font-family: 'Inter', sans-serif; vertical-align: 1px; }
+
   .status {
     font-family: 'IBM Plex Mono', monospace;
     color: var(--chalk-dim);
@@ -679,7 +715,11 @@
 <div class="wrap">
   <header>
     <h1>Liga<span>·</span>Cockpit</h1>
-    <div class="meta" id="meta">lädt …</div>
+    <div class="meta-wrap">
+      <div class="meta" id="meta">lädt …</div>
+      <button class="refresh-btn" id="refresh-btn" title="Daten jetzt neu von Kickbase holen">⟳ Aktualisieren</button>
+      <div class="refresh-status" id="refresh-status" aria-live="polite"></div>
+    </div>
   </header>
 
   <div class="topbar" id="topbar" hidden>
@@ -743,6 +783,18 @@
       <div><div class="stat-label">Netto-Transfer</div><div class="stat-value" id="sb-transfer">—</div></div>
       <div><div class="stat-label">Netto-Teamwert</div><div class="stat-value" id="sb-netto">—</div></div>
     </div>
+    <div class="korr-info" id="sb-korr-info"></div>
+    <details class="korr" id="korr">
+      <summary>Budget korrigieren</summary>
+      <div class="korr-body">
+        <label for="korr-input">Echtes Budget laut App (z. B. „-40.259.629“ oder „-40,26 Mio“)</label>
+        <input type="text" inputmode="decimal" id="korr-input" autocomplete="off" placeholder="-40.259.629">
+        <input type="text" id="korr-notiz" autocomplete="off" placeholder="Notiz (optional), z. B. Screenshot von Tai">
+        <div class="korr-preview" id="korr-preview"></div>
+        <button class="sort-btn active" id="korr-save" disabled>Korrektur speichern</button>
+        <div class="korr-msg" id="korr-msg"></div>
+      </div>
+    </details>
   </div>
 
   <div class="squad" id="squad">
@@ -783,6 +835,30 @@
     </div>
   </div>
 
+  <div class="adjust visible" id="korr-log-box">
+    <div class="adjust-header"><div class="adjust-title">Protokoll Budget-Korrekturen</div></div>
+    <div id="korr-log" class="korr-log"><div class="adjust-hint">Noch keine Korrekturen.</div></div>
+  </div>
+
+  <div class="adjust visible" id="gh-box">
+    <div class="adjust-header"><div class="adjust-title">GitHub-Verbindung</div><div class="adjust-hint" id="gh-status"></div></div>
+    <div class="adjust-hint" style="margin-bottom:10px">Nötig zum Speichern von Korrekturen und für „Aktualisieren“. Der Token bleibt nur in diesem Browser.
+      Anlegen: GitHub → Settings → Developer settings → Fine-grained tokens → nur Repository <b>tracker</b>,
+      Rechte <b>Contents: Read and write</b> und <b>Actions: Read and write</b>.</div>
+    <div class="adjust-row">
+      <input type="password" id="gh-token" autocomplete="off" placeholder="github_pat_…" style="font-size:14px">
+      <button class="sort-btn" id="gh-save">Speichern</button>
+      <button class="sort-btn" id="gh-del">Entfernen</button>
+    </div>
+    <div class="adjust-row" style="margin-top:12px">
+      <label for="gh-auto">Beim Öffnen automatisch aktualisieren, wenn Daten älter sind als</label>
+      <select id="gh-auto" class="gh-select">
+        <option value="0">nie</option><option value="1">1 Stunde</option><option value="3">3 Stunden</option>
+        <option value="6">6 Stunden</option><option value="12">12 Stunden</option>
+      </select>
+    </div>
+  </div>
+
   <div class="note">
     Werte für Manager außer dir selbst sind Schätzungen (Login-Bonus wird pauschal angenommen).
     Aktualisiert sich automatisch bei jedem täglichen Skript-Lauf.
@@ -803,24 +879,98 @@ function maxGebot(budget, teamwert) {
 
 let squadCache = {};
 
+// =====================================================================
+// GitHub-Verbindung: frische Daten, Korrekturen speichern, Workflow starten
+// =====================================================================
+const REPO = 'duytamvu24/tracker';
+const WORKFLOW = 'kickbase_daily.yml';
+const GH = {
+  token() { try { return localStorage.getItem('cockpit.ghToken') || ''; } catch (e) { return ''; } },
+  setToken(t) { try { t ? localStorage.setItem('cockpit.ghToken', t) : localStorage.removeItem('cockpit.ghToken'); } catch (e) { /* egal */ } },
+  async api(pfad, opt = {}) {
+    const r = await fetch('https://api.github.com/repos/' + REPO + pfad, {
+      ...opt, cache: 'no-store',
+      headers: { Accept: 'application/vnd.github+json', Authorization: 'Bearer ' + this.token(),
+                 'X-GitHub-Api-Version': '2022-11-28', ...(opt.headers || {}) },
+    });
+    if (!r.ok) {
+      let msg = r.status + '';
+      try { msg += ' ' + (await r.json()).message; } catch (e) { /* kein JSON */ }
+      const err = new Error('GitHub ' + msg); err.status = r.status; throw err;
+    }
+    return r.status === 204 ? null : r.json();
+  },
+};
+const b64encode = str => { const bytes = new TextEncoder().encode(str); let bin = ''; bytes.forEach(b => bin += String.fromCharCode(b)); return btoa(bin); };
+const b64decode = b64 => new TextDecoder().decode(Uint8Array.from(atob(b64.replace(/\n/g, '')), c => c.charCodeAt(0)));
+
+// JSON-Datei laden: mit Token direkt aus dem Repo (sofort aktuell, ohne Pages-Verzögerung),
+// sonst von der Seite selbst.
+async function ladeJson(name, optional = false) {
+  if (GH.token()) {
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${name}?ref=main`, {
+        cache: 'no-store', headers: { Accept: 'application/vnd.github.raw+json', Authorization: 'Bearer ' + GH.token() } });
+      if (r.ok) return await r.json();
+      if (r.status === 404 && optional) return null;
+    } catch (e) { /* Fallback auf die Seite */ }
+  }
+  const r = await fetch('./' + name + '?t=' + Date.now(), { cache: 'no-store' });
+  if (!r.ok) { if (optional) return null; throw new Error(name + ' nicht gefunden (Status ' + r.status + ')'); }
+  return r.json();
+}
+
+// ---- Budget-Korrekturen ----
+let KORREKTUREN = [];
+const zeitVon = iso => iso ? new Date(iso).getTime() : 0;
+// Neueste Korrektur, die der Tracker noch nicht verarbeitet hat (nach seinem letzten Lauf)
+function offeneKorrektur(id, stateEintrag) {
+  const berechnet = zeitVon(stateEintrag && stateEintrag.berechnet_um);
+  return KORREKTUREN.filter(k => String(k.manager_id) === String(id) && zeitVon(k.zeitpunkt) > berechnet)
+    .sort((a, b) => zeitVon(a.zeitpunkt) - zeitVon(b.zeitpunkt)).pop() || null;
+}
+function mitKorrektur(id, stateEintrag) {
+  const last = stateEintrag.history[stateEintrag.history.length - 1];
+  const k = offeneKorrektur(id, stateEintrag);
+  const vomTracker = last.korrektur ? KORREKTUREN.find(x => x.zeitpunkt === last.korrektur) || { zeitpunkt: last.korrektur } : null;
+  if (!k) return { ...last, korrigiert: vomTracker };
+  return { ...last, budget: k.budget, netto_teamwert: last.teamwert + k.budget,
+           max_gebot: maxGebot(k.budget, last.teamwert), korrigiert: k };
+}
+// Gemeinsame Schnittstelle für Team-Analyse und Transfermarkt
+window.Cockpit = { budgetVon: () => null };
+
+// Freitext -> Euro: "-40.259.629", "-40,26 Mio", "4953000", "4,95 mio"
+function parseBetrag(txt) {
+  let t = String(txt || '').toLowerCase().replace(/€|\s/g, '');
+  if (!t) return null;
+  const mio = /mio|m$/.test(t);
+  t = t.replace(/mio\.?|m$/g, '');
+  if (mio) t = t.replace(/\./g, '').replace(',', '.');
+  else t = t.replace(/[.,](?=\d{3}(\D|$))/g, '').replace(',', '.');
+  const n = parseFloat(t);
+  if (!isFinite(n)) return null;
+  return Math.round(mio ? n * 1e6 : n);
+}
+
 async function load() {
   const loadingEl = document.getElementById('loading');
   try {
-    const res = await fetch('./state.json?t=' + Date.now(), { cache: 'no-store' });
-    if (!res.ok) throw new Error('state.json nicht gefunden (Status ' + res.status + ')');
-    const state = await res.json();
+    const state = await ladeJson('state.json');
 
     // squad_cache.json ist optional - falls es fehlt oder fehlschlaegt, laeuft
     // das Haupt-Dashboard trotzdem, nur der Kader-Simulator bleibt dann leer.
-    try {
-      const squadRes = await fetch('./squad_cache.json?t=' + Date.now(), { cache: 'no-store' });
-      if (squadRes.ok) squadCache = await squadRes.json();
-    } catch (e) { /* squad_cache optional, ignorieren */ }
+    try { squadCache = (await ladeJson('squad_cache.json', true)) || {}; } catch (e) { /* optional */ }
+    try { KORREKTUREN = (await ladeJson('budget_korrekturen.json', true)) || []; } catch (e) { KORREKTUREN = []; }
 
-    const managers = Object.entries(state).map(([id, m]) => {
-      const last = m.history[m.history.length - 1];
-      return { id, name: m.name, ...last };
+    const managers = Object.entries(state).filter(([, m]) => m && m.history && m.history.length).map(([id, m]) => {
+      return { id, name: (m.name || '').trim(), ...mitKorrektur(id, m) };
     }).sort((a, b) => b.max_gebot - a.max_gebot);
+    window.Cockpit.budgetVon = id => {
+      const m = managers.find(x => x.id === String(id));
+      return m ? { budget: m.budget, teamwert: m.teamwert, max_gebot: m.max_gebot, korrigiert: m.korrigiert } : null;
+    };
+    window.Cockpit.stateZeit = Math.max(0, ...Object.values(state).map(m => zeitVon(m && m.berechnet_um)));
 
     if (managers.length === 0) throw new Error('Keine Manager in state.json gefunden.');
 
@@ -836,7 +986,7 @@ async function load() {
       tr.innerHTML = `
         <td><span class="rank">${i + 1}</span>${m.name}</td>
         <td>${fmt(m.teamwert)}</td>
-        <td class="${m.budget < 0 ? 'negative' : 'positive'}">${fmt(m.budget)}</td>
+        <td class="${m.budget < 0 ? 'negative' : 'positive'} td-budget">${fmt(m.budget)}${m.korrigiert ? '<span class="badge-korr">korr.</span>' : ''}</td>
         <td>${fmt(m.netto_teamwert)}</td>
         <td>${fmt(m.max_gebot)}</td>
       `;
@@ -1003,17 +1153,186 @@ async function load() {
       document.getElementById('sb-netto').textContent = fmt(m.netto_teamwert);
 
       currentManager = m;
+      try { localStorage.setItem('cockpit.budgetManager', m.id); } catch (e) { /* egal */ }
       document.getElementById('adjust-input').value = '';
+      zeigeKorrekturInfo(m);
       renderSquad(m);
     }
 
-    select(managers[0]);
+    // ---------------- Budget-Korrektur ----------------
+    const korrInput = document.getElementById('korr-input');
+    const korrNotiz = document.getElementById('korr-notiz');
+    const korrSave = document.getElementById('korr-save');
+    const korrMsg = document.getElementById('korr-msg');
+    const datumZeit = iso => new Date(iso).toLocaleString('de-DE', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' });
+
+    function zeigeKorrekturInfo(m) {
+      const k = m.korrigiert;
+      document.getElementById('sb-korr-info').textContent = k
+        ? `Budget manuell korrigiert am ${datumZeit(k.zeitpunkt)}${k.budget !== undefined ? '' : ''}${offeneKorrektur(m.id, state[m.id]) ? ' – wird beim nächsten Tracker-Lauf übernommen' : ''}`
+        : '';
+      korrInput.value = ''; korrNotiz.value = ''; korrMsg.textContent = ''; korrMsg.className = 'korr-msg';
+      vorschau();
+    }
+
+    function vorschau() {
+      const m = currentManager, neu = parseBetrag(korrInput.value);
+      const el = document.getElementById('korr-preview');
+      if (!m || neu === null) { el.innerHTML = ''; korrSave.disabled = true; return; }
+      const maxNeu = maxGebot(neu, m.teamwert);
+      el.innerHTML = `Budget <b>${fmt(m.budget)}</b> → <b>${fmt(neu)}</b> (${neu - m.budget >= 0 ? '+' : ''}${fmt(neu - m.budget)})<br>
+        Max-Gebot <b>${fmt(m.max_gebot)}</b> → <b>${fmt(maxNeu)}</b> · Netto-Teamwert → <b>${fmt(m.teamwert + neu)}</b>`;
+      korrSave.disabled = !GH.token();
+      if (!GH.token()) { korrMsg.className = 'korr-msg err'; korrMsg.textContent = 'Zum Speichern unten die GitHub-Verbindung einrichten.'; }
+    }
+    korrInput.addEventListener('input', vorschau);
+
+    korrSave.addEventListener('click', async () => {
+      const m = currentManager, neu = parseBetrag(korrInput.value);
+      if (!m || neu === null) return;
+      korrSave.disabled = true; korrMsg.className = 'korr-msg'; korrMsg.textContent = 'Speichere …';
+      const eintrag = {
+        manager_id: m.id, name: m.name, budget: neu, vorher: Math.round(m.budget), differenz: Math.round(neu - m.budget),
+        teamwert: Math.round(m.teamwert), max_gebot_neu: Math.round(maxGebot(neu, m.teamwert)),
+        zeitpunkt: new Date().toISOString(), kickbase_tag: m.date, notiz: korrNotiz.value.trim(), quelle: 'website',
+      };
+      try {
+        // Datei lesen (falls vorhanden), Eintrag anhängen, zurückschreiben -> ein Commit = dokumentiert
+        let sha, liste = [];
+        try {
+          const f = await GH.api('/contents/budget_korrekturen.json?ref=main');
+          sha = f.sha; liste = JSON.parse(b64decode(f.content));
+        } catch (e) { if (e.status !== 404) throw e; }
+        liste.push(eintrag);
+        await GH.api('/contents/budget_korrekturen.json', { method: 'PUT', body: JSON.stringify({
+          message: `Budget-Korrektur ${m.name}: ${fmt(eintrag.vorher)} -> ${fmt(neu)}${eintrag.notiz ? ' (' + eintrag.notiz + ')' : ''}`,
+          content: b64encode(JSON.stringify(liste, null, 2) + '\n'), sha, branch: 'main' }) });
+        KORREKTUREN = liste;
+        // Sofort übernehmen: Werte des Managers neu berechnen und überall aktualisieren
+        Object.assign(m, mitKorrektur(m.id, state[m.id]));
+        const row = document.getElementById('row-' + m.id);
+        row.children[2].className = (m.budget < 0 ? 'negative' : 'positive') + ' td-budget';
+        row.children[2].innerHTML = fmt(m.budget) + '<span class="badge-korr">korr.</span>';
+        row.children[3].textContent = fmt(m.netto_teamwert);
+        row.children[4].textContent = fmt(m.max_gebot);
+        select(m);
+        renderKorrLog();
+        document.dispatchEvent(new CustomEvent('cockpit:budget'));
+        korrMsg.className = 'korr-msg ok'; korrMsg.textContent = 'Gespeichert. Der Tracker übernimmt die Korrektur beim nächsten Lauf.';
+        document.getElementById('korr').open = true;
+      } catch (e) {
+        korrMsg.className = 'korr-msg err';
+        korrMsg.textContent = 'Fehler beim Speichern: ' + e.message + (e.status === 401 || e.status === 403 ? ' – Token prüfen (Contents: Read and write).' : '');
+        korrSave.disabled = false;
+      }
+    });
+
+    function renderKorrLog() {
+      const box = document.getElementById('korr-log');
+      const liste = [...KORREKTUREN].sort((a, b) => zeitVon(b.zeitpunkt) - zeitVon(a.zeitpunkt)).slice(0, 30);
+      box.innerHTML = liste.length ? liste.map(k => `
+        <div class="korr-eintrag">
+          <span>${k.name || k.manager_id}</span>
+          <span class="k-wert">${k.vorher !== undefined ? fmt(k.vorher) + ' → ' : ''}${fmt(k.budget)}</span>
+          <span class="k-sub">${datumZeit(k.zeitpunkt)}${k.differenz !== undefined ? ' · ' + (k.differenz >= 0 ? '+' : '') + fmt(k.differenz) : ''}${k.notiz ? ' · ' + k.notiz.replace(/[<>&]/g, '') : ''}</span>
+        </div>`).join('') : '<div class="adjust-hint">Noch keine Korrekturen.</div>';
+    }
+    renderKorrLog();
+
+    select(managers.find(x => x.id === aktiveId()) || managers[0]);
+    document.dispatchEvent(new CustomEvent('cockpit:budget'));
   } catch (err) {
     loadingEl.textContent = 'Fehler: ' + err.message;
   }
 }
 
-load();
+function aktiveId() { try { return localStorage.getItem('cockpit.budgetManager'); } catch (e) { return null; } }
+
+// ---------------- GitHub-Verbindung + Aktualisieren ----------------
+(function ghSetup() {
+  const tokenEl = document.getElementById('gh-token');
+  const status = document.getElementById('gh-status');
+  const auto = document.getElementById('gh-auto');
+  const zeige = () => { status.textContent = GH.token() ? 'verbunden' : 'nicht verbunden'; tokenEl.value = ''; tokenEl.placeholder = GH.token() ? '•••••• (gespeichert)' : 'github_pat_…'; };
+  zeige();
+  document.getElementById('gh-save').addEventListener('click', async () => {
+    const t = tokenEl.value.trim(); if (!t) return;
+    GH.setToken(t); status.textContent = 'prüfe …';
+    try { await GH.api(''); zeige(); status.textContent = 'verbunden ✓'; }
+    catch (e) { GH.setToken(''); zeige(); status.textContent = 'Token ungültig (' + e.message + ')'; }
+  });
+  document.getElementById('gh-del').addEventListener('click', () => { GH.setToken(''); zeige(); });
+  try { auto.value = localStorage.getItem('cockpit.autoStunden') || '0'; } catch (e) { /* egal */ }
+  auto.addEventListener('change', () => { try { localStorage.setItem('cockpit.autoStunden', auto.value); } catch (e) { /* egal */ } });
+})();
+
+const refreshBtn = document.getElementById('refresh-btn');
+const refreshStatus = document.getElementById('refresh-status');
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+async function aktualisieren() {
+  if (!GH.token()) {
+    document.getElementById('vs-budget') && document.getElementById('vs-budget').click();
+    document.getElementById('gh-box').scrollIntoView({ behavior: 'smooth' });
+    refreshStatus.textContent = 'Erst unten die GitHub-Verbindung einrichten.';
+    return;
+  }
+  refreshBtn.disabled = true;
+  try {
+    // Läuft schon ein Lauf? Dann darauf warten statt einen neuen zu starten.
+    const offen = (await GH.api(`/actions/workflows/${WORKFLOW}/runs?per_page=5`)).workflow_runs
+      .find(r => r.status !== 'completed');
+    let runId = offen && offen.id;
+    if (!runId) {
+      const start = Date.now();
+      await GH.api(`/actions/workflows/${WORKFLOW}/dispatches`, { method: 'POST', body: JSON.stringify({ ref: 'main' }) });
+      refreshStatus.textContent = 'Gestartet, warte auf GitHub …';
+      for (let i = 0; i < 20 && !runId; i++) {
+        await sleep(3000);
+        const neu = (await GH.api(`/actions/workflows/${WORKFLOW}/runs?event=workflow_dispatch&per_page=3`)).workflow_runs
+          .find(r => new Date(r.created_at).getTime() > start - 60000);
+        runId = neu && neu.id;
+      }
+      if (!runId) throw new Error('Lauf wurde nicht gefunden');
+    }
+    const t0 = Date.now();
+    for (;;) {
+      const run = await GH.api(`/actions/runs/${runId}`);
+      const sek = Math.round((Date.now() - t0) / 1000);
+      if (run.status === 'completed') {
+        if (run.conclusion !== 'success') {
+          refreshStatus.innerHTML = `Lauf fehlgeschlagen (${run.conclusion}) – <a href="${run.html_url}" target="_blank" rel="noopener">Log ansehen</a>`;
+          break;
+        }
+        refreshStatus.textContent = 'Fertig – lade neue Daten …';
+        await sleep(2500);
+        location.reload();
+        return;
+      }
+      refreshStatus.innerHTML = `Aktualisierung läuft … ${Math.floor(sek / 60)}:${String(sek % 60).padStart(2, '0')}
+        (<a href="${run.html_url}" target="_blank" rel="noopener">${run.status === 'queued' ? 'wartet' : 'läuft'}</a>)`;
+      await sleep(8000);
+    }
+  } catch (e) {
+    refreshStatus.textContent = 'Fehler: ' + e.message + (e.status === 403 ? ' – Token braucht „Actions: Read and write“.' : '');
+  }
+  refreshBtn.disabled = false;
+}
+refreshBtn.addEventListener('click', aktualisieren);
+
+load().then(() => {
+  // Automatisch aktualisieren, wenn eingestellt und die Daten zu alt sind (max. 1x pro 15 Min)
+  let stunden = 0;
+  try { stunden = +localStorage.getItem('cockpit.autoStunden') || 0; } catch (e) { /* egal */ }
+  const alter = (Date.now() - (window.Cockpit.stateZeit || 0)) / 36e5;
+  let zuletzt = 0;
+  try { zuletzt = +sessionStorage.getItem('cockpit.autoLauf') || 0; } catch (e) { /* egal */ }
+  if (GH.token() && stunden > 0 && window.Cockpit.stateZeit && alter > stunden && Date.now() - zuletzt > 15 * 60000) {
+    try { sessionStorage.setItem('cockpit.autoLauf', String(Date.now())); } catch (e) { /* egal */ }
+    refreshStatus.textContent = `Daten ${Math.round(alter)} h alt – aktualisiere automatisch …`;
+    aktualisieren();
+  }
+});
 </script>
 
 <div class="modal" id="modal" aria-hidden="true">
@@ -1320,17 +1639,47 @@ load();
   }
 
   // Kader + Startelf eines Managers aufbereiten
-  function teamKontext(t) {
+  // Budget/Teamwert: aktuelle Werte aus der Budget-Ansicht (inkl. manueller Korrekturen)
+  function budgetVon(t) {
+    const c = window.Cockpit && window.Cockpit.budgetVon(t.id);
+    return c ? { ...t, budget: c.budget, teamwert: c.teamwert, korrigiert: c.korrigiert } : t;
+  }
+
+  // Elf mit Lücken (inzwischen verkaufte Spieler) mit den besten Bankspielern zu
+  // einer gültigen Formation auffüllen.
+  function ergaenzeElf(elf, kader) {
+    const rest = kader.filter(s => !elf.includes(s));
+    let best = null;
+    for (const [a, m, st] of FORMATIONEN) {
+      const soll = { TW: 1, ABW: a, MF: m, ST: st };
+      const hat = p => elf.filter(s => s.pos === p).length;
+      if (POS_ORDER.some(p => hat(p) > soll[p])) continue;
+      const dazu = POS_ORDER.flatMap(p => rest.filter(s => s.pos === p).sort((x, y) => prog(y, 0) - prog(x, 0)).slice(0, soll[p] - hat(p)));
+      if (elf.length + dazu.length !== 11) continue;
+      const summe = dazu.reduce((x, s) => x + prog(s, 0), 0);
+      if (!best || summe > best.summe) best = { summe, dazu };
+    }
+    return best ? best.dazu : [];
+  }
+
+  function teamKontext(tRoh) {
+    const t = budgetVon(tRoh);
     const kader = t.kader.map(P).filter(Boolean);
     let elf = t.elf.map(P).filter(Boolean).filter(s => t.kader.includes(s.id));
-    let quelle = t.quelle;
+    let quelle = t.quelle, ergaenzt = [];
     if (elf.length < 11) {
-      const b = besteElf(kader, s => prog(s, 0));
-      if (b && elf.length < 8) { elf = b.elf; quelle = 'geschätzt'; }
+      if (elf.length >= 8) {
+        ergaenzt = ergaenzeElf(elf, kader);
+        elf = [...elf, ...ergaenzt];
+      }
+      if (elf.length < 11) {
+        const b = besteElf(kader, s => prog(s, 0));
+        if (b) { elf = b.elf; quelle = 'geschätzt'; ergaenzt = []; }
+      }
     }
     const elfIds = new Set(elf.map(s => s.id));
     const bank = kader.filter(s => !elfIds.has(s.id));
-    return { t, kader, elf, elfIds, bank, quelle };
+    return { t, kader, elf, elfIds, bank, quelle, ergaenzt };
   }
 
   function spieltagLabels(kader) {
@@ -1533,7 +1882,8 @@ load();
           <div><div class="stat-label">Max-Gebot</div><div class="stat-value">${mio(maxJetzt)}</div></div>
           <div><div class="stat-label">Formation</div><div class="stat-value">${formationVon(elf)}</div></div>
         </div>
-        <p class="summary">${esc(quelleText(ctx.quelle))}${t.ich ? '' : ' · Budget ist eine Tracker-Schätzung'}.</p>
+        <p class="summary">${esc(quelleText(ctx.quelle))}${ctx.ergaenzt.length ? ` – ergänzt um ${ctx.ergaenzt.map(x => esc(x.n)).join(', ')} (verkaufte Spieler ersetzt)` : ''}
+          · ${t.korrigiert ? 'Budget manuell korrigiert' : t.ich ? 'Budget laut Tracker' : 'Budget ist eine Tracker-Schätzung'}.</p>
       </div>
 
       <div class="mk-group ${ligaOffen ? 'open' : ''}" id="liga-group">
@@ -1652,7 +2002,10 @@ load();
   }
 
   function blockMarkt(s, m) {
-    const mgr = D.manager || [];
+    const mgr = (D.manager || []).map(x => {
+      const c = window.Cockpit && window.Cockpit.budgetVon(x.id);
+      return c ? { ...x, max: c.max_gebot } : x;
+    }).sort((a, b) => (b.max || 0) - (a.max || 0));
     const rows = mgr.map(x => {
       const kann = x.max !== null && x.max >= m.preis;
       return `<div class="bidder ${kann ? '' : 'no'} ${x.ich ? 'me' : ''}">
@@ -1818,8 +2171,12 @@ load();
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && offen) schliesse(); });
 
   // ---------------- Laden ----------------
-  fetch('./spieler_daten.json?t=' + Date.now(), { cache: 'no-store' })
-    .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+  // Budget-Korrekturen oder neu geladene Budgets -> Team-Ansicht neu zeichnen
+  document.addEventListener('cockpit:budget', () => {
+    if (D && !document.getElementById('view-team').hidden) renderTeam();
+  });
+
+  ladeJson('spieler_daten.json')
     .then(daten => {
       D = daten;
       byId = new Map(D.spieler.map(s => [s.id, s]));

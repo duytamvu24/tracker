@@ -54,6 +54,10 @@ MINUS_GRENZE = 0.33         # exakt 33,00% - empirisch bestaetigt (Abweichung nu
                              # exakt 83.102.169, real getestet: 83.102.168)
 
 STATE_FILE = "state.json"
+# Manuelle Budget-Korrekturen von der Website (Liste von Eintraegen mit
+# manager_id, budget, zeitpunkt, ...). Jede Korrektur ist ein Ankerpunkt:
+# Budget zum Zeitpunkt X war Y -> ab dort wird mit den Transfers weitergerechnet.
+KORREKTUREN_FILE = "budget_korrekturen.json"
 CONFIG_FILE = "config.json"
 
 
@@ -372,8 +376,45 @@ def compute_day(prev_budget: float, teamwert: float, netto_transfer: float) -> d
     }
 
 
+def load_korrekturen() -> list:
+    if os.path.exists(KORREKTUREN_FILE):
+        try:
+            with open(KORREKTUREN_FILE, "r", encoding="utf-8") as f:
+                daten = json.load(f)
+            return daten if isinstance(daten, list) else []
+        except (ValueError, OSError) as e:
+            print(f"WARNUNG: {KORREKTUREN_FILE} nicht lesbar ({e}) - Korrekturen werden ignoriert.")
+    return []
+
+
+def _berlin(ts) -> pd.Timestamp:
+    t = pd.to_datetime(ts)
+    return t.tz_localize("Europe/Berlin") if t.tzinfo is None else t.tz_convert("Europe/Berlin")
+
+
+def _tag_von(ts) -> str:
+    """Kickbase-Tag (wie in history['date']) fuer einen Zeitpunkt - gleiche Logik wie bei Transfers."""
+    return (pd.Timestamp(kickbase_day(_berlin(ts))) + pd.Timedelta(days=1)).date().isoformat()
+
+
+def _netto_nach(store: dict, manager_id: str, ab, tag: str, reset_threshold) -> float:
+    """Netto-Transfer eines Managers NACH Zeitpunkt 'ab', aber noch am selben Kickbase-Tag."""
+    ab = _berlin(ab)
+    schwelle = _berlin(reset_threshold) if reset_threshold else None
+    summe = 0.0
+    for t in store.get(manager_id, {}).values():
+        if t.get("excluded"):
+            continue
+        dt = _berlin(t["dt"])
+        if dt <= ab or (schwelle is not None and dt <= schwelle) or _tag_von(dt) != tag:
+            continue
+        summe += t["trp"] if t["tty"] != 1 else -t["trp"]
+    return summe
+
+
 def recompute_history(history: list, start_budget: float, store: dict,
-                      manager_id: str, reset_threshold: str | None) -> None:
+                      manager_id: str, reset_threshold: str | None,
+                      korrekturen: list | None = None) -> None:
     """Berechnet die KOMPLETTE Budget-Kette ab Startbudget neu aus dem Archiv.
 
     Vorher wurde nur der jeweils letzte Eintrag nachkorrigiert. Taucht ein
@@ -387,10 +428,33 @@ def recompute_history(history: list, start_budget: float, store: dict,
         for row in tagesgewinne.itertuples(index=False)
     }
 
+    # Korrekturen dieses Managers je Kickbase-Tag (die spaeteste des Tages zaehlt)
+    anker = {}
+    for k in korrekturen or []:
+        if str(k.get("manager_id")) != str(manager_id) or k.get("budget") is None or not k.get("zeitpunkt"):
+            continue
+        if reset_threshold and _berlin(k["zeitpunkt"]) <= _berlin(reset_threshold):
+            continue  # Korrektur aus der Saison vor dem Reset
+        tag = _tag_von(k["zeitpunkt"])
+        if tag not in anker or _berlin(k["zeitpunkt"]) > _berlin(anker[tag]["zeitpunkt"]):
+            anker[tag] = k
+
     budget = start_budget
     for eintrag in history:
         netto = netto_je_tag.get(eintrag["date"], 0.0)
         neu = compute_day(budget, eintrag["teamwert"], netto)
+        k = anker.get(eintrag["date"])
+        if k:
+            # Echtes Budget zum Korrektur-Zeitpunkt + Transfers danach (Login-Bonus
+            # des Tages steckt im echten Wert schon drin)
+            b = float(k["budget"]) + _netto_nach(store, manager_id, k["zeitpunkt"], eintrag["date"], reset_threshold)
+            neu["budget"] = round(b, 2)
+            neu["netto_teamwert"] = round(eintrag["teamwert"] + b, 2)
+            neu["max_gebot"] = round(b + MINUS_GRENZE * (eintrag["teamwert"] + min(b, 0)), 2)
+            neu["korrektur"] = k.get("zeitpunkt")
+        else:
+            neu.pop("korrektur", None)
+            eintrag.pop("korrektur", None)
         neu["date"] = eintrag["date"]
         eintrag.update(neu)
         budget = neu["budget"]
@@ -417,6 +481,9 @@ def run_for_day(target_day: str) -> pd.DataFrame:
         print("=== AFTER_RESET aktiv: setze Budget/Teamwert-Basis für alle Manager neu ===")
 
     jetzt_iso = pd.Timestamp.now(tz="Europe/Berlin").isoformat()
+    korrekturen = load_korrekturen()
+    if korrekturen:
+        print(f"{len(korrekturen)} Budget-Korrektur(en) aus {KORREKTUREN_FILE} geladen.")
 
     zeilen = []
 
@@ -514,7 +581,7 @@ def run_for_day(target_day: str) -> pd.DataFrame:
             # spaeter im Archiv aufgetaucht sind, und korrigierte Startbudgets.
             alte_budgets = {e["date"]: e.get("budget") for e in history}
             recompute_history(history, effektives_start_budget, transfers_store,
-                              manager_id, reset_threshold)
+                              manager_id, reset_threshold, korrekturen)
             geaendert = [
                 e for e in history
                 if alte_budgets.get(e["date"]) is not None
@@ -525,7 +592,8 @@ def run_for_day(target_day: str) -> pd.DataFrame:
                 print(f"[{name}] Budget-Kette ab {erster['date']} korrigiert "
                       f"({len(geaendert)} Tag(e), heute jetzt {history[-1]['budget']:,.0f} €).")
 
-            day_result = history[-1]
+            day_result = {k: v for k, v in history[-1].items() if k != "korrektur"}
+            state[manager_id]["berechnet_um"] = jetzt_iso
 
         zeilen.append({"Manager": name, **day_result})
 
