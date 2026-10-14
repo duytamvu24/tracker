@@ -541,11 +541,18 @@
       "mw_aenderung": 314674
     },
     {
-      "id": "11886",
-      "name": "Rômulo",
-      "marktwert": 11010426,
+      "id": "7684",
+      "name": "Aebischer",
+      "marktwert": 6150823,
+      "position": "MF",
+      "mw_aenderung": 266831
+    },
+    {
+      "id": "6172",
+      "name": "Adamu",
+      "marktwert": 4072173,
       "position": "ST",
-      "mw_aenderung": 178099
+      "mw_aenderung": 306033
     }
   ],
   "3458038": [
