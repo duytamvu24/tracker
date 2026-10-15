@@ -425,6 +425,20 @@
       "marktwert": 500000,
       "position": "ABW",
       "mw_aenderung": 0
+    },
+    {
+      "id": "10115",
+      "name": "Svensson",
+      "marktwert": 19086614,
+      "position": "ABW",
+      "mw_aenderung": 203448
+    },
+    {
+      "id": "17306",
+      "name": "Imeri",
+      "marktwert": 3112406,
+      "position": "MF",
+      "mw_aenderung": 423946
     }
   ],
   "3310917": [
@@ -662,11 +676,11 @@
       "mw_aenderung": 219427
     },
     {
-      "id": "6745",
-      "name": "Boniface",
-      "marktwert": 2300392,
-      "position": "ST",
-      "mw_aenderung": 254573
+      "id": "7750",
+      "name": "Hranác",
+      "marktwert": 836428,
+      "position": "ABW",
+      "mw_aenderung": -121620
     }
   ]
 }
