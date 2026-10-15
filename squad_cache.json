@@ -225,6 +225,13 @@
       "marktwert": 7064279,
       "position": "ABW",
       "mw_aenderung": 190554
+    },
+    {
+      "id": "2783",
+      "name": "Tapsoba",
+      "marktwert": 26140903,
+      "position": "ABW",
+      "mw_aenderung": 29789
     }
   ],
   "3181707": [
@@ -376,13 +383,6 @@
       "marktwert": 12255399,
       "position": "MF",
       "mw_aenderung": 195974
-    },
-    {
-      "id": "15376",
-      "name": "Estève",
-      "marktwert": 6832202,
-      "position": "ABW",
-      "mw_aenderung": -402858
     },
     {
       "id": "11099",
@@ -660,6 +660,13 @@
       "marktwert": 14933616,
       "position": "ABW",
       "mw_aenderung": 219427
+    },
+    {
+      "id": "6745",
+      "name": "Boniface",
+      "marktwert": 2300392,
+      "position": "ST",
+      "mw_aenderung": 254573
     }
   ]
 }
