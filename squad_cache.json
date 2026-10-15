@@ -185,13 +185,6 @@
       "mw_aenderung": 171525
     },
     {
-      "id": "1955",
-      "name": "Burke",
-      "marktwert": 4838067,
-      "position": "ST",
-      "mw_aenderung": 58787
-    },
-    {
       "id": "2941",
       "name": "Scally",
       "marktwert": 5798470,
@@ -506,25 +499,11 @@
       "mw_aenderung": 266192
     },
     {
-      "id": "13472",
-      "name": "Reggiani",
-      "marktwert": 3599831,
-      "position": "ABW",
-      "mw_aenderung": 101849
-    },
-    {
       "id": "6174",
       "name": "Arthur",
       "marktwert": 8453563,
       "position": "ABW",
       "mw_aenderung": 207973
-    },
-    {
-      "id": "7278",
-      "name": "Poreba",
-      "marktwert": 9309215,
-      "position": "MF",
-      "mw_aenderung": 168182
     },
     {
       "id": "6172",
