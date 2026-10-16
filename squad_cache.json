@@ -8,13 +8,6 @@
       "mw_aenderung": 108917
     },
     {
-      "id": "3304",
-      "name": "Matanović",
-      "marktwert": 25931902,
-      "position": "ST",
-      "mw_aenderung": 10909
-    },
-    {
       "id": "6061",
       "name": "Maza",
       "marktwert": 31081745,
@@ -136,13 +129,6 @@
       "mw_aenderung": -5143
     },
     {
-      "id": "2714",
-      "name": "Beier",
-      "marktwert": 20024941,
-      "position": "ST",
-      "mw_aenderung": 75350
-    },
-    {
       "id": "3284",
       "name": "Rohr",
       "marktwert": 13167329,
@@ -164,27 +150,6 @@
       "mw_aenderung": 56197
     },
     {
-      "id": "3041",
-      "name": "Widmer",
-      "marktwert": 2555786,
-      "position": "ABW",
-      "mw_aenderung": 171525
-    },
-    {
-      "id": "2941",
-      "name": "Scally",
-      "marktwert": 5798470,
-      "position": "ABW",
-      "mw_aenderung": 248443
-    },
-    {
-      "id": "9776",
-      "name": "Maksimović",
-      "marktwert": 5537570,
-      "position": "MF",
-      "mw_aenderung": 183645
-    },
-    {
       "id": "2074",
       "name": "Hack",
       "marktwert": 4415253,
@@ -192,11 +157,11 @@
       "mw_aenderung": 240832
     },
     {
-      "id": "11665",
-      "name": "Potulski",
-      "marktwert": 8654940,
-      "position": "ABW",
-      "mw_aenderung": 183942
+      "id": "6172",
+      "name": "Adamu",
+      "marktwert": 4503617,
+      "position": "ST",
+      "mw_aenderung": 176012
     },
     {
       "id": "2783",
@@ -213,11 +178,11 @@
       "mw_aenderung": 244330
     },
     {
-      "id": "9995",
-      "name": "Mokwa",
-      "marktwert": 7552127,
-      "position": "ST",
-      "mw_aenderung": 112815
+      "id": "89",
+      "name": "Günter",
+      "marktwert": 3489953,
+      "position": "ABW",
+      "mw_aenderung": 227968
     }
   ],
   "3181707": [
@@ -227,13 +192,6 @@
       "marktwert": 65037047,
       "position": "ST",
       "mw_aenderung": 9277
-    },
-    {
-      "id": "2373",
-      "name": "Kabak",
-      "marktwert": 21396570,
-      "position": "ABW",
-      "mw_aenderung": 54752
     },
     {
       "id": "11959",
@@ -304,27 +262,6 @@
       "marktwert": 9870613,
       "position": "MF",
       "mw_aenderung": 223914
-    },
-    {
-      "id": "51",
-      "name": "Khedira",
-      "marktwert": 6720564,
-      "position": "MF",
-      "mw_aenderung": 118322
-    },
-    {
-      "id": "10120",
-      "name": "Røssing-Lelesiit",
-      "marktwert": 1238942,
-      "position": "ST",
-      "mw_aenderung": 153519
-    },
-    {
-      "id": "4446",
-      "name": "Kemlein",
-      "marktwert": 4328767,
-      "position": "MF",
-      "mw_aenderung": 126959
     },
     {
       "id": "1961",
@@ -513,20 +450,6 @@
       "mw_aenderung": 266192
     },
     {
-      "id": "6174",
-      "name": "Arthur",
-      "marktwert": 8453563,
-      "position": "ABW",
-      "mw_aenderung": 207973
-    },
-    {
-      "id": "6172",
-      "name": "Adamu",
-      "marktwert": 4503617,
-      "position": "ST",
-      "mw_aenderung": 176012
-    },
-    {
       "id": "15313",
       "name": "Erevbenagie",
       "marktwert": 3370391,
@@ -539,13 +462,6 @@
       "marktwert": 3516355,
       "position": "ST",
       "mw_aenderung": 265720
-    },
-    {
-      "id": "8381",
-      "name": "Burcu",
-      "marktwert": 2759589,
-      "position": "MF",
-      "mw_aenderung": 232885
     }
   ],
   "3458038": [
@@ -569,13 +485,6 @@
       "marktwert": 26608141,
       "position": "ABW",
       "mw_aenderung": 94875
-    },
-    {
-      "id": "11631",
-      "name": "Burger",
-      "marktwert": 19753336,
-      "position": "MF",
-      "mw_aenderung": 13214
     },
     {
       "id": "6081",
@@ -634,13 +543,6 @@
       "mw_aenderung": 53086
     },
     {
-      "id": "11748",
-      "name": "Mohya",
-      "marktwert": 5434717,
-      "position": "MF",
-      "mw_aenderung": 175235
-    },
-    {
       "id": "670",
       "name": "Karaman",
       "marktwert": 8664956,
@@ -653,13 +555,6 @@
       "marktwert": 15153741,
       "position": "ABW",
       "mw_aenderung": 220125
-    },
-    {
-      "id": "2765",
-      "name": "Thielmann",
-      "marktwert": 3323753,
-      "position": "MF",
-      "mw_aenderung": 145468
     }
   ]
 }
