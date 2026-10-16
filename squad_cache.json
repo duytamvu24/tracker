@@ -36,20 +36,6 @@
       "mw_aenderung": 57563
     },
     {
-      "id": "14249",
-      "name": "El Aynaoui",
-      "marktwert": 13854078,
-      "position": "MF",
-      "mw_aenderung": 59750
-    },
-    {
-      "id": "7215",
-      "name": "Makengo",
-      "marktwert": 14807685,
-      "position": "ABW",
-      "mw_aenderung": 40190
-    },
-    {
       "id": "8301",
       "name": "Sirch",
       "marktwert": 5138842,
@@ -225,6 +211,13 @@
       "marktwert": 12132628,
       "position": "ABW",
       "mw_aenderung": 244330
+    },
+    {
+      "id": "9995",
+      "name": "Mokwa",
+      "marktwert": 7552127,
+      "position": "ST",
+      "mw_aenderung": 112815
     }
   ],
   "3181707": [
@@ -339,6 +332,13 @@
       "marktwert": 15506245,
       "position": "MF",
       "mw_aenderung": 7545
+    },
+    {
+      "id": "2294",
+      "name": "Pieper",
+      "marktwert": 11542104,
+      "position": "ABW",
+      "mw_aenderung": -236451
     }
   ],
   "3308384": [
@@ -532,6 +532,20 @@
       "marktwert": 3370391,
       "position": "ST",
       "mw_aenderung": 266574
+    },
+    {
+      "id": "7350",
+      "name": "Stange",
+      "marktwert": 3516355,
+      "position": "ST",
+      "mw_aenderung": 265720
+    },
+    {
+      "id": "8381",
+      "name": "Burcu",
+      "marktwert": 2759589,
+      "position": "MF",
+      "mw_aenderung": 232885
     }
   ],
   "3458038": [
