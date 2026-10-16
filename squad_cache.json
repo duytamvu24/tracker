@@ -332,6 +332,13 @@
       "marktwert": 4328767,
       "position": "MF",
       "mw_aenderung": 126959
+    },
+    {
+      "id": "1961",
+      "name": "Gnabry",
+      "marktwert": 15506245,
+      "position": "MF",
+      "mw_aenderung": 7545
     }
   ],
   "3308384": [
@@ -411,6 +418,13 @@
       "marktwert": 3475584,
       "position": "MF",
       "mw_aenderung": 363178
+    },
+    {
+      "id": "1745",
+      "name": "Condé",
+      "marktwert": 500000,
+      "position": "MF",
+      "mw_aenderung": 0
     }
   ],
   "3310917": [
@@ -604,13 +618,6 @@
       "marktwert": 27702830,
       "position": "MF",
       "mw_aenderung": 53086
-    },
-    {
-      "id": "13806",
-      "name": "Seol",
-      "marktwert": 4228745,
-      "position": "ABW",
-      "mw_aenderung": 248506
     },
     {
       "id": "11748",
