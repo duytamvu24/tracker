@@ -176,6 +176,13 @@
       "marktwert": 7173710,
       "position": "MF",
       "mw_aenderung": 187649
+    },
+    {
+      "id": "2803",
+      "name": "Lemperle",
+      "marktwert": 10754489,
+      "position": "ST",
+      "mw_aenderung": 131489
     }
   ],
   "3181707": [
@@ -455,6 +462,13 @@
       "marktwert": 15796715,
       "position": "ABW",
       "mw_aenderung": 71257
+    },
+    {
+      "id": "3063",
+      "name": "Chiarodia",
+      "marktwert": 1438357,
+      "position": "ABW",
+      "mw_aenderung": 154940
     }
   ],
   "3458038": [
