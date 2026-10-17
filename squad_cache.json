@@ -162,6 +162,20 @@
       "marktwert": 3489587,
       "position": "ABW",
       "mw_aenderung": -366
+    },
+    {
+      "id": "3072",
+      "name": "Urbig",
+      "marktwert": 5315009,
+      "position": "TW",
+      "mw_aenderung": 114513
+    },
+    {
+      "id": "2358",
+      "name": "Krauß",
+      "marktwert": 7173710,
+      "position": "MF",
+      "mw_aenderung": 187649
     }
   ],
   "3181707": [
@@ -434,6 +448,13 @@
       "marktwert": 3560508,
       "position": "ST",
       "mw_aenderung": 44153
+    },
+    {
+      "id": "2141",
+      "name": "Baku",
+      "marktwert": 15796715,
+      "position": "ABW",
+      "mw_aenderung": 71257
     }
   ],
   "3458038": [
@@ -527,6 +548,13 @@
       "marktwert": 7392191,
       "position": "ABW",
       "mw_aenderung": 172926
+    },
+    {
+      "id": "12321",
+      "name": "Simpson-Pusey",
+      "marktwert": 9311305,
+      "position": "ABW",
+      "mw_aenderung": 239706
     }
   ]
 }
