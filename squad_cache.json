@@ -129,13 +129,6 @@
       "mw_aenderung": 110543
     },
     {
-      "id": "6172",
-      "name": "Adamu",
-      "marktwert": 4493277,
-      "position": "ST",
-      "mw_aenderung": -44688
-    },
-    {
       "id": "2783",
       "name": "Tapsoba",
       "marktwert": 26234672,
@@ -169,6 +162,13 @@
       "marktwert": 10873163,
       "position": "ST",
       "mw_aenderung": 118674
+    },
+    {
+      "id": "3102",
+      "name": "Rothe",
+      "marktwert": 8555735,
+      "position": "ABW",
+      "mw_aenderung": 132391
     }
   ],
   "3181707": [
@@ -455,6 +455,13 @@
       "marktwert": 1683493,
       "position": "ABW",
       "mw_aenderung": 245136
+    },
+    {
+      "id": "3187",
+      "name": "Schäfer",
+      "marktwert": 4030720,
+      "position": "MF",
+      "mw_aenderung": 390453
     }
   ],
   "3458038": [
@@ -513,13 +520,6 @@
       "marktwert": 27802744,
       "position": "MF",
       "mw_aenderung": 52716
-    },
-    {
-      "id": "670",
-      "name": "Karaman",
-      "marktwert": 8805533,
-      "position": "ST",
-      "mw_aenderung": 43596
     },
     {
       "id": "9642",
