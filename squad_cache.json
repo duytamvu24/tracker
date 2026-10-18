@@ -157,13 +157,6 @@
       "mw_aenderung": 233787
     },
     {
-      "id": "89",
-      "name": "Günter",
-      "marktwert": 3282404,
-      "position": "ABW",
-      "mw_aenderung": -207183
-    },
-    {
       "id": "3072",
       "name": "Urbig",
       "marktwert": 5465329,
@@ -522,13 +515,6 @@
       "mw_aenderung": 139156
     },
     {
-      "id": "513",
-      "name": "Götze",
-      "marktwert": 4327001,
-      "position": "MF",
-      "mw_aenderung": 13384
-    },
-    {
       "id": "2694",
       "name": "Stiller",
       "marktwert": 27802744,
@@ -576,6 +562,27 @@
       "marktwert": 19295896,
       "position": "MF",
       "mw_aenderung": 65665
+    },
+    {
+      "id": "15196",
+      "name": "Yamamoto",
+      "marktwert": 1505829,
+      "position": "MF",
+      "mw_aenderung": 149940
+    },
+    {
+      "id": "173",
+      "name": "Tah",
+      "marktwert": 28448741,
+      "position": "ABW",
+      "mw_aenderung": 23892
+    },
+    {
+      "id": "11955",
+      "name": "El Khannouss",
+      "marktwert": 13800209,
+      "position": "MF",
+      "mw_aenderung": -246369
     }
   ]
 }
