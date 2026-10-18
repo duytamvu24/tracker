@@ -169,6 +169,13 @@
       "marktwert": 8555735,
       "position": "ABW",
       "mw_aenderung": 132391
+    },
+    {
+      "id": "2126",
+      "name": "Kühn",
+      "marktwert": 2452901,
+      "position": "MF",
+      "mw_aenderung": 228130
     }
   ],
   "3181707": [
@@ -420,27 +427,6 @@
       "marktwert": 12177699,
       "position": "ST",
       "mw_aenderung": 103148
-    },
-    {
-      "id": "12367",
-      "name": "Spalt",
-      "marktwert": 3306515,
-      "position": "MF",
-      "mw_aenderung": -221687
-    },
-    {
-      "id": "15313",
-      "name": "Erevbenagie",
-      "marktwert": 3382606,
-      "position": "ST",
-      "mw_aenderung": -56977
-    },
-    {
-      "id": "7350",
-      "name": "Stange",
-      "marktwert": 3470251,
-      "position": "ST",
-      "mw_aenderung": -90257
     },
     {
       "id": "2141",
