@@ -69,6 +69,13 @@
       "marktwert": 25164238,
       "position": "ST",
       "mw_aenderung": 262233
+    },
+    {
+      "id": "10049",
+      "name": "Behrens",
+      "marktwert": 11880780,
+      "position": "ABW",
+      "mw_aenderung": 237922
     }
   ],
   "3181699": [
@@ -155,13 +162,6 @@
       "marktwert": 7715963,
       "position": "MF",
       "mw_aenderung": 316176
-    },
-    {
-      "id": "2803",
-      "name": "Lemperle",
-      "marktwert": 10995346,
-      "position": "ST",
-      "mw_aenderung": 122183
     },
     {
       "id": "3102",
@@ -262,6 +262,13 @@
       "marktwert": 11753016,
       "position": "ABW",
       "mw_aenderung": 116795
+    },
+    {
+      "id": "7242",
+      "name": "Gosens",
+      "marktwert": 9485554,
+      "position": "ABW",
+      "mw_aenderung": 262216
     }
   ],
   "3308384": [
@@ -448,6 +455,20 @@
       "marktwert": 4468981,
       "position": "MF",
       "mw_aenderung": 438261
+    },
+    {
+      "id": "2065",
+      "name": "Uduokhai",
+      "marktwert": 10498339,
+      "position": "ABW",
+      "mw_aenderung": 226266
+    },
+    {
+      "id": "620",
+      "name": "Schwolow",
+      "marktwert": 7732271,
+      "position": "TW",
+      "mw_aenderung": 347951
     }
   ],
   "3458038": [
@@ -562,6 +583,13 @@
       "marktwert": 13821140,
       "position": "MF",
       "mw_aenderung": 20931
+    },
+    {
+      "id": "3158",
+      "name": "Asllani",
+      "marktwert": 12902764,
+      "position": "ST",
+      "mw_aenderung": 206418
     }
   ]
 }
