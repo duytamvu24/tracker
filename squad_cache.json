@@ -76,6 +76,20 @@
       "marktwert": 12360462,
       "position": "ABW",
       "mw_aenderung": 233035
+    },
+    {
+      "id": "7696",
+      "name": "Labrović",
+      "marktwert": 500000,
+      "position": "TW",
+      "mw_aenderung": 0
+    },
+    {
+      "id": "9754",
+      "name": "Bah",
+      "marktwert": 5839888,
+      "position": "ABW",
+      "mw_aenderung": 384522
     }
   ],
   "3181699": [
@@ -297,6 +311,13 @@
       "marktwert": 5491979,
       "position": "MF",
       "mw_aenderung": 331491
+    },
+    {
+      "id": "7349",
+      "name": "Jeltsch",
+      "marktwert": 15397944,
+      "position": "ABW",
+      "mw_aenderung": 59961
     }
   ],
   "3308384": [
