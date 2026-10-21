@@ -90,6 +90,13 @@
       "marktwert": 5839888,
       "position": "ABW",
       "mw_aenderung": 384522
+    },
+    {
+      "id": "1257",
+      "name": "Kübler",
+      "marktwert": 3384125,
+      "position": "ABW",
+      "mw_aenderung": 198847
     }
   ],
   "3181699": [
@@ -499,13 +506,6 @@
       "mw_aenderung": 428243
     },
     {
-      "id": "2065",
-      "name": "Uduokhai",
-      "marktwert": 10922404,
-      "position": "ABW",
-      "mw_aenderung": 205847
-    },
-    {
       "id": "620",
       "name": "Schwolow",
       "marktwert": 8417564,
@@ -518,6 +518,20 @@
       "marktwert": 15976053,
       "position": "ABW",
       "mw_aenderung": 181967
+    },
+    {
+      "id": "2552",
+      "name": "Bülter",
+      "marktwert": 7724847,
+      "position": "ST",
+      "mw_aenderung": 311939
+    },
+    {
+      "id": "11101",
+      "name": "Albert",
+      "marktwert": 949662,
+      "position": "ST",
+      "mw_aenderung": 325977
     }
   ],
   "3458038": [
