@@ -264,13 +264,6 @@
       "mw_aenderung": 254222
     },
     {
-      "id": "11161",
-      "name": "Machida",
-      "marktwert": 7852944,
-      "position": "ABW",
-      "mw_aenderung": -198148
-    },
-    {
       "id": "2366",
       "name": "Davies",
       "marktwert": 22073137,
@@ -332,6 +325,13 @@
       "marktwert": 1184598,
       "position": "ABW",
       "mw_aenderung": 271657
+    },
+    {
+      "id": "15211",
+      "name": "Gadou",
+      "marktwert": 22432865,
+      "position": "ABW",
+      "mw_aenderung": 201760
     }
   ],
   "3308384": [
