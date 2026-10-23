@@ -157,13 +157,6 @@
       "mw_aenderung": 65394
     },
     {
-      "id": "2074",
-      "name": "Hack",
-      "marktwert": 5675917,
-      "position": "MF",
-      "mw_aenderung": 122163
-    },
-    {
       "id": "2783",
       "name": "Tapsoba",
       "marktwert": 26520599,
@@ -192,13 +185,6 @@
       "mw_aenderung": 232492
     },
     {
-      "id": "3102",
-      "name": "Rothe",
-      "marktwert": 9992983,
-      "position": "ABW",
-      "mw_aenderung": 230798
-    },
-    {
       "id": "2126",
       "name": "Kühn",
       "marktwert": 4242082,
@@ -211,13 +197,6 @@
       "marktwert": 6420196,
       "position": "ABW",
       "mw_aenderung": 402368
-    },
-    {
-      "id": "9384",
-      "name": "Darvich",
-      "marktwert": 6727204,
-      "position": "MF",
-      "mw_aenderung": 102021
     },
     {
       "id": "1954",
@@ -627,13 +606,6 @@
       "mw_aenderung": 362877
     },
     {
-      "id": "15196",
-      "name": "Yamamoto",
-      "marktwert": 3015088,
-      "position": "MF",
-      "mw_aenderung": 320120
-    },
-    {
       "id": "173",
       "name": "Tah",
       "marktwert": 28569394,
@@ -667,6 +639,13 @@
       "marktwert": 6756074,
       "position": "ABW",
       "mw_aenderung": 406448
+    },
+    {
+      "id": "2006",
+      "name": "Posch",
+      "marktwert": 11177504,
+      "position": "ABW",
+      "mw_aenderung": 147557
     }
   ]
 }
