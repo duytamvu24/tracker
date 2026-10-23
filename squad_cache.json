@@ -71,18 +71,18 @@
       "mw_aenderung": 140312
     },
     {
-      "id": "1257",
-      "name": "Kübler",
-      "marktwert": 3809071,
-      "position": "ABW",
-      "mw_aenderung": 38173
-    },
-    {
       "id": "2722",
       "name": "Osterhage",
       "marktwert": 958507,
       "position": "MF",
       "mw_aenderung": 210573
+    },
+    {
+      "id": "2498",
+      "name": "Baack",
+      "marktwert": 500000,
+      "position": "MF",
+      "mw_aenderung": 0
     }
   ],
   "3181699": [
