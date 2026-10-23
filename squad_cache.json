@@ -36,13 +36,6 @@
       "mw_aenderung": 30041
     },
     {
-      "id": "577",
-      "name": "Batz",
-      "marktwert": 500000,
-      "position": "TW",
-      "mw_aenderung": 0
-    },
-    {
       "id": "8247",
       "name": "Hendriks",
       "marktwert": 8177520,
@@ -76,20 +69,6 @@
       "marktwert": 12727324,
       "position": "ABW",
       "mw_aenderung": 165049
-    },
-    {
-      "id": "7696",
-      "name": "Labrović",
-      "marktwert": 500000,
-      "position": "TW",
-      "mw_aenderung": 0
-    },
-    {
-      "id": "9754",
-      "name": "Bah",
-      "marktwert": 6363643,
-      "position": "ABW",
-      "mw_aenderung": 214327
     },
     {
       "id": "1257",
@@ -192,13 +171,6 @@
       "mw_aenderung": 279439
     },
     {
-      "id": "3277",
-      "name": "Muheim",
-      "marktwert": 6420196,
-      "position": "ABW",
-      "mw_aenderung": 402368
-    },
-    {
       "id": "1954",
       "name": "Bernardo",
       "marktwert": 1938898,
@@ -211,6 +183,13 @@
       "marktwert": 21313187,
       "position": "MF",
       "mw_aenderung": 123655
+    },
+    {
+      "id": "4654",
+      "name": "Kömür",
+      "marktwert": 5481228,
+      "position": "MF",
+      "mw_aenderung": 253325
     }
   ],
   "3181707": [
@@ -278,6 +257,13 @@
       "mw_aenderung": 136174
     },
     {
+      "id": "3277",
+      "name": "Muheim",
+      "marktwert": 6420196,
+      "position": "ABW",
+      "mw_aenderung": 402368
+    },
+    {
       "id": "7242",
       "name": "Gosens",
       "marktwert": 10186614,
@@ -290,13 +276,6 @@
       "marktwert": 26461664,
       "position": "ST",
       "mw_aenderung": 20824
-    },
-    {
-      "id": "118",
-      "name": "Grifo",
-      "marktwert": 7229347,
-      "position": "MF",
-      "mw_aenderung": 170198
     },
     {
       "id": "15283",
@@ -397,13 +376,6 @@
       "marktwert": 20329150,
       "position": "ABW",
       "mw_aenderung": 82906
-    },
-    {
-      "id": "17306",
-      "name": "Imeri",
-      "marktwert": 5661542,
-      "position": "MF",
-      "mw_aenderung": 145655
     },
     {
       "id": "1745",
