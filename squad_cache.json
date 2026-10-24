@@ -455,6 +455,13 @@
       "marktwert": 1764196,
       "position": "ST",
       "mw_aenderung": 217807
+    },
+    {
+      "id": "9605",
+      "name": "Grønbæk",
+      "marktwert": 6533579,
+      "position": "MF",
+      "mw_aenderung": 133890
     }
   ],
   "3458038": [
@@ -548,6 +555,20 @@
       "marktwert": 16504366,
       "position": "MF",
       "mw_aenderung": 200188
+    },
+    {
+      "id": "7219",
+      "name": "Jóhannesson",
+      "marktwert": 7751225,
+      "position": "MF",
+      "mw_aenderung": 218972
+    },
+    {
+      "id": "11255",
+      "name": "Katic",
+      "marktwert": 15979918,
+      "position": "ABW",
+      "mw_aenderung": 59383
     }
   ]
 }
