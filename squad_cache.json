@@ -283,6 +283,13 @@
       "marktwert": 22790079,
       "position": "ABW",
       "mw_aenderung": 173086
+    },
+    {
+      "id": "2395",
+      "name": "Ryerson",
+      "marktwert": 14856607,
+      "position": "ABW",
+      "mw_aenderung": 197526
     }
   ],
   "3308384": [
@@ -569,6 +576,20 @@
       "marktwert": 15979918,
       "position": "ABW",
       "mw_aenderung": 59383
+    },
+    {
+      "id": "1863",
+      "name": "Heuer Fernandes",
+      "marktwert": 11148818,
+      "position": "TW",
+      "mw_aenderung": 23447
+    },
+    {
+      "id": "7224",
+      "name": "Castello Jr.",
+      "marktwert": 15830193,
+      "position": "ABW",
+      "mw_aenderung": 125622
     }
   ]
 }
