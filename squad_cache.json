@@ -197,6 +197,13 @@
       "marktwert": 5520657,
       "position": "MF",
       "mw_aenderung": 39429
+    },
+    {
+      "id": "2646",
+      "name": "Becker",
+      "marktwert": 18979439,
+      "position": "ST",
+      "mw_aenderung": 99568
     }
   ],
   "3181707": [
@@ -536,13 +543,6 @@
       "mw_aenderung": 375410
     },
     {
-      "id": "173",
-      "name": "Tah",
-      "marktwert": 28614007,
-      "position": "ABW",
-      "mw_aenderung": 44613
-    },
-    {
       "id": "3158",
       "name": "Asllani",
       "marktwert": 13819653,
@@ -590,6 +590,13 @@
       "marktwert": 15830193,
       "position": "ABW",
       "mw_aenderung": 125622
+    },
+    {
+      "id": "3471",
+      "name": "Hložek",
+      "marktwert": 9601895,
+      "position": "ST",
+      "mw_aenderung": 146555
     }
   ]
 }
