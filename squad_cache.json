@@ -171,11 +171,11 @@
       "mw_aenderung": 366668
     },
     {
-      "id": "8274",
-      "name": "El Mala",
-      "marktwert": 21554003,
-      "position": "MF",
-      "mw_aenderung": 120167
+      "id": "15211",
+      "name": "Gadou",
+      "marktwert": 22973026,
+      "position": "ABW",
+      "mw_aenderung": 182947
     },
     {
       "id": "2646",
@@ -271,11 +271,11 @@
       "mw_aenderung": 90948
     },
     {
-      "id": "15211",
-      "name": "Gadou",
-      "marktwert": 22973026,
-      "position": "ABW",
-      "mw_aenderung": 182947
+      "id": "8274",
+      "name": "El Mala",
+      "marktwert": 21554003,
+      "position": "MF",
+      "mw_aenderung": 120167
     },
     {
       "id": "2395",
@@ -283,6 +283,13 @@
       "marktwert": 15057195,
       "position": "ABW",
       "mw_aenderung": 200588
+    },
+    {
+      "id": "11752",
+      "name": "Omari",
+      "marktwert": 6441982,
+      "position": "ABW",
+      "mw_aenderung": 377251
     }
   ],
   "3308384": [
