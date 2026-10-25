@@ -76,6 +76,13 @@
       "marktwert": 500000,
       "position": "MF",
       "mw_aenderung": 0
+    },
+    {
+      "id": "2897",
+      "name": "Reitz",
+      "marktwert": 11429781,
+      "position": "MF",
+      "mw_aenderung": 233913
     }
   ],
   "3181699": [
@@ -136,13 +143,6 @@
       "mw_aenderung": 11287
     },
     {
-      "id": "3072",
-      "name": "Urbig",
-      "marktwert": 6663068,
-      "position": "TW",
-      "mw_aenderung": -4414
-    },
-    {
       "id": "2358",
       "name": "Krauß",
       "marktwert": 9112617,
@@ -190,6 +190,13 @@
       "marktwert": 8418621,
       "position": "ABW",
       "mw_aenderung": 142578
+    },
+    {
+      "id": "6199",
+      "name": "Machino",
+      "marktwert": 3958612,
+      "position": "ST",
+      "mw_aenderung": 218610
     }
   ],
   "3181707": [
@@ -476,6 +483,13 @@
       "marktwert": 7535591,
       "position": "MF",
       "mw_aenderung": 86774
+    },
+    {
+      "id": "2399",
+      "name": "Maloney",
+      "marktwert": 3180611,
+      "position": "MF",
+      "mw_aenderung": 107374
     }
   ],
   "3458038": [
