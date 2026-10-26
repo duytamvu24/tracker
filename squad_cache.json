@@ -190,6 +190,20 @@
       "marktwert": 4344304,
       "position": "ST",
       "mw_aenderung": 385692
+    },
+    {
+      "id": "11043",
+      "name": "Assignon",
+      "marktwert": 5167102,
+      "position": "ABW",
+      "mw_aenderung": 436965
+    },
+    {
+      "id": "17288",
+      "name": "Regeer",
+      "marktwert": 12697134,
+      "position": "MF",
+      "mw_aenderung": 180670
     }
   ],
   "3181707": [
@@ -597,6 +611,13 @@
       "marktwert": 10079083,
       "position": "ST",
       "mw_aenderung": 274711
+    },
+    {
+      "id": "2300",
+      "name": "Stanišić",
+      "marktwert": 15479022,
+      "position": "ABW",
+      "mw_aenderung": 139488
     }
   ]
 }
