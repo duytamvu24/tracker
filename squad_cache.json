@@ -304,6 +304,13 @@
       "marktwert": 7241822,
       "position": "ABW",
       "mw_aenderung": 398506
+    },
+    {
+      "id": "4406",
+      "name": "Dina Ebimbe",
+      "marktwert": 4898166,
+      "position": "MF",
+      "mw_aenderung": 199410
     }
   ],
   "3308384": [
@@ -497,6 +504,13 @@
       "marktwert": 6506808,
       "position": "MF",
       "mw_aenderung": 321306
+    },
+    {
+      "id": "11007",
+      "name": "Irié",
+      "marktwert": 4028144,
+      "position": "MF",
+      "mw_aenderung": 411247
     }
   ],
   "3458038": [
@@ -613,11 +627,11 @@
       "mw_aenderung": 192088
     },
     {
-      "id": "2300",
-      "name": "Stanišić",
-      "marktwert": 15611102,
-      "position": "ABW",
-      "mw_aenderung": 132080
+      "id": "2862",
+      "name": "Castrop",
+      "marktwert": 3828402,
+      "position": "MF",
+      "mw_aenderung": 345394
     }
   ]
 }
