@@ -76,6 +76,13 @@
       "marktwert": 11908205,
       "position": "MF",
       "mw_aenderung": 234431
+    },
+    {
+      "id": "1811",
+      "name": "Gouweleeuw",
+      "marktwert": 4327863,
+      "position": "ABW",
+      "mw_aenderung": 151253
     }
   ],
   "3181699": [
@@ -464,13 +471,6 @@
       "mw_aenderung": 204613
     },
     {
-      "id": "11101",
-      "name": "Albert",
-      "marktwert": 2344613,
-      "position": "ST",
-      "mw_aenderung": 151934
-    },
-    {
       "id": "9605",
       "name": "Grønbæk",
       "marktwert": 7007113,
@@ -490,6 +490,13 @@
       "marktwert": 3603280,
       "position": "MF",
       "mw_aenderung": 210788
+    },
+    {
+      "id": "3559",
+      "name": "Ulrich",
+      "marktwert": 6506808,
+      "position": "MF",
+      "mw_aenderung": 321306
     }
   ],
   "3458038": [
