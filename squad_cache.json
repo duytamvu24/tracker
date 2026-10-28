@@ -83,6 +83,13 @@
       "marktwert": 4560455,
       "position": "ABW",
       "mw_aenderung": 232592
+    },
+    {
+      "id": "14300",
+      "name": "Okon-Engstler",
+      "marktwert": 507436,
+      "position": "MF",
+      "mw_aenderung": 7436
     }
   ],
   "3181699": [
@@ -134,13 +141,6 @@
       "marktwert": 26804080,
       "position": "ABW",
       "mw_aenderung": 46721
-    },
-    {
-      "id": "2358",
-      "name": "Krauß",
-      "marktwert": 9455618,
-      "position": "MF",
-      "mw_aenderung": 118108
     },
     {
       "id": "3063",
@@ -420,13 +420,6 @@
       "marktwert": 29620584,
       "position": "ABW",
       "mw_aenderung": 49337
-    },
-    {
-      "id": "14241",
-      "name": "Medina",
-      "marktwert": 16448065,
-      "position": "ABW",
-      "mw_aenderung": 136183
     },
     {
       "id": "2383",
