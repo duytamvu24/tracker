@@ -511,6 +511,13 @@
       "marktwert": 4428073,
       "position": "MF",
       "mw_aenderung": 399929
+    },
+    {
+      "id": "9507",
+      "name": "Nusa",
+      "marktwert": 29942787,
+      "position": "MF",
+      "mw_aenderung": 135940
     }
   ],
   "3458038": [
@@ -618,13 +625,6 @@
       "marktwert": 16388126,
       "position": "ABW",
       "mw_aenderung": 129630
-    },
-    {
-      "id": "3471",
-      "name": "Hložek",
-      "marktwert": 10446476,
-      "position": "ST",
-      "mw_aenderung": 175305
     },
     {
       "id": "2862",
