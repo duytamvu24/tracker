@@ -90,6 +90,20 @@
       "marktwert": 507436,
       "position": "MF",
       "mw_aenderung": 7436
+    },
+    {
+      "id": "7325",
+      "name": "Baum",
+      "marktwert": 6245682,
+      "position": "ABW",
+      "mw_aenderung": 187358
+    },
+    {
+      "id": "3029",
+      "name": "Ljubičić",
+      "marktwert": 1022799,
+      "position": "MF",
+      "mw_aenderung": 127616
     }
   ],
   "3181699": [
@@ -632,6 +646,13 @@
       "marktwert": 4230536,
       "position": "MF",
       "mw_aenderung": 402134
+    },
+    {
+      "id": "6668",
+      "name": "Minjae",
+      "marktwert": 10622470,
+      "position": "ABW",
+      "mw_aenderung": 29693
     }
   ]
 }
