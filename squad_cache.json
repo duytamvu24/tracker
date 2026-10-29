@@ -620,13 +620,6 @@
       "mw_aenderung": 313690
     },
     {
-      "id": "11255",
-      "name": "Katic",
-      "marktwert": 16469639,
-      "position": "ABW",
-      "mw_aenderung": 112615
-    },
-    {
       "id": "7224",
       "name": "Castello Jr.",
       "marktwert": 16496712,
@@ -653,6 +646,13 @@
       "marktwert": 7491775,
       "position": "MF",
       "mw_aenderung": 321194
+    },
+    {
+      "id": "2895",
+      "name": "Nebel",
+      "marktwert": 7649965,
+      "position": "MF",
+      "mw_aenderung": 330092
     }
   ]
 }
