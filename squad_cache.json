@@ -332,6 +332,13 @@
       "marktwert": 11260932,
       "position": "MF",
       "mw_aenderung": 144655
+    },
+    {
+      "id": "12263",
+      "name": "Schnitzer",
+      "marktwert": 645071,
+      "position": "MF",
+      "mw_aenderung": 116528
     }
   ],
   "3308384": [
@@ -576,13 +583,6 @@
       "marktwert": 20444863,
       "position": "ST",
       "mw_aenderung": 273493
-    },
-    {
-      "id": "2694",
-      "name": "Stiller",
-      "marktwert": 28547534,
-      "position": "MF",
-      "mw_aenderung": 72158
     },
     {
       "id": "9642",
