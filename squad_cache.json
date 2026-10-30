@@ -111,6 +111,13 @@
       "marktwert": 11782938,
       "position": "MF",
       "mw_aenderung": 106366
+    },
+    {
+      "id": "7269",
+      "name": "Tella",
+      "marktwert": 5383885,
+      "position": "MF",
+      "mw_aenderung": 387527
     }
   ],
   "3181699": [
@@ -225,6 +232,13 @@
       "marktwert": 22466806,
       "position": "ST",
       "mw_aenderung": 154194
+    },
+    {
+      "id": "2988",
+      "name": "Leweling",
+      "marktwert": 12627928,
+      "position": "MF",
+      "mw_aenderung": 122741
     }
   ],
   "3181707": [
