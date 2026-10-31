@@ -57,13 +57,6 @@
       "mw_aenderung": 90578
     },
     {
-      "id": "2722",
-      "name": "Osterhage",
-      "marktwert": 3242751,
-      "position": "MF",
-      "mw_aenderung": 243003
-    },
-    {
       "id": "2498",
       "name": "Baack",
       "marktwert": 1360322,
@@ -225,6 +218,13 @@
       "marktwert": 12692835,
       "position": "MF",
       "mw_aenderung": 64907
+    },
+    {
+      "id": "7745",
+      "name": "Coufal",
+      "marktwert": 22397893,
+      "position": "ABW",
+      "mw_aenderung": 6249
     }
   ],
   "3181707": [
@@ -483,6 +483,13 @@
       "marktwert": 30326365,
       "position": "MF",
       "mw_aenderung": 125617
+    },
+    {
+      "id": "15472",
+      "name": "Daka",
+      "marktwert": 946512,
+      "position": "ST",
+      "mw_aenderung": 61411
     }
   ],
   "3458038": [
@@ -590,6 +597,13 @@
       "marktwert": 8127526,
       "position": "MF",
       "mw_aenderung": 192108
+    },
+    {
+      "id": "1223",
+      "name": "Friedrich",
+      "marktwert": 500000,
+      "position": "ABW",
+      "mw_aenderung": 0
     }
   ]
 }
