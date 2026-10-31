@@ -604,6 +604,13 @@
       "marktwert": 500000,
       "position": "ABW",
       "mw_aenderung": 0
+    },
+    {
+      "id": "1815",
+      "name": "Kramarić",
+      "marktwert": 6552996,
+      "position": "MF",
+      "mw_aenderung": 294193
     }
   ]
 }
