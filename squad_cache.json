@@ -278,13 +278,6 @@
       "mw_aenderung": -160057
     },
     {
-      "id": "1961",
-      "name": "Gnabry",
-      "marktwert": 17132926,
-      "position": "MF",
-      "mw_aenderung": 190349
-    },
-    {
       "id": "2294",
       "name": "Pieper",
       "marktwert": 13783876,
@@ -511,6 +504,20 @@
       "marktwert": 11316481,
       "position": "TW",
       "mw_aenderung": 65146
+    },
+    {
+      "id": "10113",
+      "name": "Gomis",
+      "marktwert": 11782102,
+      "position": "ST",
+      "mw_aenderung": 151793
+    },
+    {
+      "id": "2261",
+      "name": "Neuhaus",
+      "marktwert": 7960352,
+      "position": "MF",
+      "mw_aenderung": 351942
     }
   ],
   "3458038": [
@@ -606,13 +613,6 @@
       "mw_aenderung": 294736
     },
     {
-      "id": "2895",
-      "name": "Nebel",
-      "marktwert": 8239567,
-      "position": "MF",
-      "mw_aenderung": 112041
-    },
-    {
       "id": "1223",
       "name": "Friedrich",
       "marktwert": 500000,
@@ -632,6 +632,13 @@
       "marktwert": 7392124,
       "position": "MF",
       "mw_aenderung": 185091
+    },
+    {
+      "id": "7463",
+      "name": "Onyeka",
+      "marktwert": 5435159,
+      "position": "MF",
+      "mw_aenderung": 260290
     }
   ]
 }
