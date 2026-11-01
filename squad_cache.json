@@ -497,6 +497,20 @@
       "marktwert": 1129703,
       "position": "ST",
       "mw_aenderung": 183191
+    },
+    {
+      "id": "12317",
+      "name": "Adam",
+      "marktwert": 3513306,
+      "position": "ST",
+      "mw_aenderung": 48091
+    },
+    {
+      "id": "524",
+      "name": "Baumann",
+      "marktwert": 11316481,
+      "position": "TW",
+      "mw_aenderung": 65146
     }
   ],
   "3458038": [
@@ -578,13 +592,6 @@
       "mw_aenderung": 108207
     },
     {
-      "id": "2862",
-      "name": "Castrop",
-      "marktwert": 5128242,
-      "position": "MF",
-      "mw_aenderung": 34469
-    },
-    {
       "id": "6668",
       "name": "Minjae",
       "marktwert": 10937119,
@@ -618,6 +625,13 @@
       "marktwert": 6863000,
       "position": "MF",
       "mw_aenderung": 310004
+    },
+    {
+      "id": "7717",
+      "name": "Prass",
+      "marktwert": 7392124,
+      "position": "MF",
+      "mw_aenderung": 185091
     }
   ]
 }
