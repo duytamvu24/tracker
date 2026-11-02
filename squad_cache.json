@@ -213,11 +213,18 @@
       "mw_aenderung": 149923
     },
     {
-      "id": "7745",
-      "name": "Coufal",
-      "marktwert": 22347330,
+      "id": "1991",
+      "name": "Upamecano",
+      "marktwert": 31472107,
       "position": "ABW",
-      "mw_aenderung": 16589
+      "mw_aenderung": 120426
+    },
+    {
+      "id": "3183",
+      "name": "Kade",
+      "marktwert": 14810635,
+      "position": "ST",
+      "mw_aenderung": 123198
     }
   ],
   "3181707": [
@@ -304,6 +311,20 @@
       "marktwert": 1285265,
       "position": "MF",
       "mw_aenderung": 220836
+    },
+    {
+      "id": "7745",
+      "name": "Coufal",
+      "marktwert": 22347330,
+      "position": "ABW",
+      "mw_aenderung": 16589
+    },
+    {
+      "id": "14908",
+      "name": "Abraha",
+      "marktwert": 837140,
+      "position": "ABW",
+      "mw_aenderung": 224550
     }
   ],
   "3308384": [
@@ -490,6 +511,13 @@
       "marktwert": 8323363,
       "position": "MF",
       "mw_aenderung": 363011
+    },
+    {
+      "id": "2764",
+      "name": "Keitel",
+      "marktwert": 3853327,
+      "position": "MF",
+      "mw_aenderung": 367669
     }
   ],
   "3458038": [
@@ -534,13 +562,6 @@
       "marktwert": 21482834,
       "position": "ST",
       "mw_aenderung": 266766
-    },
-    {
-      "id": "9642",
-      "name": "Matsima",
-      "marktwert": 17410689,
-      "position": "ABW",
-      "mw_aenderung": 64676
     },
     {
       "id": "3158",
