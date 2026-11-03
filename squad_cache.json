@@ -111,6 +111,13 @@
       "marktwert": 10309478,
       "position": "MF",
       "mw_aenderung": 78421
+    },
+    {
+      "id": "2275",
+      "name": "Baumgartner",
+      "marktwert": 12517253,
+      "position": "MF",
+      "mw_aenderung": 252213
     }
   ],
   "3181699": [
@@ -218,6 +225,13 @@
       "marktwert": 14901997,
       "position": "ST",
       "mw_aenderung": 91362
+    },
+    {
+      "id": "8273",
+      "name": "El Mala",
+      "marktwert": 500000,
+      "position": "ST",
+      "mw_aenderung": 0
     }
   ],
   "3181707": [
@@ -318,6 +332,13 @@
       "marktwert": 1146479,
       "position": "ABW",
       "mw_aenderung": 309339
+    },
+    {
+      "id": "3026",
+      "name": "Günther",
+      "marktwert": 7710108,
+      "position": "ABW",
+      "mw_aenderung": 305377
     }
   ],
   "3308384": [
@@ -478,13 +499,6 @@
       "mw_aenderung": 316279
     },
     {
-      "id": "524",
-      "name": "Baumann",
-      "marktwert": 11452484,
-      "position": "TW",
-      "mw_aenderung": 62517
-    },
-    {
       "id": "10113",
       "name": "Gomis",
       "marktwert": 12119294,
@@ -518,6 +532,13 @@
       "marktwert": 7933592,
       "position": "ST",
       "mw_aenderung": 268515
+    },
+    {
+      "id": "7320",
+      "name": "Scheller",
+      "marktwert": 10662946,
+      "position": "ABW",
+      "mw_aenderung": 211586
     }
   ],
   "3458038": [
@@ -634,11 +655,11 @@
       "mw_aenderung": 353698
     },
     {
-      "id": "2195",
-      "name": "Dahmen",
-      "marktwert": 17177498,
-      "position": "TW",
-      "mw_aenderung": 31771
+      "id": "10004",
+      "name": "Ebnoutalib",
+      "marktwert": 22511149,
+      "position": "ST",
+      "mw_aenderung": 212140
     }
   ]
 }
