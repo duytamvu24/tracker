@@ -313,13 +313,6 @@
       "mw_aenderung": 18935
     },
     {
-      "id": "12263",
-      "name": "Schnitzer",
-      "marktwert": 1696191,
-      "position": "MF",
-      "mw_aenderung": 79898
-    },
-    {
       "id": "14908",
       "name": "Abraha",
       "marktwert": 1801640,
@@ -353,6 +346,13 @@
       "marktwert": 5911466,
       "position": "MF",
       "mw_aenderung": 385341
+    },
+    {
+      "id": "8307",
+      "name": "Sano",
+      "marktwert": 22751960,
+      "position": "MF",
+      "mw_aenderung": 8581
     }
   ],
   "3308384": [
@@ -662,18 +662,18 @@
       "mw_aenderung": 339346
     },
     {
-      "id": "7463",
-      "name": "Onyeka",
-      "marktwert": 6782868,
-      "position": "MF",
-      "mw_aenderung": 297152
-    },
-    {
       "id": "10004",
       "name": "Ebnoutalib",
       "marktwert": 22917808,
       "position": "ST",
       "mw_aenderung": 189427
+    },
+    {
+      "id": "11006",
+      "name": "Suzuki",
+      "marktwert": 19250205,
+      "position": "MF",
+      "mw_aenderung": 188836
     }
   ]
 }
