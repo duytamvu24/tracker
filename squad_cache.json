@@ -178,13 +178,6 @@
       "mw_aenderung": 160286
     },
     {
-      "id": "2030",
-      "name": "Tietz",
-      "marktwert": 22933782,
-      "position": "ST",
-      "mw_aenderung": 6506
-    },
-    {
       "id": "2988",
       "name": "Leweling",
       "marktwert": 13522261,
@@ -199,13 +192,6 @@
       "mw_aenderung": 92904
     },
     {
-      "id": "3183",
-      "name": "Kade",
-      "marktwert": 14714951,
-      "position": "ST",
-      "mw_aenderung": -246265
-    },
-    {
       "id": "8273",
       "name": "El Mala",
       "marktwert": 1663909,
@@ -218,6 +204,13 @@
       "marktwert": 998201,
       "position": "MF",
       "mw_aenderung": 279934
+    },
+    {
+      "id": "1671",
+      "name": "Prömel",
+      "marktwert": 10731605,
+      "position": "MF",
+      "mw_aenderung": 239162
     }
   ],
   "3181707": [
@@ -297,13 +290,6 @@
       "marktwert": 2069820,
       "position": "ABW",
       "mw_aenderung": 268180
-    },
-    {
-      "id": "3026",
-      "name": "Günther",
-      "marktwert": 8444059,
-      "position": "ABW",
-      "mw_aenderung": 175759
     },
     {
       "id": "1964",
@@ -513,18 +499,18 @@
       "mw_aenderung": 243301
     },
     {
-      "id": "3209",
-      "name": "Engelhardt",
-      "marktwert": 14339598,
-      "position": "MF",
-      "mw_aenderung": 158467
-    },
-    {
       "id": "3336",
       "name": "Marino",
       "marktwert": 8549221,
       "position": "ST",
       "mw_aenderung": 136364
+    },
+    {
+      "id": "3041",
+      "name": "Widmer",
+      "marktwert": 996159,
+      "position": "ABW",
+      "mw_aenderung": 258391
     }
   ],
   "3458038": [
