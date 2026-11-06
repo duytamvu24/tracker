@@ -57,20 +57,6 @@
       "mw_aenderung": 51842
     },
     {
-      "id": "2498",
-      "name": "Baack",
-      "marktwert": 3378972,
-      "position": "MF",
-      "mw_aenderung": 291518
-    },
-    {
-      "id": "1811",
-      "name": "Gouweleeuw",
-      "marktwert": 7270475,
-      "position": "ABW",
-      "mw_aenderung": 278390
-    },
-    {
       "id": "14300",
       "name": "Okon-Engstler",
       "marktwert": 3090815,
@@ -341,11 +327,11 @@
       "mw_aenderung": 331224
     },
     {
-      "id": "8307",
-      "name": "Sano",
-      "marktwert": 22702800,
-      "position": "MF",
-      "mw_aenderung": -49160
+      "id": "11886",
+      "name": "Rômulo",
+      "marktwert": 15054793,
+      "position": "ST",
+      "mw_aenderung": 195319
     }
   ],
   "3308384": [
@@ -653,6 +639,13 @@
       "marktwert": 19393595,
       "position": "MF",
       "mw_aenderung": 143390
+    },
+    {
+      "id": "8367",
+      "name": "Sambi Lokonga",
+      "marktwert": 4928637,
+      "position": "MF",
+      "mw_aenderung": 35282
     }
   ]
 }
