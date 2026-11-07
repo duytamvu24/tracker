@@ -738,10 +738,18 @@
         "netto_transfer": 2460838.0,
         "netto_teamwert": 258010516.0,
         "max_gebot": 81240986.28
+      },
+      {
+        "date": "2026-11-07",
+        "teamwert": 263613124.0,
+        "budget": -3802484.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 259810640.0,
+        "max_gebot": 81935027.2
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00",
-    "berechnet_um": "2026-11-06T21:00:30.532093+01:00"
+    "berechnet_um": "2026-11-07T02:00:34.790990+01:00"
   },
   "3181699": {
     "name": "Lam Quy ",
@@ -1478,14 +1486,22 @@
       {
         "date": "2026-11-06",
         "teamwert": 269188936.0,
-        "budget": 914199.0,
-        "netto_transfer": 45480337.0,
-        "netto_teamwert": 270103135.0,
-        "max_gebot": 89746547.88
+        "budget": -7687372.0,
+        "netto_transfer": 36878766.0,
+        "netto_teamwert": 261501564.0,
+        "max_gebot": 78608144.12
+      },
+      {
+        "date": "2026-11-07",
+        "teamwert": 278816282.0,
+        "budget": -7587372.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 271228910.0,
+        "max_gebot": 81918168.3
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00",
-    "berechnet_um": "2026-11-06T21:00:30.532093+01:00"
+    "berechnet_um": "2026-11-07T02:00:34.790990+01:00"
   },
   "3181707": {
     "name": "Tam Dan",
@@ -2226,10 +2242,18 @@
         "netto_transfer": 14946859.0,
         "netto_teamwert": 260638576.0,
         "max_gebot": 79713932.08
+      },
+      {
+        "date": "2026-11-07",
+        "teamwert": 267486786.0,
+        "budget": -6196798.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 261289988.0,
+        "max_gebot": 80028898.04
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00",
-    "berechnet_um": "2026-11-06T21:00:30.532093+01:00"
+    "berechnet_um": "2026-11-07T02:00:34.790990+01:00"
   },
   "3308384": {
     "name": "Tai",
@@ -2970,10 +2994,18 @@
         "netto_transfer": 0.0,
         "netto_teamwert": 174263018.0,
         "max_gebot": 59905702.8
+      },
+      {
+        "date": "2026-11-07",
+        "teamwert": 170161202.0,
+        "budget": 3680458.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 173841660.0,
+        "max_gebot": 59833654.66
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00",
-    "berechnet_um": "2026-11-06T21:00:30.532093+01:00"
+    "berechnet_um": "2026-11-07T02:00:34.790990+01:00"
   },
   "3310917": {
     "name": "Duy Tam",
@@ -3715,17 +3747,25 @@
         "netto_transfer": 24170038.0,
         "netto_teamwert": 316878825.0,
         "max_gebot": 104927886.05
+      },
+      {
+        "date": "2026-11-07",
+        "teamwert": 318124866.0,
+        "budget": 634140.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 318759006.0,
+        "max_gebot": 105615345.78
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00",
     "budget_abgleich": {
-      "date": "2026-11-06",
-      "geprueft_um": "2026-11-06T21:00:30.532093+01:00",
-      "echt": 4556140.0,
-      "tracker": 534140.0,
+      "date": "2026-11-07",
+      "geprueft_um": "2026-11-07T02:00:34.790990+01:00",
+      "echt": 4656140.0,
+      "tracker": 634140.0,
       "differenz": 4022000.0
     },
-    "berechnet_um": "2026-11-06T21:00:30.532093+01:00"
+    "berechnet_um": "2026-11-07T02:00:34.790990+01:00"
   },
   "3458038": {
     "name": "Dragontrieu ",
@@ -4467,9 +4507,17 @@
         "netto_transfer": 18131736.0,
         "netto_teamwert": 271967466.0,
         "max_gebot": 80532556.78
+      },
+      {
+        "date": "2026-11-07",
+        "teamwert": 282975584.0,
+        "budget": -9116707.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 273858877.0,
+        "max_gebot": 81256722.41
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00",
-    "berechnet_um": "2026-11-06T21:00:30.532093+01:00"
+    "berechnet_um": "2026-11-07T02:00:34.790990+01:00"
   }
 }
