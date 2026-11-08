@@ -211,6 +211,13 @@
       "marktwert": 8267517,
       "position": "TW",
       "mw_aenderung": 235937
+    },
+    {
+      "id": "16948",
+      "name": "Konstantelias",
+      "marktwert": 830844,
+      "position": "MF",
+      "mw_aenderung": -42756
     }
   ],
   "3181707": [
@@ -290,20 +297,6 @@
       "marktwert": 2464861,
       "position": "ABW",
       "mw_aenderung": 182173
-    },
-    {
-      "id": "1964",
-      "name": "Götze",
-      "marktwert": 4439367,
-      "position": "ABW",
-      "mw_aenderung": -191154
-    },
-    {
-      "id": "10112",
-      "name": "Jaquez",
-      "marktwert": 4965623,
-      "position": "ABW",
-      "mw_aenderung": -407140
     },
     {
       "id": "10114",
