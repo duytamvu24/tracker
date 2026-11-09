@@ -290,6 +290,13 @@
       "marktwert": 15601880,
       "position": "ST",
       "mw_aenderung": 201139
+    },
+    {
+      "id": "11956",
+      "name": "Fernández",
+      "marktwert": 15759276,
+      "position": "MF",
+      "mw_aenderung": 139334
     }
   ],
   "3308384": [
@@ -483,6 +490,13 @@
       "marktwert": 19471841,
       "position": "MF",
       "mw_aenderung": 111864
+    },
+    {
+      "id": "2855",
+      "name": "Ache",
+      "marktwert": 5418040,
+      "position": "ST",
+      "mw_aenderung": 142412
     }
   ],
   "3458038": [
