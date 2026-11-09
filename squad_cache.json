@@ -278,13 +278,6 @@
       "mw_aenderung": -210019
     },
     {
-      "id": "14908",
-      "name": "Abraha",
-      "marktwert": 2550495,
-      "position": "ABW",
-      "mw_aenderung": 85634
-    },
-    {
       "id": "10114",
       "name": "Chukwuemeka",
       "marktwert": 6971585,
@@ -476,6 +469,20 @@
       "marktwert": 8578118,
       "position": "ABW",
       "mw_aenderung": 369385
+    },
+    {
+      "id": "2084",
+      "name": "Lienhart",
+      "marktwert": 19656094,
+      "position": "ABW",
+      "mw_aenderung": 72680
+    },
+    {
+      "id": "3120",
+      "name": "Bischof",
+      "marktwert": 19471841,
+      "position": "MF",
+      "mw_aenderung": 111864
     }
   ],
   "3458038": [
