@@ -227,11 +227,11 @@
       "mw_aenderung": 1427
     },
     {
-      "id": "2822",
-      "name": "Silas",
-      "marktwert": 690235,
-      "position": "ST",
-      "mw_aenderung": 187071
+      "id": "16378",
+      "name": "Karetsas",
+      "marktwert": 19117105,
+      "position": "MF",
+      "mw_aenderung": 270116
     }
   ],
   "3181707": [
@@ -318,6 +318,13 @@
       "marktwert": 16047310,
       "position": "MF",
       "mw_aenderung": 139498
+    },
+    {
+      "id": "11680",
+      "name": "Eichhorn",
+      "marktwert": 3058135,
+      "position": "MF",
+      "mw_aenderung": 467669
     }
   ],
   "3308384": [
@@ -478,13 +485,6 @@
       "mw_aenderung": 369838
     },
     {
-      "id": "10113",
-      "name": "Gomis",
-      "marktwert": 13756157,
-      "position": "ST",
-      "mw_aenderung": 232770
-    },
-    {
       "id": "3041",
       "name": "Widmer",
       "marktwert": 3182905,
@@ -518,6 +518,13 @@
       "marktwert": 6329529,
       "position": "ABW",
       "mw_aenderung": 343973
+    },
+    {
+      "id": "11631",
+      "name": "Burger",
+      "marktwert": 18028139,
+      "position": "MF",
+      "mw_aenderung": 253185
     }
   ],
   "3458038": [
@@ -583,13 +590,6 @@
       "marktwert": 17844078,
       "position": "ABW",
       "mw_aenderung": 136821
-    },
-    {
-      "id": "6668",
-      "name": "Minjae",
-      "marktwert": 12918426,
-      "position": "ABW",
-      "mw_aenderung": 183774
     },
     {
       "id": "7277",
