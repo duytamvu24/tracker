@@ -104,6 +104,13 @@
       "marktwert": 17405756,
       "position": "ABW",
       "mw_aenderung": 109672
+    },
+    {
+      "id": "6174",
+      "name": "Arthur",
+      "marktwert": 11530899,
+      "position": "ABW",
+      "mw_aenderung": 181965
     }
   ],
   "3181699": [
@@ -218,6 +225,13 @@
       "marktwert": 765758,
       "position": "MF",
       "mw_aenderung": 1427
+    },
+    {
+      "id": "2822",
+      "name": "Silas",
+      "marktwert": 690235,
+      "position": "ST",
+      "mw_aenderung": 187071
     }
   ],
   "3181707": [
@@ -485,18 +499,25 @@
       "mw_aenderung": 400442
     },
     {
-      "id": "3120",
-      "name": "Bischof",
-      "marktwert": 19636949,
-      "position": "MF",
-      "mw_aenderung": 74943
-    },
-    {
       "id": "2855",
       "name": "Ache",
       "marktwert": 5931711,
       "position": "ST",
       "mw_aenderung": 293686
+    },
+    {
+      "id": "9995",
+      "name": "Mokwa",
+      "marktwert": 8544017,
+      "position": "ST",
+      "mw_aenderung": 297228
+    },
+    {
+      "id": "8301",
+      "name": "Sirch",
+      "marktwert": 6329529,
+      "position": "ABW",
+      "mw_aenderung": 343973
     }
   ],
   "3458038": [
