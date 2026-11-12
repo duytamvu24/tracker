@@ -299,13 +299,6 @@
       "mw_aenderung": -187719
     },
     {
-      "id": "10114",
-      "name": "Chukwuemeka",
-      "marktwert": 7395786,
-      "position": "MF",
-      "mw_aenderung": 84944
-    },
-    {
       "id": "11886",
       "name": "Rômulo",
       "marktwert": 16316160,
@@ -325,6 +318,20 @@
       "marktwert": 3487921,
       "position": "MF",
       "mw_aenderung": 429786
+    },
+    {
+      "id": "6292",
+      "name": "Hansen",
+      "marktwert": 9760433,
+      "position": "ABW",
+      "mw_aenderung": 330149
+    },
+    {
+      "id": "10134",
+      "name": "Schmetgens",
+      "marktwert": 5242610,
+      "position": "ABW",
+      "mw_aenderung": 352578
     }
   ],
   "3308384": [
