@@ -332,6 +332,13 @@
       "marktwert": 5242610,
       "position": "ABW",
       "mw_aenderung": 352578
+    },
+    {
+      "id": "17203",
+      "name": "Moffi",
+      "marktwert": 6700122,
+      "position": "ST",
+      "mw_aenderung": 319849
     }
   ],
   "3308384": [
@@ -639,6 +646,13 @@
       "marktwert": 22029069,
       "position": "ABW",
       "mw_aenderung": 231366
+    },
+    {
+      "id": "9684",
+      "name": "Claude-Maurice",
+      "marktwert": 6626195,
+      "position": "MF",
+      "mw_aenderung": 316191
     }
   ]
 }
