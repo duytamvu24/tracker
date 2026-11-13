@@ -527,13 +527,6 @@
       "mw_aenderung": 275263
     },
     {
-      "id": "8301",
-      "name": "Sirch",
-      "marktwert": 6884471,
-      "position": "ABW",
-      "mw_aenderung": 248598
-    },
-    {
       "id": "6172",
       "name": "Adamu",
       "marktwert": 3153493,
@@ -546,6 +539,20 @@
       "marktwert": 4572081,
       "position": "MF",
       "mw_aenderung": 438930
+    },
+    {
+      "id": "3089",
+      "name": "Ito",
+      "marktwert": 3681913,
+      "position": "ABW",
+      "mw_aenderung": 314700
+    },
+    {
+      "id": "2065",
+      "name": "Uduokhai",
+      "marktwert": 5634869,
+      "position": "ABW",
+      "mw_aenderung": 290857
     }
   ],
   "3458038": [
@@ -627,13 +634,6 @@
       "mw_aenderung": 407119
     },
     {
-      "id": "7717",
-      "name": "Prass",
-      "marktwert": 10552152,
-      "position": "MF",
-      "mw_aenderung": 171493
-    },
-    {
       "id": "8367",
       "name": "Sambi Lokonga",
       "marktwert": 6769626,
@@ -667,6 +667,13 @@
       "marktwert": 6796776,
       "position": "ST",
       "mw_aenderung": 309056
+    },
+    {
+      "id": "2803",
+      "name": "Lemperle",
+      "marktwert": 8871822,
+      "position": "ST",
+      "mw_aenderung": 380497
     }
   ]
 }
