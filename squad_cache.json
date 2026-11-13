@@ -346,6 +346,13 @@
       "marktwert": 22643144,
       "position": "MF",
       "mw_aenderung": 189396
+    },
+    {
+      "id": "1978",
+      "name": "Torunarigha",
+      "marktwert": 6889469,
+      "position": "ABW",
+      "mw_aenderung": 270580
     }
   ],
   "3308384": [
@@ -499,13 +506,6 @@
       "mw_aenderung": 98910
     },
     {
-      "id": "15472",
-      "name": "Daka",
-      "marktwert": 5077043,
-      "position": "ST",
-      "mw_aenderung": 249638
-    },
-    {
       "id": "3041",
       "name": "Widmer",
       "marktwert": 3984436,
@@ -539,6 +539,13 @@
       "marktwert": 3153493,
       "position": "ST",
       "mw_aenderung": 252620
+    },
+    {
+      "id": "12367",
+      "name": "Spalt",
+      "marktwert": 4572081,
+      "position": "MF",
+      "mw_aenderung": 438930
     }
   ],
   "3458038": [
@@ -655,11 +662,11 @@
       "mw_aenderung": 284523
     },
     {
-      "id": "2141",
-      "name": "Baku",
-      "marktwert": 16874365,
-      "position": "ABW",
-      "mw_aenderung": 78873
+      "id": "670",
+      "name": "Karaman",
+      "marktwert": 6796776,
+      "position": "ST",
+      "mw_aenderung": 309056
     }
   ]
 }
