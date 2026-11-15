@@ -313,13 +313,6 @@
       "mw_aenderung": 244067
     },
     {
-      "id": "6292",
-      "name": "Hansen",
-      "marktwert": 10280750,
-      "position": "ABW",
-      "mw_aenderung": 85910
-    },
-    {
       "id": "10134",
       "name": "Schmetgens",
       "marktwert": 5791998,
@@ -353,6 +346,13 @@
       "marktwert": 10376460,
       "position": "ABW",
       "mw_aenderung": 154086
+    },
+    {
+      "id": "2846",
+      "name": "Tillman",
+      "marktwert": 7547115,
+      "position": "MF",
+      "mw_aenderung": 110567
     }
   ],
   "3308384": [
