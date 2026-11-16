@@ -539,6 +539,13 @@
       "marktwert": 6196942,
       "position": "ABW",
       "mw_aenderung": 162677
+    },
+    {
+      "id": "11675",
+      "name": "Díaz",
+      "marktwert": 41695574,
+      "position": "ST",
+      "mw_aenderung": 116911
     }
   ],
   "3458038": [
@@ -634,13 +641,6 @@
       "mw_aenderung": 144801
     },
     {
-      "id": "9684",
-      "name": "Claude-Maurice",
-      "marktwert": 7474241,
-      "position": "MF",
-      "mw_aenderung": 137684
-    },
-    {
       "id": "2803",
       "name": "Lemperle",
       "marktwert": 9854175,
@@ -653,6 +653,20 @@
       "marktwert": 1279077,
       "position": "ABW",
       "mw_aenderung": 331714
+    },
+    {
+      "id": "17306",
+      "name": "Imeri",
+      "marktwert": 4973227,
+      "position": "MF",
+      "mw_aenderung": 251789
+    },
+    {
+      "id": "9754",
+      "name": "Bah",
+      "marktwert": 5609105,
+      "position": "ABW",
+      "mw_aenderung": 377316
     }
   ]
 }
