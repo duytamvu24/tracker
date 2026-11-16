@@ -111,6 +111,13 @@
       "marktwert": 4866543,
       "position": "ST",
       "mw_aenderung": 200530
+    },
+    {
+      "id": "13888",
+      "name": "Doué",
+      "marktwert": 5206833,
+      "position": "ABW",
+      "mw_aenderung": 346668
     }
   ],
   "3181699": [
@@ -527,13 +534,6 @@
       "mw_aenderung": 112046
     },
     {
-      "id": "2065",
-      "name": "Uduokhai",
-      "marktwert": 6235762,
-      "position": "ABW",
-      "mw_aenderung": 148254
-    },
-    {
       "id": "10024",
       "name": "Schmied",
       "marktwert": 6196942,
@@ -653,13 +653,6 @@
       "marktwert": 1279077,
       "position": "ABW",
       "mw_aenderung": 331714
-    },
-    {
-      "id": "3754",
-      "name": "Vázquez",
-      "marktwert": 5194594,
-      "position": "ABW",
-      "mw_aenderung": 119984
     }
   ]
 }
