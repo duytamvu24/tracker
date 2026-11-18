@@ -511,6 +511,13 @@
       "marktwert": 41904262,
       "position": "ST",
       "mw_aenderung": 101676
+    },
+    {
+      "id": "493",
+      "name": "Gregoritsch",
+      "marktwert": 16507458,
+      "position": "ST",
+      "mw_aenderung": 99342
     }
   ],
   "3458038": [
@@ -534,13 +541,6 @@
       "marktwert": 28200346,
       "position": "ABW",
       "mw_aenderung": 63201
-    },
-    {
-      "id": "6085",
-      "name": "Seimen",
-      "marktwert": 12425720,
-      "position": "TW",
-      "mw_aenderung": 74144
     },
     {
       "id": "2172",
@@ -632,6 +632,13 @@
       "marktwert": 14389771,
       "position": "TW",
       "mw_aenderung": 73803
+    },
+    {
+      "id": "11955",
+      "name": "El Khannouss",
+      "marktwert": 17483757,
+      "position": "MF",
+      "mw_aenderung": 124235
     }
   ]
 }
