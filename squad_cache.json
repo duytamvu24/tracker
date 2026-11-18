@@ -620,18 +620,18 @@
       "mw_aenderung": 423831
     },
     {
-      "id": "17306",
-      "name": "Imeri",
-      "marktwert": 5463875,
-      "position": "MF",
-      "mw_aenderung": 232053
-    },
-    {
       "id": "9754",
       "name": "Bah",
       "marktwert": 6357927,
       "position": "ABW",
       "mw_aenderung": 367820
+    },
+    {
+      "id": "9513",
+      "name": "Hein",
+      "marktwert": 14389771,
+      "position": "TW",
+      "mw_aenderung": 73803
     }
   ]
 }
