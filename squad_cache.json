@@ -3,379 +3,379 @@
     {
       "id": "8227",
       "name": "Vandevoordt",
-      "marktwert": 20507383,
+      "marktwert": 20571588,
       "position": "TW",
-      "mw_aenderung": 63963
+      "mw_aenderung": 64205
     },
     {
       "id": "6061",
       "name": "Maza",
-      "marktwert": 34111067,
+      "marktwert": 34145094,
       "position": "MF",
-      "mw_aenderung": 43489
+      "mw_aenderung": 34027
     },
     {
       "id": "6080",
       "name": "Pavlović",
-      "marktwert": 38066891,
+      "marktwert": 38118581,
       "position": "MF",
-      "mw_aenderung": 57064
+      "mw_aenderung": 51690
     },
     {
       "id": "8247",
       "name": "Hendriks",
-      "marktwert": 11768541,
+      "marktwert": 11970665,
       "position": "ABW",
-      "mw_aenderung": 195868
+      "mw_aenderung": 202124
     },
     {
       "id": "7963",
       "name": "Quansah",
-      "marktwert": 19869390,
+      "marktwert": 19962466,
       "position": "ABW",
-      "mw_aenderung": 89406
+      "mw_aenderung": 93076
     },
     {
       "id": "2746",
       "name": "Schick",
-      "marktwert": 33507139,
+      "marktwert": 33559257,
       "position": "ST",
-      "mw_aenderung": 54578
+      "mw_aenderung": 52118
     },
     {
       "id": "2687",
       "name": "Nkunku",
-      "marktwert": 28171740,
+      "marktwert": 28276631,
       "position": "ST",
-      "mw_aenderung": 108379
+      "mw_aenderung": 104891
     },
     {
       "id": "11008",
       "name": "Banzuzi",
-      "marktwert": 13932199,
+      "marktwert": 14122424,
       "position": "MF",
-      "mw_aenderung": 190080
+      "mw_aenderung": 190225
     },
     {
       "id": "2275",
       "name": "Baumgartner",
-      "marktwert": 14854906,
+      "marktwert": 14925297,
       "position": "MF",
-      "mw_aenderung": 88856
+      "mw_aenderung": 70391
     },
     {
       "id": "8292",
       "name": "Castañeda",
-      "marktwert": 14363684,
+      "marktwert": 14422707,
       "position": "MF",
-      "mw_aenderung": 64925
+      "mw_aenderung": 59023
     },
     {
       "id": "7737",
       "name": "Veerman",
-      "marktwert": 16410279,
+      "marktwert": 16580935,
       "position": "MF",
-      "mw_aenderung": 171768
+      "mw_aenderung": 170656
     },
     {
       "id": "7215",
       "name": "Makengo",
-      "marktwert": 18076288,
+      "marktwert": 18209835,
       "position": "ABW",
-      "mw_aenderung": 121311
+      "mw_aenderung": 133547
     },
     {
       "id": "6174",
       "name": "Arthur",
-      "marktwert": 12134521,
+      "marktwert": 12160937,
       "position": "ABW",
-      "mw_aenderung": 35428
+      "mw_aenderung": 26416
     },
     {
       "id": "3228",
       "name": "Njinmah",
-      "marktwert": 5181065,
+      "marktwert": 5250587,
       "position": "ST",
-      "mw_aenderung": 132772
+      "mw_aenderung": 69522
     },
     {
       "id": "13888",
       "name": "Doué",
-      "marktwert": 5832561,
+      "marktwert": 6123046,
       "position": "ABW",
-      "mw_aenderung": 313927
+      "mw_aenderung": 290485
     }
   ],
   "3181699": [
     {
       "id": "15199",
       "name": "Moreira",
-      "marktwert": 15933251,
+      "marktwert": 16069276,
       "position": "ST",
-      "mw_aenderung": 135987
+      "mw_aenderung": 136025
     },
     {
       "id": "7676",
       "name": "Rieder",
-      "marktwert": 24141695,
+      "marktwert": 24211787,
       "position": "MF",
-      "mw_aenderung": 76663
+      "mw_aenderung": 70092
     },
     {
       "id": "1664",
       "name": "Mittelstädt",
-      "marktwert": 31036245,
+      "marktwert": 31090604,
       "position": "ABW",
-      "mw_aenderung": 60000
+      "mw_aenderung": 54359
     },
     {
       "id": "3284",
       "name": "Rohr",
-      "marktwert": 16893969,
+      "marktwert": 16947434,
       "position": "ABW",
-      "mw_aenderung": 58813
+      "mw_aenderung": 53465
     },
     {
       "id": "32",
       "name": "Karius",
-      "marktwert": 15734392,
+      "marktwert": 15527699,
       "position": "TW",
-      "mw_aenderung": -233555
+      "mw_aenderung": -206693
     },
     {
       "id": "1704",
       "name": "Anton",
-      "marktwert": 36720073,
+      "marktwert": 36723611,
       "position": "ABW",
-      "mw_aenderung": 8481
+      "mw_aenderung": 3538
     },
     {
       "id": "2783",
       "name": "Tapsoba",
-      "marktwert": 25159985,
+      "marktwert": 24825319,
       "position": "ABW",
-      "mw_aenderung": -381494
+      "mw_aenderung": -334666
     },
     {
       "id": "15211",
       "name": "Gadou",
-      "marktwert": 25055450,
+      "marktwert": 25103949,
       "position": "ABW",
-      "mw_aenderung": 81646
+      "mw_aenderung": 48499
     },
     {
       "id": "17288",
       "name": "Regeer",
-      "marktwert": 16094418,
+      "marktwert": 16177560,
       "position": "MF",
-      "mw_aenderung": 90702
+      "mw_aenderung": 83142
     },
     {
       "id": "2988",
       "name": "Leweling",
-      "marktwert": 14137182,
+      "marktwert": 14236422,
       "position": "MF",
-      "mw_aenderung": 95751
+      "mw_aenderung": 99240
     },
     {
       "id": "1991",
       "name": "Upamecano",
-      "marktwert": 33207926,
+      "marktwert": 33289423,
       "position": "ABW",
-      "mw_aenderung": 91700
+      "mw_aenderung": 81497
     },
     {
       "id": "8273",
       "name": "El Mala",
-      "marktwert": 4463244,
+      "marktwert": 4636475,
       "position": "ST",
-      "mw_aenderung": 154675
+      "mw_aenderung": 173231
     },
     {
       "id": "1671",
       "name": "Prömel",
-      "marktwert": 12719890,
+      "marktwert": 12835658,
       "position": "MF",
-      "mw_aenderung": 117414
+      "mw_aenderung": 115768
     },
     {
       "id": "1590",
       "name": "Zentner",
-      "marktwert": 10339336,
+      "marktwert": 10375234,
       "position": "TW",
-      "mw_aenderung": 48035
+      "mw_aenderung": 35898
     },
     {
       "id": "16948",
       "name": "Konstantelias",
-      "marktwert": 1668753,
+      "marktwert": 1844350,
       "position": "MF",
-      "mw_aenderung": 179207
+      "mw_aenderung": 175597
     },
     {
       "id": "16378",
       "name": "Karetsas",
-      "marktwert": 20213140,
+      "marktwert": 20317036,
       "position": "MF",
-      "mw_aenderung": 112547
+      "mw_aenderung": 103896
+    },
+    {
+      "id": "173",
+      "name": "Tah",
+      "marktwert": 29476661,
+      "position": "ABW",
+      "mw_aenderung": 63347
     }
   ],
   "3181707": [
     {
       "id": "7226",
       "name": "Kane",
-      "marktwert": 65882249,
+      "marktwert": 65898560,
       "position": "ST",
-      "mw_aenderung": 17921
+      "mw_aenderung": 16311
     },
     {
       "id": "3019",
       "name": "Atubolu",
-      "marktwert": 14647959,
+      "marktwert": 14659781,
       "position": "TW",
-      "mw_aenderung": 13113
+      "mw_aenderung": 11822
     },
     {
       "id": "17285",
       "name": "Brassier",
-      "marktwert": 18201667,
+      "marktwert": 18069204,
       "position": "ABW",
-      "mw_aenderung": -109176
+      "mw_aenderung": -132463
     },
     {
       "id": "2887",
       "name": "Dōan",
-      "marktwert": 11960111,
+      "marktwert": 11554345,
       "position": "MF",
-      "mw_aenderung": -439146
+      "mw_aenderung": -405766
     },
     {
       "id": "3069",
       "name": "Nmecha",
-      "marktwert": 29949222,
+      "marktwert": 30013865,
       "position": "MF",
-      "mw_aenderung": 70591
+      "mw_aenderung": 64643
     },
     {
       "id": "2294",
       "name": "Pieper",
-      "marktwert": 16574863,
+      "marktwert": 16710598,
       "position": "ABW",
-      "mw_aenderung": 139848
+      "mw_aenderung": 135735
     },
     {
       "id": "3277",
       "name": "Muheim",
-      "marktwert": 11501037,
+      "marktwert": 11589165,
       "position": "ABW",
-      "mw_aenderung": 96534
+      "mw_aenderung": 88128
     },
     {
       "id": "2255",
       "name": "Burkardt",
-      "marktwert": 27544034,
+      "marktwert": 27570331,
       "position": "ST",
-      "mw_aenderung": 28235
+      "mw_aenderung": 26297
     },
     {
       "id": "8274",
       "name": "El Mala",
-      "marktwert": 19757237,
+      "marktwert": 19577252,
       "position": "MF",
-      "mw_aenderung": -231019
+      "mw_aenderung": -179985
     },
     {
       "id": "11886",
       "name": "Rômulo",
-      "marktwert": 17504020,
+      "marktwert": 17688393,
       "position": "ST",
-      "mw_aenderung": 199373
-    },
-    {
-      "id": "11680",
-      "name": "Eichhorn",
-      "marktwert": 4910185,
-      "position": "MF",
-      "mw_aenderung": 125439
+      "mw_aenderung": 184373
     },
     {
       "id": "2120",
       "name": "Nartey",
-      "marktwert": 5972971,
+      "marktwert": 6069627,
       "position": "MF",
-      "mw_aenderung": 130171
+      "mw_aenderung": 96656
     },
     {
       "id": "2804",
       "name": "Musiala",
-      "marktwert": 23392978,
+      "marktwert": 23531830,
       "position": "MF",
-      "mw_aenderung": 146040
+      "mw_aenderung": 138852
     },
     {
-      "id": "15193",
-      "name": "Rots",
-      "marktwert": 10617337,
-      "position": "ABW",
-      "mw_aenderung": 58386
+      "id": "15283",
+      "name": "Adeline",
+      "marktwert": 6816646,
+      "position": "MF",
+      "mw_aenderung": 234049
     }
   ],
   "3308384": [
     {
       "id": "2749",
       "name": "Tigges",
-      "marktwert": 4050498,
+      "marktwert": 3953964,
       "position": "ST",
-      "mw_aenderung": -98642
+      "mw_aenderung": -96534
     },
     {
       "id": "1685",
       "name": "Kimmich",
-      "marktwert": 60313252,
+      "marktwert": 60329807,
       "position": "MF",
-      "mw_aenderung": 20143
+      "mw_aenderung": 16555
     },
     {
       "id": "1996",
       "name": "Friedl",
-      "marktwert": 16944034,
+      "marktwert": 17011110,
       "position": "ABW",
-      "mw_aenderung": 73336
+      "mw_aenderung": 67076
     },
     {
       "id": "17309",
       "name": "Nwaneri",
-      "marktwert": 6957093,
+      "marktwert": 6785008,
       "position": "MF",
-      "mw_aenderung": -182648
+      "mw_aenderung": -172085
     },
     {
       "id": "11099",
       "name": "Bellingham",
-      "marktwert": 19715070,
+      "marktwert": 19814647,
       "position": "MF",
-      "mw_aenderung": 95263
+      "mw_aenderung": 99577
     },
     {
       "id": "2201",
       "name": "Maina",
-      "marktwert": 6626658,
+      "marktwert": 6405270,
       "position": "ST",
-      "mw_aenderung": -254864
+      "mw_aenderung": -221388
     },
     {
       "id": "7282",
       "name": "Deman",
-      "marktwert": 10550269,
+      "marktwert": 10698453,
       "position": "ABW",
-      "mw_aenderung": 163709
+      "mw_aenderung": 148184
     },
     {
       "id": "1873",
       "name": "Kobel",
-      "marktwert": 19541643,
+      "marktwert": 19585395,
       "position": "TW",
-      "mw_aenderung": 43458
+      "mw_aenderung": 43752
     },
     {
       "id": "157",
@@ -387,9 +387,9 @@
     {
       "id": "10115",
       "name": "Svensson",
-      "marktwert": 22216621,
+      "marktwert": 22300186,
       "position": "ABW",
-      "mw_aenderung": 87583
+      "mw_aenderung": 83565
     },
     {
       "id": "1745",
@@ -403,242 +403,228 @@
     {
       "id": "8329",
       "name": "Olise",
-      "marktwert": 65886875,
+      "marktwert": 65932095,
       "position": "MF",
-      "mw_aenderung": 45888
+      "mw_aenderung": 45220
     },
     {
       "id": "4335",
       "name": "Scherhant",
-      "marktwert": 22039272,
+      "marktwert": 22169900,
       "position": "MF",
-      "mw_aenderung": 113414
+      "mw_aenderung": 130628
     },
     {
       "id": "2522",
       "name": "Raum",
-      "marktwert": 30889832,
+      "marktwert": 30951065,
       "position": "ABW",
-      "mw_aenderung": 67806
+      "mw_aenderung": 61233
     },
     {
       "id": "2383",
       "name": "Schlotterbeck",
-      "marktwert": 31714684,
+      "marktwert": 31774644,
       "position": "ABW",
-      "mw_aenderung": 57625
+      "mw_aenderung": 59960
     },
     {
       "id": "1246",
       "name": "Orban",
-      "marktwert": 31002585,
+      "marktwert": 31033314,
       "position": "ABW",
-      "mw_aenderung": 38505
+      "mw_aenderung": 30729
     },
     {
       "id": "3190",
       "name": "Chabot",
-      "marktwert": 22994292,
+      "marktwert": 23160436,
       "position": "ABW",
-      "mw_aenderung": 184588
+      "mw_aenderung": 166144
     },
     {
       "id": "1580",
       "name": "Schwäbe",
-      "marktwert": 13743439,
+      "marktwert": 13758955,
       "position": "TW",
-      "mw_aenderung": 14542
+      "mw_aenderung": 15516
     },
     {
       "id": "2854",
       "name": "Demirović",
-      "marktwert": 16927570,
+      "marktwert": 17040541,
       "position": "ST",
-      "mw_aenderung": 102045
+      "mw_aenderung": 112971
     },
     {
       "id": "3543",
       "name": "Brown",
-      "marktwert": 20781189,
+      "marktwert": 20942683,
       "position": "ABW",
-      "mw_aenderung": 142433
+      "mw_aenderung": 161494
     },
     {
       "id": "9507",
       "name": "Nusa",
-      "marktwert": 32386429,
+      "marktwert": 32517251,
       "position": "MF",
-      "mw_aenderung": 120081
-    },
-    {
-      "id": "3041",
-      "name": "Widmer",
-      "marktwert": 5051879,
-      "position": "ABW",
-      "mw_aenderung": 140827
+      "mw_aenderung": 130822
     },
     {
       "id": "2855",
       "name": "Ache",
-      "marktwert": 7366818,
+      "marktwert": 7499239,
       "position": "ST",
-      "mw_aenderung": 142389
+      "mw_aenderung": 132421
     },
     {
       "id": "6172",
       "name": "Adamu",
-      "marktwert": 4204136,
+      "marktwert": 4409269,
       "position": "ST",
-      "mw_aenderung": 212844
+      "mw_aenderung": 205133
     },
     {
       "id": "12367",
       "name": "Spalt",
-      "marktwert": 6013699,
+      "marktwert": 6218183,
       "position": "MF",
-      "mw_aenderung": 234191
+      "mw_aenderung": 204484
     },
     {
       "id": "10024",
       "name": "Schmied",
-      "marktwert": 6465010,
+      "marktwert": 6547544,
       "position": "ABW",
-      "mw_aenderung": 125065
+      "mw_aenderung": 82534
     },
     {
       "id": "11675",
       "name": "Díaz",
-      "marktwert": 41904262,
+      "marktwert": 41991954,
       "position": "ST",
-      "mw_aenderung": 101676
+      "mw_aenderung": 87692
     },
     {
       "id": "493",
       "name": "Gregoritsch",
-      "marktwert": 16507458,
+      "marktwert": 16609118,
       "position": "ST",
-      "mw_aenderung": 99342
+      "mw_aenderung": 101660
     }
   ],
   "3458038": [
     {
       "id": "4199",
       "name": "García",
-      "marktwert": 39774554,
+      "marktwert": 39818105,
       "position": "MF",
-      "mw_aenderung": 40916
+      "mw_aenderung": 43551
     },
     {
       "id": "1639",
       "name": "Amiri",
-      "marktwert": 26908142,
+      "marktwert": 26953696,
       "position": "MF",
-      "mw_aenderung": 22407
+      "mw_aenderung": 45554
     },
     {
       "id": "3759",
       "name": "Gutiérrez",
-      "marktwert": 28200346,
+      "marktwert": 28255727,
       "position": "ABW",
-      "mw_aenderung": 63201
+      "mw_aenderung": 55381
     },
     {
       "id": "2172",
       "name": "Führich",
-      "marktwert": 21285932,
+      "marktwert": 21357370,
       "position": "MF",
-      "mw_aenderung": 68521
+      "mw_aenderung": 71438
     },
     {
       "id": "608",
       "name": "Füllkrug",
-      "marktwert": 24897285,
+      "marktwert": 25060018,
       "position": "ST",
-      "mw_aenderung": 169816
+      "mw_aenderung": 162733
     },
     {
       "id": "3158",
       "name": "Asllani",
-      "marktwert": 17754873,
+      "marktwert": 17861725,
       "position": "ST",
-      "mw_aenderung": 116520
+      "mw_aenderung": 106852
     },
     {
       "id": "4596",
       "name": "Gruda",
-      "marktwert": 21565739,
+      "marktwert": 21810068,
       "position": "MF",
-      "mw_aenderung": 231714
+      "mw_aenderung": 244329
     },
     {
       "id": "7224",
       "name": "Castello Jr.",
-      "marktwert": 18948974,
+      "marktwert": 19114682,
       "position": "ABW",
-      "mw_aenderung": 169777
+      "mw_aenderung": 165708
     },
     {
       "id": "7277",
       "name": "Chaïbi",
-      "marktwert": 12327284,
+      "marktwert": 12483649,
       "position": "MF",
-      "mw_aenderung": 153208
-    },
-    {
-      "id": "1223",
-      "name": "Friedrich",
-      "marktwert": 5930528,
-      "position": "ABW",
-      "mw_aenderung": 232751
+      "mw_aenderung": 156365
     },
     {
       "id": "10789",
       "name": "Karl",
-      "marktwert": 18586373,
+      "marktwert": 18767539,
       "position": "MF",
-      "mw_aenderung": 185564
+      "mw_aenderung": 181166
     },
     {
       "id": "2373",
       "name": "Kabak",
-      "marktwert": 23030586,
+      "marktwert": 23142465,
       "position": "ABW",
-      "mw_aenderung": 140331
-    },
-    {
-      "id": "2803",
-      "name": "Lemperle",
-      "marktwert": 10386024,
-      "position": "ST",
-      "mw_aenderung": 215696
+      "mw_aenderung": 111879
     },
     {
       "id": "3279",
       "name": "Vušković",
-      "marktwert": 2086575,
+      "marktwert": 2492872,
       "position": "ABW",
-      "mw_aenderung": 423831
+      "mw_aenderung": 406297
     },
     {
       "id": "9754",
       "name": "Bah",
-      "marktwert": 6357927,
+      "marktwert": 6678729,
       "position": "ABW",
-      "mw_aenderung": 367820
+      "mw_aenderung": 320802
     },
     {
       "id": "9513",
       "name": "Hein",
-      "marktwert": 14389771,
+      "marktwert": 14458406,
       "position": "TW",
-      "mw_aenderung": 73803
+      "mw_aenderung": 68635
     },
     {
       "id": "11955",
       "name": "El Khannouss",
-      "marktwert": 17483757,
+      "marktwert": 17614987,
       "position": "MF",
-      "mw_aenderung": 124235
+      "mw_aenderung": 131230
+    },
+    {
+      "id": "2006",
+      "name": "Posch",
+      "marktwert": 8421351,
+      "position": "ABW",
+      "mw_aenderung": 341650
     }
   ]
 }
