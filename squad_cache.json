@@ -150,13 +150,6 @@
       "mw_aenderung": 3538
     },
     {
-      "id": "2783",
-      "name": "Tapsoba",
-      "marktwert": 24825319,
-      "position": "ABW",
-      "mw_aenderung": -334666
-    },
-    {
       "id": "15211",
       "name": "Gadou",
       "marktwert": 25103949,
@@ -511,6 +504,13 @@
       "marktwert": 16609118,
       "position": "ST",
       "mw_aenderung": 101660
+    },
+    {
+      "id": "3193",
+      "name": "Tiago Tomás",
+      "marktwert": 6077409,
+      "position": "ST",
+      "mw_aenderung": 175284
     }
   ],
   "3458038": [
@@ -625,6 +625,13 @@
       "marktwert": 8421351,
       "position": "ABW",
       "mw_aenderung": 341650
+    },
+    {
+      "id": "7158",
+      "name": "Undav",
+      "marktwert": 29502674,
+      "position": "ST",
+      "mw_aenderung": 66478
     }
   ]
 }
