@@ -92,18 +92,18 @@
       "mw_aenderung": 22263
     },
     {
-      "id": "3228",
-      "name": "Njinmah",
-      "marktwert": 5143512,
-      "position": "ST",
-      "mw_aenderung": -107075
-    },
-    {
       "id": "13888",
       "name": "Doué",
       "marktwert": 6365452,
       "position": "ABW",
       "mw_aenderung": 242406
+    },
+    {
+      "id": "11570",
+      "name": "Sebulonsen",
+      "marktwert": 4215143,
+      "position": "ABW",
+      "mw_aenderung": 178037
     }
   ],
   "3181699": [
@@ -171,13 +171,6 @@
       "mw_aenderung": 70086
     },
     {
-      "id": "8273",
-      "name": "El Mala",
-      "marktwert": 4775109,
-      "position": "ST",
-      "mw_aenderung": 138634
-    },
-    {
       "id": "1671",
       "name": "Prömel",
       "marktwert": 12936175,
@@ -211,20 +204,6 @@
       "marktwert": 29538599,
       "position": "ABW",
       "mw_aenderung": 61938
-    },
-    {
-      "id": "10916",
-      "name": "Ayhan",
-      "marktwert": 5885323,
-      "position": "ABW",
-      "mw_aenderung": 117010
-    },
-    {
-      "id": "7283",
-      "name": "Brackelmann",
-      "marktwert": 10074210,
-      "position": "ABW",
-      "mw_aenderung": 298718
     }
   ],
   "3181707": [
