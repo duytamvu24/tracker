@@ -858,10 +858,18 @@
         "netto_transfer": 0.0,
         "netto_teamwert": 283227726.0,
         "max_gebot": 86692006.58
+      },
+      {
+        "date": "2026-11-22",
+        "teamwert": 291478358.0,
+        "budget": -6673143.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 284805215.0,
+        "max_gebot": 87312577.95
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00",
-    "berechnet_um": "2026-11-21T14:37:38.180888+01:00"
+    "berechnet_um": "2026-11-21T23:15:18.332923+01:00"
   },
   "3181699": {
     "name": "Lam Quy ",
@@ -1722,10 +1730,18 @@
         "netto_transfer": 0.0,
         "netto_teamwert": 283557755.0,
         "max_gebot": 87075591.15
+      },
+      {
+        "date": "2026-11-22",
+        "teamwert": 291079113.0,
+        "budget": -6398468.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 284680645.0,
+        "max_gebot": 87546144.85
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00",
-    "berechnet_um": "2026-11-21T14:37:38.180888+01:00"
+    "berechnet_um": "2026-11-21T23:15:18.332923+01:00"
   },
   "3181707": {
     "name": "Tam Dan",
@@ -2582,14 +2598,22 @@
       {
         "date": "2026-11-21",
         "teamwert": 191110893.0,
-        "budget": 69779251.0,
-        "netto_transfer": 72852548.0,
-        "netto_teamwert": 260890144.0,
-        "max_gebot": 132845845.69
+        "budget": 66879251.0,
+        "netto_transfer": 69952548.0,
+        "netto_teamwert": 257990144.0,
+        "max_gebot": 129945845.69
+      },
+      {
+        "date": "2026-11-22",
+        "teamwert": 194574752.0,
+        "budget": 66979251.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 261554003.0,
+        "max_gebot": 131188919.16
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00",
-    "berechnet_um": "2026-11-21T14:37:38.180888+01:00"
+    "berechnet_um": "2026-11-21T23:15:18.332923+01:00"
   },
   "3308384": {
     "name": "Tai",
@@ -3450,10 +3474,18 @@
         "netto_transfer": 0.0,
         "netto_teamwert": 172810734.0,
         "max_gebot": 60431449.08
+      },
+      {
+        "date": "2026-11-22",
+        "teamwert": 167839999.0,
+        "budget": 5180458.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 173020457.0,
+        "max_gebot": 60567657.67
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00",
-    "berechnet_um": "2026-11-21T14:37:38.180888+01:00"
+    "berechnet_um": "2026-11-21T23:15:18.332923+01:00"
   },
   "3310917": {
     "name": "Duy Tam",
@@ -4311,21 +4343,29 @@
       {
         "date": "2026-11-21",
         "teamwert": 368326992.0,
-        "budget": -30109382.0,
-        "netto_transfer": -27419985.0,
-        "netto_teamwert": 338217610.0,
-        "max_gebot": 81502429.3
+        "budget": -38514979.0,
+        "netto_transfer": -35825582.0,
+        "netto_teamwert": 329812013.0,
+        "max_gebot": 70322985.29
+      },
+      {
+        "date": "2026-11-22",
+        "teamwert": 377931273.0,
+        "budget": -38414979.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 339516294.0,
+        "max_gebot": 73625398.02
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00",
     "budget_abgleich": {
-      "date": "2026-11-21",
-      "geprueft_um": "2026-11-21T14:37:38.180888+01:00",
-      "echt": -24471382.0,
-      "tracker": -30109382.0,
-      "differenz": 5638000.0
+      "date": "2026-11-22",
+      "geprueft_um": "2026-11-21T23:15:18.332923+01:00",
+      "echt": -32876979.0,
+      "tracker": -38414979.0,
+      "differenz": 5538000.0
     },
-    "berechnet_um": "2026-11-21T14:37:38.180888+01:00"
+    "berechnet_um": "2026-11-21T23:15:18.332923+01:00"
   },
   "3458038": {
     "name": "Dragontrieu ",
@@ -5183,13 +5223,21 @@
       {
         "date": "2026-11-21",
         "teamwert": 303893958.0,
-        "budget": -8499717.0,
+        "budget": 13863571.0,
+        "netto_transfer": 22363288.0,
+        "netto_teamwert": 317757529.0,
+        "max_gebot": 114148577.14
+      },
+      {
+        "date": "2026-11-22",
+        "teamwert": 283040836.0,
+        "budget": 13963571.0,
         "netto_transfer": 0.0,
-        "netto_teamwert": 295394241.0,
-        "max_gebot": 88980382.53
+        "netto_teamwert": 297004407.0,
+        "max_gebot": 107367046.88
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00",
-    "berechnet_um": "2026-11-21T14:37:38.180888+01:00"
+    "berechnet_um": "2026-11-21T23:15:18.332923+01:00"
   }
 }
