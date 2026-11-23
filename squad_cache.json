@@ -204,6 +204,20 @@
       "marktwert": 29785808,
       "position": "ABW",
       "mw_aenderung": 101916
+    },
+    {
+      "id": "18550",
+      "name": "Codjo-Evora",
+      "marktwert": 1013416,
+      "position": "ST",
+      "mw_aenderung": 312781
+    },
+    {
+      "id": "15502",
+      "name": "Binder",
+      "marktwert": 3244334,
+      "position": "MF",
+      "mw_aenderung": 50924
     }
   ],
   "3181707": [
@@ -283,6 +297,13 @@
       "marktwert": 2749040,
       "position": "ST",
       "mw_aenderung": 7432
+    },
+    {
+      "id": "2694",
+      "name": "Stiller",
+      "marktwert": 20677354,
+      "position": "MF",
+      "mw_aenderung": 233271
     }
   ],
   "3308384": [
@@ -469,6 +490,13 @@
       "marktwert": 611044,
       "position": "ST",
       "mw_aenderung": 89480
+    },
+    {
+      "id": "4406",
+      "name": "Dina Ebimbe",
+      "marktwert": 2483725,
+      "position": "MF",
+      "mw_aenderung": -5923
     }
   ],
   "3458038": [
@@ -583,13 +611,6 @@
       "marktwert": 511892,
       "position": "MF",
       "mw_aenderung": 11892
-    },
-    {
-      "id": "2395",
-      "name": "Ryerson",
-      "marktwert": 12070611,
-      "position": "ABW",
-      "mw_aenderung": 38793
     }
   ]
 }
