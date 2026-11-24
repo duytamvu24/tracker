@@ -218,6 +218,13 @@
       "marktwert": 3327544,
       "position": "MF",
       "mw_aenderung": 83210
+    },
+    {
+      "id": "7721",
+      "name": "Grüll",
+      "marktwert": 18976507,
+      "position": "MF",
+      "mw_aenderung": 4424
     }
   ],
   "3181707": [
@@ -497,6 +504,13 @@
       "marktwert": 2561895,
       "position": "MF",
       "mw_aenderung": 78170
+    },
+    {
+      "id": "11752",
+      "name": "Omari",
+      "marktwert": 6954712,
+      "position": "ABW",
+      "mw_aenderung": 325881
     }
   ],
   "3458038": [
@@ -611,6 +625,13 @@
       "marktwert": 11737539,
       "position": "MF",
       "mw_aenderung": 151905
+    },
+    {
+      "id": "7514",
+      "name": "Le Joncour",
+      "marktwert": 5166092,
+      "position": "ABW",
+      "mw_aenderung": 258588
     }
   ]
 }
