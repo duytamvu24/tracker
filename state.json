@@ -878,14 +878,22 @@
       {
         "date": "2026-11-24",
         "teamwert": 295327037.0,
-        "budget": -6473143.0,
+        "budget": -16077586.0,
+        "netto_transfer": -9604443.0,
+        "netto_teamwert": 279249451.0,
+        "max_gebot": 76074732.83
+      },
+      {
+        "date": "2026-11-25",
+        "teamwert": 306397760.0,
+        "budget": -15977586.0,
         "netto_transfer": 0.0,
-        "netto_teamwert": 288853894.0,
-        "max_gebot": 88848642.02
+        "netto_teamwert": 290420174.0,
+        "max_gebot": 79861071.42
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00",
-    "berechnet_um": "2026-11-24T12:16:48.264343+01:00"
+    "berechnet_um": "2026-11-25T00:10:17.875014+01:00"
   },
   "3181699": {
     "name": "Lam Quy ",
@@ -1770,10 +1778,18 @@
         "netto_transfer": -20137211.0,
         "netto_teamwert": 286607996.0,
         "max_gebot": 63796045.68
+      },
+      {
+        "date": "2026-11-25",
+        "teamwert": 319241300.0,
+        "budget": -30684593.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 288556707.0,
+        "max_gebot": 64539120.31
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00",
-    "berechnet_um": "2026-11-24T12:16:48.264343+01:00"
+    "berechnet_um": "2026-11-25T00:10:17.875014+01:00"
   },
   "3181707": {
     "name": "Tam Dan",
@@ -2658,10 +2674,18 @@
         "netto_transfer": 0.0,
         "netto_teamwert": 250393907.0,
         "max_gebot": 107378961.19
+      },
+      {
+        "date": "2026-11-25",
+        "teamwert": 219766418.0,
+        "budget": 31483209.0,
+        "netto_transfer": -5555555.0,
+        "netto_teamwert": 251249627.0,
+        "max_gebot": 104006126.94
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00",
-    "berechnet_um": "2026-11-24T12:16:48.264343+01:00"
+    "berechnet_um": "2026-11-25T00:10:17.875014+01:00"
   },
   "3308384": {
     "name": "Tai",
@@ -3546,10 +3570,18 @@
         "netto_transfer": 0.0,
         "netto_teamwert": 173707129.0,
         "max_gebot": 60928259.43
+      },
+      {
+        "date": "2026-11-25",
+        "teamwert": 168676126.0,
+        "budget": 5480458.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 174156584.0,
+        "max_gebot": 61143579.58
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00",
-    "berechnet_um": "2026-11-24T12:16:48.264343+01:00"
+    "berechnet_um": "2026-11-25T00:10:17.875014+01:00"
   },
   "3310917": {
     "name": "Duy Tam",
@@ -4435,17 +4467,25 @@
         "netto_transfer": -7254712.0,
         "netto_teamwert": 343823017.0,
         "max_gebot": 75726299.61
+      },
+      {
+        "date": "2026-11-25",
+        "teamwert": 366762732.0,
+        "budget": -20142488.0,
+        "netto_transfer": 17492808.0,
+        "netto_teamwert": 346620244.0,
+        "max_gebot": 94242192.52
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00",
     "budget_abgleich": {
-      "date": "2026-11-24",
-      "geprueft_um": "2026-11-24T12:16:48.264343+01:00",
-      "echt": -30556296.0,
-      "tracker": -37735296.0,
-      "differenz": 7179000.0
+      "date": "2026-11-25",
+      "geprueft_um": "2026-11-25T00:10:17.875014+01:00",
+      "echt": -13063488.0,
+      "tracker": -20142488.0,
+      "differenz": 7079000.0
     },
-    "berechnet_um": "2026-11-24T12:16:48.264343+01:00"
+    "berechnet_um": "2026-11-25T00:10:17.875014+01:00"
   },
   "3458038": {
     "name": "Dragontrieu ",
@@ -5331,9 +5371,17 @@
         "netto_transfer": -5166092.0,
         "netto_teamwert": 300840287.0,
         "max_gebot": 76008440.71
+      },
+      {
+        "date": "2026-11-25",
+        "teamwert": 321047206.0,
+        "budget": -17804802.0,
+        "netto_transfer": 5364052.0,
+        "netto_teamwert": 303242404.0,
+        "max_gebot": 82265191.32
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00",
-    "berechnet_um": "2026-11-24T12:16:48.264343+01:00"
+    "berechnet_um": "2026-11-25T00:10:17.875014+01:00"
   }
 }
