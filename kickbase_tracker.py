@@ -50,7 +50,20 @@ import pandas as pd
 KICKBASE_EMAIL = os.environ.get("KICKBASE_EMAIL", "DEINE_EMAIL")
 KICKBASE_PASSWORD = os.environ.get("KICKBASE_PASSWORD", "DEIN_PASSWORT")
 
-LOGIN_BONUS = 100_000       # € pro Tag, laut eurer Liga-Regel fix
+LOGIN_BONUS = 100_000       # € pro Tag (Endstufe)
+# Nach einem Reset steigt der Login-Bonus stufenweise: am Reset-Tag selbst gibt
+# es nichts, danach 10k, 20k, ... bis 100k (ab dem 10. Tag immer 100k).
+# Am 25.11.2026 gegen alle echten Budgetstaende geprueft (auf den Euro genau).
+LOGIN_BONUS_STUFE = 10_000
+
+
+def login_bonus(tage_seit_reset: int | None) -> float:
+    """Login-Bonus eines Kickbase-Tages; tage_seit_reset = 0 ist der Reset-Tag."""
+    if tage_seit_reset is None:
+        return LOGIN_BONUS
+    if tage_seit_reset <= 0:
+        return 0
+    return min(LOGIN_BONUS_STUFE * tage_seit_reset, LOGIN_BONUS)
 MINUS_GRENZE = 0.33         # exakt 33,00% - empirisch bestaetigt (Abweichung nur 1 Euro
                              # bei Budget=50.152.491 / Teamwert=99.847.509 -> Max-Gebot
                              # exakt 83.102.169, real getestet: 83.102.168)
@@ -496,8 +509,9 @@ def last_budget(history: list, start_budget: float) -> float:
     return history[-1]["budget"]
 
 
-def compute_day(prev_budget: float, teamwert: float, netto_transfer: float, praemie: float = 0.0) -> dict:
-    budget = prev_budget + netto_transfer + LOGIN_BONUS + praemie
+def compute_day(prev_budget: float, teamwert: float, netto_transfer: float, praemie: float = 0.0,
+                login: float = LOGIN_BONUS) -> dict:
+    budget = prev_budget + netto_transfer + login + praemie
     netto_teamwert = teamwert + budget
 
     # Basis fuer die 33%-Regel: negatives Budget reduziert die Basis (offizielles
@@ -589,11 +603,13 @@ def recompute_history(history: list, start_budget: float, store: dict,
     for p in praemien or []:
         praemien_je_tag.setdefault(p["tag"], []).append(p)
 
+    reset_tag = pd.Timestamp(_tag_von(reset_threshold)) if reset_threshold else None
     budget = start_budget
     for eintrag in history:
         netto = netto_je_tag.get(eintrag["date"], 0.0)
         praemie = sum(p["betrag"] for p in praemien_je_tag.get(eintrag["date"], []))
-        neu = compute_day(budget, eintrag["teamwert"], netto, praemie)
+        tage = (pd.Timestamp(eintrag["date"]) - reset_tag).days if reset_tag is not None else None
+        neu = compute_day(budget, eintrag["teamwert"], netto, praemie, login_bonus(tage))
         k = anker.get(eintrag["date"])
         if k:
             # Echtes Budget zum Korrektur-Zeitpunkt + Transfers/Prämien danach
