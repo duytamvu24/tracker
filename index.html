@@ -2307,7 +2307,7 @@ load().then(() => {
   ];
 
   let TF = null, laden = null;
-  let mid = null, filter = pref.get('filter', 'trade'), scope = pref.get('scope', 'andere');
+  let mid = null, filter = pref.get('filter', 'trade'), scope = pref.get('scope', 'andere'), zeitraum = pref.get('zeitraum', null);
   const body = () => document.getElementById('tf-body');
   const nameVon = id => ((TF.manager.find(x => x.id === id) || {}).name || id);
   const ichId = () => (TF.manager.find(x => x.ich) || {}).id;
@@ -2355,6 +2355,8 @@ load().then(() => {
     if (sc) { scope = sc.dataset.scope; pref.set('scope', scope); window.renderTransfers(); return; }
     const m = e.target.closest('[data-mid]');
     if (m) { mid = m.dataset.mid; pref.set('mid', mid); window.renderTransfers(); return; }
+    const zr = e.target.closest('[data-zeitraum]');
+    if (zr) { zeitraum = zr.dataset.zeitraum; pref.set('zeitraum', zeitraum); window.renderTransfers(); return; }
     const z = e.target.closest('[data-zelle]');
     if (z) {
       const [a, n] = z.dataset.zelle.split('|');
@@ -2492,22 +2494,31 @@ load().then(() => {
 
   // ---------------- 3) Manager ----------------
   function managerTeil() {
-    const m = TF.manager.find(x => x.id === mid);
+    const mg = TF.manager.find(x => x.id === mid);
+    // Zeitraum: Saison oder einzelne Abschnitte (Hinrunde/Rückrunde) – Standard: der laufende Abschnitt
+    const namen = Object.keys(mg.bereiche || { Saison: 1 });
+    const laufend = (TF.perioden || []).length > 1 ? TF.perioden[TF.perioden.length - 1].name : 'Saison';
+    if (!zeitraum || !namen.includes(zeitraum)) zeitraum = laufend;
+    const m = { ...mg, ...((mg.bereiche || {})[zeitraum] || {}),
+                positionen: zeitraum === 'Saison' ? mg.positionen : mg.positionen.filter(p => p.periode === zeitraum) };
     const t = m.trades, g = m.gehalten, o = m.offen;
+    const zeitraumWahl = namen.length > 1 ? `<div class="tf-filter">${['Saison', ...namen.filter(n => n !== 'Saison')].map(n =>
+      `<button class="sort-btn ${n === zeitraum ? 'active' : ''}" data-zeitraum="${esc(n)}">${esc(n)}</button>`).join('')}</div>` : '';
     const quote = t.anzahl ? t.gewinner / t.anzahl : null;
     const chips = `<div class="team-chips">${TF.manager.map(x =>
       `<button class="tab ${x.id === mid ? 'active' : ''}" data-mid="${esc(x.id)}">${esc(x.name)}${x.ich ? ' (du)' : ''}</button>`).join('')}</div>`;
-    const kopf = `<div class="tm-card"><h3>${esc(m.name)} · Transfer-Bilanz seit Reset</h3>
+    const kopf = `<div class="tm-card"><h3>${esc(m.name)} · Transfer-Bilanz${namen.length > 1 ? ' · ' + esc(zeitraum) : ' seit Saisonstart'}</h3>
       <div class="tf-kpis">
         ${kpi('TF-Gewinn', sgeld(m.tf_gewinn), `${nf(m.kaeufe)} Käufe · ${nf(m.verkaeufe)} Verkäufe`, cls(m.tf_gewinn))}
         ${kpi('Trades', `${nf(t.anzahl)} <span class="tf-dim" style="font-size:.7em">· ${pct0(quote)} im Plus</span>`,
               `Netto ${sgeld(t.gewinn_summe)} · Ø ${sgeld(t.gewinn_schnitt)}`)}
         ${kpi('OVP bei Trades', geld(t.ovp_eur_median), `Median · ${anteil(t.anteil_median)} vom theor. Gewinn`)}
         ${kpi('Gehalten & verkauft', nf(g.anzahl), `Netto ${sgeld(g.gewinn_summe)}`, '')}
-        ${kpi('Noch im Kader', nf(o.anzahl), `unrealisiert ${sgeld(m.unrealisiert)}`, '')}
+        ${m.durch_reset ? kpi('Durch Reset beendet', nf(m.durch_reset), 'beim Reset noch im Kader – ohne Verkauf', '')
+                        : kpi('Noch im Kader', nf(o.anzahl), `unrealisiert ${sgeld(m.unrealisiert)}`, '')}
         ${kpi('Mit Managern', nf(m.kaeufe_von_manager + m.verkaeufe_an_manager), `${nf(m.kaeufe_von_manager)} gekauft · ${nf(m.verkaeufe_an_manager)} verkauft`)}
       </div></div>`;
-    return `<div class="section-title" style="margin-top:22px"><span>Kauf- und Tradeverhalten</span></div>${chips}${kopf}
+    return `<div class="section-title" style="margin-top:22px"><span>Kauf- und Tradeverhalten</span></div>${chips}${zeitraumWahl}${kopf}
       ${sektion('anteil', 'OVP im Vergleich zum Netto', 'Trades nach OVP-Anteil', gruppenTabelle(m.nach_ovp, 'OVP-Anteil'))}
       ${sektion('anstieg', 'Nach Anstieg der letzten Nacht', 'Trades', gruppenTabelle(m.nach_anstieg || [], 'Anstieg'))}
       ${sektion('tag', 'Nach Kauf-Wochentag', 'Trades', gruppenTabelle(m.nach_wochentag, 'Tag'))}
@@ -2529,9 +2540,11 @@ load().then(() => {
     const pos = [...m.positionen].reverse();
     const gruppen = {
       trade: pos.filter(p => p.typ === 'trade'), verlust: pos.filter(p => p.tf_gewinn < 0),
-      gehalten: pos.filter(p => p.typ === 'gehalten'), offen: pos.filter(p => p.typ === 'offen'), alle: pos,
+      gehalten: pos.filter(p => p.typ === 'gehalten'), offen: pos.filter(p => p.typ === 'offen'),
+      reset: pos.filter(p => p.typ === 'reset'), alle: pos,
     };
-    const namen = { trade: 'Trades', verlust: 'Verluste', gehalten: 'Gehalten', offen: 'Im Kader', alle: 'Alle' };
+    const namen = { trade: 'Trades', verlust: 'Verluste', gehalten: 'Gehalten', offen: 'Im Kader', reset: 'Durch Reset', alle: 'Alle' };
+    if (!gruppen.reset.length) delete namen.reset;
     const sel = gruppen[filter] ? filter : 'trade';
     return `<div class="tf-filter">${Object.keys(namen).map(k => `<button class="sort-btn ${k === sel ? 'active' : ''}" data-filter="${k}">${namen[k]} (${gruppen[k].length})</button>`).join('')}</div>
       <div class="tf-table-wrap"><table class="tf-table"><thead><tr><th>Spieler</th><th>Anstieg</th><th>OVP</th>
@@ -2539,13 +2552,13 @@ load().then(() => {
       ${gruppen[sel].slice(0, 300).map(p => {
         const ergebnis = p.typ === 'offen' ? p.unrealisiert : p.tf_gewinn;
         const unter = [p.wochentag + ' ' + datum(p.kauf), geld(p.preis),
-          p.von === 'manager' ? 'von ' + esc(p.von_name) : '', p.typ === 'offen' ? 'im Kader' : (p.verkauf ? 'verkauft ' + datum(p.verkauf) : '')].filter(Boolean).join(' · ');
+          p.von === 'manager' ? 'von ' + esc(p.von_name) : '', p.typ === 'offen' ? 'im Kader' : p.typ === 'reset' ? 'durch Reset beendet' : (p.verkauf ? 'verkauft ' + datum(p.verkauf) : '')].filter(Boolean).join(' · ');
         return `<tr class="${ergebnis < 0 ? 'loss' : ''}">
           <td class="tf-name">${esc(p.name)}<small>${unter}</small></td>
           <td class="${cls(p.anstieg_vortag)}">${sgeld(p.anstieg_vortag)}<small>${leer(p.naechte) ? '' : p.naechte + ' N. · theor. ' + geld(p.theo_gewinn)}</small></td>
           <td>${sgeld(p.ovp_eur)}<small>${leer(p.ovp_anteil) ? '' : anteil(p.ovp_anteil) + ' vom Gewinn'}</small></td>
           <td class="${cls(p.mw_anstieg_eur)}">${sgeld(p.mw_anstieg_eur)}<small>${nf(p.haltedauer_tage, 1)} Tage${p.spieltage ? ' · ' + nf(p.punkte) + ' Pkt' : ''}</small></td>
-          <td class="${cls(ergebnis)}"><b>${sgeld(ergebnis)}</b>${p.typ === 'offen' ? '<small>unrealisiert</small>' : ''}</td></tr>`;
+          <td class="${cls(ergebnis)}"><b>${sgeld(ergebnis)}</b>${p.typ === 'offen' ? '<small>unrealisiert</small>' : p.typ === 'reset' ? '<small>kein Verkauf</small>' : ''}</td></tr>`;
       }).join('') || '<tr><td colspan="5" class="tf-dim">Keine Einträge.</td></tr>'}
       </tbody></table></div>`;
   }

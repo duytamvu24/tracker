@@ -17,6 +17,10 @@ Pro Kauf:
   - Typ: "trade"    = vor dem nächsten Anpfiff wieder verkauft
          "gehalten" = mindestens einen Spieltag im Kader, später verkauft
          "offen"    = noch im Kader (unrealisierter Gewinn = MW jetzt - Kaufpreis)
+         "reset"    = beim Winter-Reset noch im Kader (Kader neu ausgelost, kein Verkauf)
+
+Ausgewertet wird die ganze Saison ueber Winter-Resets hinweg, je Manager zusaetzlich
+getrennt nach Hinrunde/Rueckrunde (Abschnitte aus state.json "perioden").
 
 Dazu je Manager: Zusammenfassung, Auswertung nach Wochentag und OVP-Stufe und
 ein Bieter-Profil (welche OVP zahlt er bei welchem Marktwert-Trend) für den
@@ -252,6 +256,25 @@ def pid_fuer(t: dict, aus_feed: dict, aus_daten: dict, mw: dict, versatz: int) -
     return best[1] if best else None
 
 
+def lade_perioden(state: dict, manager_ids: list[str]) -> list[tuple[str, pd.Timestamp]]:
+    """Abschnitte der laufenden Saison aus state.json: [("Hinrunde", start), ("Rückrunde", start), ...].
+    Der Tracker legt beim Reset je Manager "perioden" an ({"start", "art": "saison"|"winter"});
+    die Saison beginnt mit dem letzten "saison"-Eintrag."""
+    eintraege = []
+    for mid in manager_ids:
+        per = state[mid].get("perioden") or (
+            [{"start": state[mid]["reset_threshold"], "art": "saison"}] if state[mid].get("reset_threshold") else [])
+        if len(per) > len(eintraege):
+            eintraege = per
+    eintraege = [e for e in eintraege if e.get("start")]
+    if not eintraege:
+        return [("Saison", pd.Timestamp("2000-01-01", tz=TZ))]
+    letzte_saison = max((i for i, e in enumerate(eintraege) if e.get("art") == "saison"), default=0)
+    abschnitte = eintraege[letzte_saison:]
+    namen = ["Hinrunde", "Rückrunde"]
+    return [(namen[i] if i < len(namen) else f"Abschnitt {i + 1}", berlin(e["start"])) for i, e in enumerate(abschnitte)]
+
+
 def naechte_bis(ts: pd.Timestamp, anpfiff: pd.Timestamp | None) -> int | None:
     """Wie viele naechtliche Marktwert-Updates (~22 Uhr) liegen zwischen Kauf und Anpfiff?"""
     if anpfiff is None:
@@ -290,24 +313,33 @@ def analysiere() -> dict:
     punkte_je_tag = {str(p["id"]): {g["tag"]: (g.get("p") or 0) for g in p.get("spiele", []) or []} for p in spieler}
 
     manager_ids = [mid for mid in state if isinstance(state[mid], dict) and state[mid].get("history")]
-    schwellen = {mid: berlin(state[mid]["reset_threshold"]) for mid in manager_ids if state[mid].get("reset_threshold")}
-    schwelle_min = min(schwellen.values()) if schwellen else pd.Timestamp("2000-01-01", tz=TZ)
+    perioden = lade_perioden(state, manager_ids)
+    saison_start = perioden[0][1]
+    resets = [start for _, start in perioden[1:]]
+    print("Abschnitte: " + ", ".join(f"{n} ab {s:%d.%m.%Y %H:%M}" for n, s in perioden))
 
-    transfers_nachladen(league_id, headers, store, schwelle_min)
+    def periode_von(ts):
+        name = perioden[0][0]
+        for n, start in perioden:
+            if ts > start:
+                name = n
+        return name
+
+    transfers_nachladen(league_id, headers, store, saison_start)
     kt.save_transfers_store(store)
 
     anpfiffe = sorted(((int(d), berlin(v["anpfiff"])) for d, v in spieltage.items() if v.get("anpfiff")),
                       key=lambda x: x[1])
     jetzt = pd.Timestamp.now(tz=TZ)
 
-    # alle Transfers seit Reset, mit Zeitstempel
+    # alle Transfers der laufenden Saison (ueber Winter-Resets hinweg), mit Zeitstempel
     alle = []
     for mid in manager_ids:
         for t in store.get(mid, {}).values():
             if t.get("excluded"):
                 continue
             ts = berlin(t["dt"])
-            if mid in schwellen and ts <= schwellen[mid]:
+            if ts <= saison_start:
                 continue
             alle.append((mid, ts, t))
     alle.sort(key=lambda x: x[1])
@@ -353,7 +385,20 @@ def analysiere() -> dict:
     positionen = {mid: [] for mid in manager_ids}
     offen = {mid: {} for mid in manager_ids}
     startkader_verkauf = {mid: [] for mid in manager_ids}
+    offene_resets = list(resets)
+
+    def reset_schliessen(zeit):
+        """Beim Reset werden alle Kader neu ausgelost: offene Kaeufe enden ohne Verkauf."""
+        for m_id in manager_ids:
+            for stapel in offen[m_id].values():
+                for pos in stapel:
+                    pos["reset"] = zeit
+                    positionen[m_id].append(pos)
+            offen[m_id] = {}
+
     for mid, ts, t in alle:
+        while offene_resets and ts > offene_resets[0]:
+            reset_schliessen(offene_resets.pop(0))
         pid = pid_fuer(t, aus_feed, aus_daten, mw, versatz) or ("name:" + norm(t["pn"]))
         art, partner = gegenpartei(mid, ts, t)
         if t["tty"] == 1:
@@ -368,6 +413,9 @@ def analysiere() -> dict:
             else:
                 startkader_verkauf[mid].append({"pid": pid, "name": t["pn"], "verkauf": ts, "vk_preis": t["trp"],
                                                 "an": art, "an_name": partner})
+    for zeit in offene_resets:
+        if zeit <= jetzt:
+            reset_schliessen(zeit)
     for mid in manager_ids:
         for stapel in offen[mid].values():
             positionen[mid].extend(stapel)
@@ -383,15 +431,18 @@ def analysiere() -> dict:
         naechte = naechte_bis(kauf, anpfiff)
         theo = (max(anstieg_vortag, 0) * naechte) if (anstieg_vortag is not None and naechte is not None) else None
         vk = pos.get("verkauf")
-        if vk is None:
+        reset = pos.get("reset")
+        if reset is not None:
+            typ = "reset"
+        elif vk is None:
             typ = "offen"
         elif anpfiff is not None and vk < anpfiff:
             typ = "trade"
         else:
             typ = "gehalten"
-        ende = vk if vk is not None else jetzt
+        ende = vk if vk is not None else (reset if reset is not None else jetzt)
         mw_ende = mw_bei(mw, pid, ende, versatz)
-        if vk is None and (sp_by_id.get(pid) or {}).get("mv"):
+        if typ == "offen" and (sp_by_id.get(pid) or {}).get("mv"):
             mw_ende = sp_by_id[pid]["mv"]          # noch im Kader: aktueller MW aus spieler_daten.json
         ovp_eur = (pos["preis"] - mw_k) if mw_k else None
         anstieg = (mw_ende - mw_k) if (mw_ende and mw_k) else None
@@ -401,7 +452,8 @@ def analysiere() -> dict:
         sp = sp_by_id.get(pid, {})
         return {
             "pid": pid, "name": pos["name"], "pos": sp.get("pos"), "tid": sp.get("tid"),
-            "typ": typ,
+            "typ": typ, "periode": periode_von(kauf),
+            "reset": reset.isoformat() if reset is not None else None,
             "kauf": kauf.isoformat(), "wochentag": WOCHENTAGE[kauf.weekday()], "stunde": kauf.hour,
             "preis": pos["preis"], "von": pos["von"], "von_name": pos["von_name"],
             "mw_kauf": mw_k, "ovp_eur": ovp_eur, "ovp": runde(ovp_eur / mw_k) if ovp_eur is not None and mw_k else None,
@@ -414,7 +466,7 @@ def analysiere() -> dict:
             "mw_anstieg": runde(anstieg / mw_k) if anstieg is not None and mw_k else None,
             "haltedauer_tage": runde((ende - kauf).total_seconds() / 86400, 2),
             "tf_gewinn": gewinn,
-            "unrealisiert": (mw_ende - pos["preis"]) if (vk is None and mw_ende) else None,
+            "unrealisiert": (mw_ende - pos["preis"]) if (typ == "offen" and mw_ende) else None,
             "ovp_eingespielt": (anstieg >= ovp_eur) if (anstieg is not None and ovp_eur is not None) else None,
             "ovp_anteil": runde(ovp_eur / theo, 3) if (ovp_eur is not None and theo) else None,
             "spieltage": len(spieltage),
@@ -457,42 +509,52 @@ def analysiere() -> dict:
                 aus.append({"gruppe": name, **zusammenfassung(g)})
         return aus
 
-    ergebnis_manager = []
-    bieter_alle = []
-    for mid in manager_ids:
-        details = sorted((detail(p) for p in positionen[mid]), key=lambda x: x["kauf"])
+    def bereich(details: list[dict], sk: list[dict]) -> dict:
+        """Kennzahlen fuer einen Zeitraum (Saison, Hinrunde, Rueckrunde ...)."""
         trades = [x for x in details if x["typ"] == "trade"]
         gehalten = [x for x in details if x["typ"] == "gehalten"]
         offene = [x for x in details if x["typ"] == "offen"]
         verkauft = trades + gehalten
-        sk = [{**s, "verkauf": s["verkauf"].isoformat(), "wochentag": WOCHENTAGE[s["verkauf"].weekday()]}
-              for s in startkader_verkauf[mid]]
-        kaeufe_markt = [x for x in details if x["von"] == "kickbase" and x.get("ovp") is not None]
-        for x in kaeufe_markt:
-            bieter_alle.append({"mid": mid, "ovp": x["ovp"], "ovp_eur": x["ovp_eur"], "anstieg": x["anstieg_vortag"],
-                                "naechte": x["naechte"], "anteil": x["ovp_anteil"], "typ": x["typ"],
-                                "gewinn": x["tf_gewinn"], "wt": x["wochentag"]})
-        n_kauf = len(details)
-        n_verkauf = len(verkauft) + len(sk)
-        ergebnis_manager.append({
-            "id": mid, "name": state[mid]["name"].strip(), "ich": mid == kt.EIGENE_MANAGER_ID,
-            "kaeufe": n_kauf, "verkaeufe": n_verkauf,
+        return {
+            "kaeufe": len(details), "verkaeufe": len(verkauft) + len(sk),
             "kaeufe_von_manager": sum(1 for x in details if x["von"] == "manager"),
             "verkaeufe_an_manager": sum(1 for x in verkauft if x.get("an") == "manager")
-                                    + sum(1 for s in sk if s["an"] == "manager"),
+                                    + sum(1 for s_ in sk if s_["an"] == "manager"),
             "tf_gewinn": sum(x["tf_gewinn"] for x in verkauft),
-            "startkader_erloes": sum(s["vk_preis"] for s in sk),
+            "startkader_anzahl": len(sk),
+            "startkader_erloes": sum(s_["vk_preis"] for s_ in sk),
             "unrealisiert": sum(x["unrealisiert"] or 0 for x in offene),
+            "durch_reset": sum(1 for x in details if x["typ"] == "reset"),
             "trades": zusammenfassung(trades),
             "gehalten": zusammenfassung(gehalten),
             "offen": zusammenfassung(offene),
             "nach_wochentag": gruppiert(trades, lambda x: x["wochentag"], WOCHENTAGE),
-            "nach_wochentag_alle": gruppiert(details, lambda x: x["wochentag"], WOCHENTAGE),
             "nach_ovp": gruppiert(trades, lambda x: ("MW fiel/stagnierte" if not x["theo_gewinn"] else
                                                      stufe(x["ovp_anteil"], ANTEIL_STUFEN)),
-                                  [s[2] for s in ANTEIL_STUFEN] + ["MW fiel/stagnierte"]),
+                                  [s_[2] for s_ in ANTEIL_STUFEN] + ["MW fiel/stagnierte"]),
             "nach_anstieg": gruppiert(trades, lambda x: stufe(x["anstieg_vortag"], ANSTIEG_STUFEN),
-                                      [s[2] for s in ANSTIEG_STUFEN]),
+                                      [s_[2] for s_ in ANSTIEG_STUFEN]),
+        }
+
+    ergebnis_manager = []
+    bieter_alle = []
+    for mid in manager_ids:
+        details = sorted((detail(p) for p in positionen[mid]), key=lambda x: x["kauf"])
+        sk = [{**s_, "verkauf": s_["verkauf"].isoformat(), "wochentag": WOCHENTAGE[s_["verkauf"].weekday()],
+               "periode": periode_von(s_["verkauf"])} for s_ in startkader_verkauf[mid]]
+        for x in details:
+            if x["von"] == "kickbase" and x.get("ovp") is not None:
+                bieter_alle.append({"mid": mid, "ovp": x["ovp"], "ovp_eur": x["ovp_eur"], "anstieg": x["anstieg_vortag"],
+                                    "naechte": x["naechte"], "anteil": x["ovp_anteil"], "typ": x["typ"],
+                                    "gewinn": x["tf_gewinn"], "wt": x["wochentag"], "periode": x["periode"]})
+        bereiche = {"Saison": bereich(details, sk)}
+        if len(perioden) > 1:
+            for n, _ in perioden:
+                bereiche[n] = bereich([x for x in details if x["periode"] == n], [s_ for s_ in sk if s_["periode"] == n])
+        ergebnis_manager.append({
+            "id": mid, "name": state[mid]["name"].strip(), "ich": mid == kt.EIGENE_MANAGER_ID,
+            **bereiche["Saison"],             # Saison-Werte auch direkt (kompatibel)
+            "bereiche": bereiche,
             "positionen": details,
             "startkader_verkauft": sk,
         })
@@ -526,7 +588,8 @@ def analysiere() -> dict:
         "anpfiffe": {str(t): a.isoformat() for t, a in anpfiffe},
         "manager": ergebnis_manager,
         "bieter_profil": profil,
-        "bieter_kaeufe": [{k: b[k] for k in ("mid", "ovp_eur", "anstieg", "naechte", "anteil", "typ", "gewinn", "wt")}
+        "perioden": [{"name": n, "start": st.isoformat()} for n, st in perioden],
+        "bieter_kaeufe": [{k: b[k] for k in ("mid", "ovp_eur", "anstieg", "naechte", "anteil", "typ", "gewinn", "wt", "periode")}
                           for b in bieter_alle if b["ovp_eur"] is not None],
     }
 

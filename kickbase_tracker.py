@@ -74,15 +74,11 @@ DEFAULT_START_BUDGET = 50_000_000
 # Korrigierte Startbudgets fuer die LAUFENDE Saison (nach dem Reset).
 # Diese Werte ueberschreiben das beim Reset geschaetzte start_budget in state.json.
 # Die komplette Budget-Kette wird danach automatisch neu berechnet.
-# Frueher stand hier 54.953.000 (Duy Tam) bzw. 53.400.000 (Dragontrieu). Die
-# Differenz zu 50 Mio (4.953.000 / 3.400.000) waren in Wahrheit die Punkteprämien
-# der Spieltage 1-4, die der Tracker damals noch nicht kannte. Seit die Prämie
-# eingerechnet wird, gilt wieder das echte Startbudget von 50 Mio.
-# NACH DEM NAECHSTEN SAISON-RESET LEEREN!
-START_BUDGET_OVERRIDES = {
-    "3310917": 50_000_000,   # Duy Tam
-    "3458038": 50_000_000,   # Dragontrieu
-}
+# Nur eintragen, wenn ein Startbudget nachweislich falsch geschaetzt wurde -
+# und nach dem naechsten Reset wieder leeren, sonst ueberschreibt es das neue
+# Startbudget. (Die frueheren Eintraege fuer Duy Tam/Dragontrieu waren in
+# Wahrheit die Punkteprämien der Spieltage 1-4 und sind seit 25.11.2026 raus.)
+START_BUDGET_OVERRIDES: dict[str, float] = {}
 
 # Punkteprämie: Kickbase schreibt nach jedem Spieltag pro erzieltem
 # Spieltagspunkt 1.000 € gut (auch in Ligen ohne Erfolgs-Boni, laut
@@ -638,8 +634,12 @@ def run_for_day(target_day: str) -> pd.DataFrame:
     dedupe_transfers_store(transfers_store)
     config = load_config()
     after_reset = config.get("after_reset", 0) == 1
+    # Art des Resets: "winter" (Standard) oder "saison" (neue Saison im Sommer,
+    # in config.json zusaetzlich "neue_saison": 1 setzen). Die Transfer-Analyse
+    # wertet die ganze Saison aus und trennt Hinrunde/Rueckrunde an den Resets.
+    reset_art = "saison" if config.get("neue_saison", 0) == 1 else "winter"
     if after_reset:
-        print("=== AFTER_RESET aktiv: setze Budget/Teamwert-Basis für alle Manager neu ===")
+        print(f"=== AFTER_RESET aktiv ({reset_art}): setze Budget/Teamwert-Basis für alle Manager neu ===")
 
     jetzt = pd.Timestamp.now(tz="Europe/Berlin")
     jetzt_iso = jetzt.isoformat()
@@ -692,6 +692,10 @@ def run_for_day(target_day: str) -> pd.DataFrame:
             day_result["date"] = target_day
 
             state[manager_id]["history"] = [day_result]
+            alte_schwelle = state[manager_id].get("reset_threshold")
+            perioden = state[manager_id].setdefault(
+                "perioden", [{"start": alte_schwelle, "art": "saison"}] if alte_schwelle else [])
+            perioden.append({"start": jetzt_iso, "art": reset_art})
             state[manager_id]["reset_threshold"] = jetzt_iso
             state[manager_id]["start_budget"] = budget  # tatsaechlicher (ggf. aufgestockter) Wert merken
             state[manager_id]["teamwert_bei_reset"] = teamwert  # fuer spaetere Pruefung der Reset-Regel
@@ -777,6 +781,7 @@ def run_for_day(target_day: str) -> pd.DataFrame:
 
     if after_reset:
         config["after_reset"] = 0
+        config["neue_saison"] = 0
         save_config(config)
         print("=== AFTER_RESET abgeschlossen, config.json auf after_reset=0 zurückgesetzt ===")
 
