@@ -900,10 +900,18 @@
         "netto_transfer": 0.0,
         "netto_teamwert": 300370174.0,
         "max_gebot": 93094571.42
+      },
+      {
+        "date": "2026-11-26",
+        "teamwert": 308595731.0,
+        "budget": -5927586.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 302668145.0,
+        "max_gebot": 93952901.85
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00",
-    "berechnet_um": "2026-11-25T16:38:27.578425+01:00",
+    "berechnet_um": "2026-11-25T23:38:51.448033+01:00",
     "spieltagspunkte": {
       "1": 1269,
       "2": 827,
@@ -1914,10 +1922,18 @@
         "netto_transfer": 0.0,
         "netto_teamwert": 298322707.0,
         "max_gebot": 77527900.31
+      },
+      {
+        "date": "2026-11-26",
+        "teamwert": 301862797.0,
+        "budget": -1788370.0,
+        "netto_transfer": 19030223.0,
+        "netto_teamwert": 300074427.0,
+        "max_gebot": 97236190.91
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00",
-    "berechnet_um": "2026-11-25T16:38:27.578425+01:00",
+    "berechnet_um": "2026-11-25T23:38:51.448033+01:00",
     "spieltagspunkte": {
       "1": 1275,
       "2": 1158,
@@ -2928,10 +2944,18 @@
         "netto_transfer": -5555555.0,
         "netto_teamwert": 261374627.0,
         "max_gebot": 114131126.94
+      },
+      {
+        "date": "2026-11-26",
+        "teamwert": 221806996.0,
+        "budget": 41708209.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 263515205.0,
+        "max_gebot": 114904517.68
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00",
-    "berechnet_um": "2026-11-25T16:38:27.578425+01:00",
+    "berechnet_um": "2026-11-25T23:38:51.448033+01:00",
     "spieltagspunkte": {
       "1": 863,
       "2": 827,
@@ -3942,10 +3966,18 @@
         "netto_transfer": 0.0,
         "netto_teamwert": 182107584.0,
         "max_gebot": 69094579.58
+      },
+      {
+        "date": "2026-11-26",
+        "teamwert": 168986294.0,
+        "budget": 13531458.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 182517752.0,
+        "max_gebot": 69296935.02
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00",
-    "berechnet_um": "2026-11-25T16:38:27.578425+01:00",
+    "berechnet_um": "2026-11-25T23:38:51.448033+01:00",
     "spieltagspunkte": {
       "1": 965,
       "2": 998,
@@ -4952,21 +4984,29 @@
       {
         "date": "2026-11-25",
         "teamwert": 374139842.0,
-        "budget": -20348598.0,
-        "netto_transfer": 10107698.0,
-        "netto_teamwert": 353791244.0,
-        "max_gebot": 96402512.52
+        "budget": -12454487.0,
+        "netto_transfer": 18001809.0,
+        "netto_teamwert": 361685355.0,
+        "max_gebot": 106901680.15
+      },
+      {
+        "date": "2026-11-26",
+        "teamwert": 368083595.0,
+        "budget": -12354487.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 355729108.0,
+        "max_gebot": 105036118.64
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00",
     "budget_abgleich": {
-      "date": "2026-11-25",
-      "geprueft_um": "2026-11-25T16:38:27.578425+01:00",
-      "echt": -20348598.0,
-      "tracker": -20348598.0,
-      "differenz": 0.0
+      "date": "2026-11-26",
+      "geprueft_um": "2026-11-25T23:38:51.448033+01:00",
+      "echt": -12454487.0,
+      "tracker": -12354487.0,
+      "differenz": -100000.0
     },
-    "berechnet_um": "2026-11-25T16:38:27.578425+01:00",
+    "berechnet_um": "2026-11-25T23:38:51.448033+01:00",
     "spieltagspunkte": {
       "1": 969,
       "2": 975,
@@ -5973,14 +6013,22 @@
       {
         "date": "2026-11-25",
         "teamwert": 321047206.0,
-        "budget": -3194513.0,
-        "netto_transfer": 5364052.0,
-        "netto_teamwert": 317852693.0,
-        "max_gebot": 101696875.69
+        "budget": 8775099.0,
+        "netto_transfer": 17333664.0,
+        "netto_teamwert": 329822305.0,
+        "max_gebot": 114720676.98
+      },
+      {
+        "date": "2026-11-26",
+        "teamwert": 310974455.0,
+        "budget": 8875099.0,
+        "netto_transfer": 0.0,
+        "netto_teamwert": 319849554.0,
+        "max_gebot": 111496669.15
       }
     ],
     "reset_threshold": "2026-08-07T20:49:42.064051+02:00",
-    "berechnet_um": "2026-11-25T16:38:27.578425+01:00",
+    "berechnet_um": "2026-11-25T23:38:51.448033+01:00",
     "spieltagspunkte": {
       "1": 757,
       "2": 1123,
