@@ -242,7 +242,7 @@ def lade_spieltag_gutschriften(headers: dict) -> dict[int, str]:
         url = f"https://api.kickbase.com/v4/competitions/{COMPETITION_ID}/matchdays"
         r = requests.get(url, headers=headers, timeout=30)
         r.raise_for_status()
-        letzte = {}
+        letzte, erste = {}, {}
         for tag in r.json().get("it", []) or []:
             for spiel in tag.get("it", []) or []:
                 day = spiel.get("day", tag.get("day"))
@@ -252,8 +252,11 @@ def lade_spieltag_gutschriften(headers: dict) -> dict[int, str]:
                 t = _berlin(dt)
                 if int(day) not in letzte or t > letzte[int(day)]:
                     letzte[int(day)] = t
+                if int(day) not in erste or t < erste[int(day)]:
+                    erste[int(day)] = t
         if letzte:
-            cache = {str(d): {"letztes_spiel": t.isoformat(), "gutschrift": praemien_zeitpunkt(t).isoformat()}
+            cache = {str(d): {"anpfiff": erste[d].isoformat(), "letztes_spiel": t.isoformat(),
+                              "gutschrift": praemien_zeitpunkt(t).isoformat()}
                      for d, t in sorted(letzte.items())}
             save_spieltage(cache)
     except Exception as e:  # noqa: BLE001
@@ -385,15 +388,32 @@ def fetch_and_archive_transfers(league_id: str, manager_id: str, headers: dict, 
     r.raise_for_status()
     transfers = r.json().get("it", [])
 
+    neu = archiviere_transfers(store, manager_id, transfers)
+    if neu:
+        print(f"  -> {neu} neue Transfer(s) fürs Archiv gefunden (Manager {manager_id}).")
+
+
+# Zusatzfelder aus dem Transfer-Feed, die fuer die Transfer-Analyse gebraucht
+# werden: Spieler-ID, Verein, Handelspartner (nur bei Manager-zu-Manager-Deals).
+TRANSFER_EXTRAS = ("pi", "tid", "othnm")
+
+
+def archiviere_transfers(store: dict, manager_id: str, transfers: list) -> int:
+    """Merged Transfer-Eintraege ins Archiv. Ergaenzt bei bekannten Eintraegen
+    fehlende Zusatzfelder (Spieler-ID, Handelspartner). Gibt die Zahl neuer zurueck."""
     manager_store = store.setdefault(manager_id, {})
     neu = 0
     for t in transfers:
         key = _transfer_key(t)
-        if key not in manager_store:
-            manager_store[key] = {"dt": t["dt"], "pn": t["pn"], "trp": t["trp"], "tty": t["tty"]}
+        eintrag = manager_store.get(key)
+        if eintrag is None:
+            eintrag = {"dt": t["dt"], "pn": t["pn"], "trp": t["trp"], "tty": t["tty"]}
+            manager_store[key] = eintrag
             neu += 1
-    if neu:
-        print(f"  -> {neu} neue Transfer(s) fürs Archiv gefunden (Manager {manager_id}).")
+        for feld in TRANSFER_EXTRAS:
+            if t.get(feld) not in (None, "") and feld not in eintrag:
+                eintrag[feld] = t[feld]
+    return neu
 
 
 def get_tagesgewinn_aus_archiv(store: dict, manager_id: str, reset_threshold: str | None = None) -> pd.DataFrame:

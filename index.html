@@ -446,7 +446,7 @@
   }
   .topbar .search-wrap { margin-bottom: 10px; }
   .view-switch {
-    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    display: grid; grid-template-columns: repeat(4, 1fr);
     border: 1px solid var(--line); border-radius: 999px; padding: 3px;
     background: rgba(255,255,255,0.03);
   }
@@ -458,6 +458,42 @@
     transition: background 0.15s ease, color 0.15s ease;
   }
   .vs-btn.active { background: var(--gold); color: var(--pitch-deep); }
+  @media (max-width: 420px) { .vs-btn { font-size: 12px; padding: 8px 4px; letter-spacing: 0.02em; } }
+
+  /* ---------- Transfer-Analyse ---------- */
+  .tf-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 10px; }
+  @media (max-width: 560px) { .tf-kpis { grid-template-columns: repeat(2, 1fr); } }
+  .tf-kpis .stat-value { font-size: 17px; }
+  .tf-kpis .stat-sub { font-size: 11px; color: var(--chalk-dim); margin-top: 2px; }
+  .tf-table-wrap { overflow-x: auto; margin: 8px -4px 0; }
+  .tf-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .tf-table th { text-align: right; font-weight: 500; color: var(--chalk-dim); font-size: 11px; text-transform: uppercase;
+                 letter-spacing: 0.04em; padding: 6px 6px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  .tf-table td { text-align: right; padding: 7px 6px; border-bottom: 1px solid var(--line); font-family: 'IBM Plex Mono', monospace;
+                 font-size: 12px; white-space: nowrap; }
+  .tf-table th:first-child, .tf-table td:first-child { text-align: left; font-family: 'Inter', sans-serif; }
+  .tf-table td.tf-name { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 13px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; }
+  .tf-table td small { display: block; font-family: 'Inter', sans-serif; font-weight: 400; font-size: 10.5px; color: var(--chalk-dim); }
+  .tf-table tr.loss td { background: rgba(232, 131, 107, 0.07); }
+  .tf-pos { color: var(--good); } .tf-neg { color: var(--bad); } .tf-dim { color: var(--chalk-dim); }
+  .tf-filter { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 4px; }
+  .tf-note { font-size: 11.5px; color: var(--chalk-dim); margin-top: 8px; line-height: 1.5; }
+  .tf-calc { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
+  @media (max-width: 560px) { .tf-calc { grid-template-columns: 1fr 1fr; } }
+  .tf-calc label { font-size: 11px; color: var(--chalk-dim); text-transform: uppercase; letter-spacing: 0.05em; display: grid; gap: 4px; }
+  .tf-calc input { background: rgba(255,255,255,0.04); border: 1px solid var(--line); border-radius: 4px; color: var(--chalk);
+                   font-family: 'IBM Plex Mono', monospace; font-size: 16px; padding: 8px 10px; min-width: 0; width: 100%; }
+  .tf-calc input:focus { outline: none; border-color: var(--gold); }
+  .tf-result { margin-top: 14px; display: grid; gap: 8px; }
+  .tf-result .tf-big { font-family: 'IBM Plex Mono', monospace; font-size: 22px; color: var(--gold-bright); }
+  .tf-verdict { font-size: 13px; padding: 8px 10px; border-radius: 4px; background: var(--card); border-left: 3px solid var(--chalk-dim); }
+  .tf-verdict.ok { border-left-color: var(--good); } .tf-verdict.warn { border-left-color: var(--bad); }
+  .tf-bars { display: grid; gap: 6px; margin-top: 8px; }
+  .tf-bar-row { display: grid; grid-template-columns: 34px 1fr 118px; gap: 8px; align-items: center; font-size: 12px; }
+  .tf-bar-row b { font-family: 'IBM Plex Mono', monospace; font-weight: 500; text-align: right; font-size: 11.5px; }
+  .tf-bar { height: 10px; background: rgba(255,255,255,0.06); border-radius: 4px; position: relative; overflow: hidden; }
+  .tf-bar span { position: absolute; top: 0; bottom: 0; border-radius: 4px; }
+  #view-transfers[hidden] { display: none; }
 
   /* ---------- Team-Analyse ---------- */
   .team-chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 16px; scrollbar-width: none; }
@@ -733,6 +769,7 @@
       <button class="vs-btn" role="tab" data-view="markt" id="vs-markt">Markt</button>
       <button class="vs-btn" role="tab" data-view="team" id="vs-team">Team</button>
       <button class="vs-btn" role="tab" data-view="budget" id="vs-budget">Budgets</button>
+      <button class="vs-btn" role="tab" data-view="transfers" id="vs-transfers">Transfers</button>
     </div>
   </div>
 
@@ -755,6 +792,11 @@
   <section class="players" id="view-team" hidden>
     <div class="team-chips" id="team-chips" role="tablist" aria-label="Manager"></div>
     <div id="team-body"></div>
+  </section>
+
+  <section class="players" id="view-transfers" hidden>
+    <div class="team-chips" id="tf-chips" role="tablist" aria-label="Manager"></div>
+    <div id="tf-body"><div class="status">Lade Transfer-Analyse …</div></div>
   </section>
 
   <div id="view-budget">
@@ -1587,8 +1629,9 @@ load().then(() => {
   // ---------------- Ansicht: Transfermarkt <-> Budgets ----------------
   function zeigeAnsicht(view) {
     if (view === 'team' && !(D.manager_teams || []).length) view = 'markt';
-    for (const v of ['markt', 'team', 'budget']) document.getElementById('view-' + v).hidden = v !== view;
+    for (const v of ['markt', 'team', 'budget', 'transfers']) document.getElementById('view-' + v).hidden = v !== view;
     if (view === 'team') renderTeam();
+    if (view === 'transfers' && window.renderTransfers) window.renderTransfers();
     document.querySelectorAll('.vs-btn').forEach(b => {
       const aktiv = b.dataset.view === view;
       b.classList.toggle('active', aktiv);
@@ -2193,9 +2236,252 @@ load().then(() => {
       renderMarkt();
       if (!(D.manager_teams || []).length) document.getElementById('vs-team').hidden = true;
       const gemerkt = pref.get('ansicht', 'markt');
-      zeigeAnsicht(['markt', 'team', 'budget'].includes(gemerkt) ? gemerkt : 'markt');
+      zeigeAnsicht(['markt', 'team', 'budget', 'transfers'].includes(gemerkt) ? gemerkt : 'markt');
     })
     .catch(() => { /* spieler_daten.json fehlt noch -> Bereich bleibt ausgeblendet */ });
+})();
+</script>
+<script>
+/* =====================================================================
+   Transfer-Analyse: Kauf- und Tradeverhalten je Manager + Gebots-Rechner.
+   Daten aus transfer_analyse.json (erzeugt von transfer_analyse.py).
+   ===================================================================== */
+(() => {
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const nf = (n, d = 0) => new Intl.NumberFormat('de-DE', { minimumFractionDigits: d, maximumFractionDigits: d }).format(n);
+  const leer = n => n === null || n === undefined || Number.isNaN(n);
+  const eur = n => leer(n) ? '–' : nf(Math.round(n)) + ' €';
+  const mio = (n, d = 2) => leer(n) ? '–' : nf(n / 1e6, d) + ' Mio';
+  const smio = (n, d = 2) => leer(n) ? '–' : (n > 0 ? '+' : '') + mio(n, d);
+  const pct = (x, d = 1) => leer(x) ? '–' : (x > 0 ? '+' : '') + nf(x * 100, d) + ' %';
+  const pct0 = (x, d = 1) => leer(x) ? '–' : nf(x * 100, d) + ' %';
+  const cls = n => leer(n) || n === 0 ? '' : n > 0 ? 'tf-pos' : 'tf-neg';
+  const datum = iso => new Date(iso).toLocaleString('de-DE', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+  const pref = {
+    get: (k, d) => { try { const v = localStorage.getItem('cockpit.tf.' + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set: (k, v) => { try { localStorage.setItem('cockpit.tf.' + k, JSON.stringify(v)); } catch (e) { /* egal */ } },
+  };
+
+  let TF = null, laden = null, mid = null, filter = pref.get('filter', 'alle');
+  const body = () => document.getElementById('tf-body');
+
+  async function daten() {
+    if (TF) return TF;
+    if (!laden) laden = ladeJson('transfer_analyse.json', true).then(d => (TF = d));
+    return laden;
+  }
+
+  window.renderTransfers = async () => {
+    try { await daten(); } catch (e) { TF = null; }
+    if (!TF || !(TF.manager || []).length) {
+      body().innerHTML = '<div class="status">Noch keine Transfer-Analyse vorhanden – sie wird beim nächsten Tracker-Lauf erstellt.</div>';
+      return;
+    }
+    const ms = TF.manager;
+    if (!mid || !ms.some(m => m.id === mid)) {
+      const gemerkt = pref.get('mid', null);
+      mid = (ms.find(m => m.id === gemerkt) || ms.find(m => m.ich) || ms[0]).id;
+    }
+    document.getElementById('tf-chips').innerHTML = ms.map(m =>
+      `<button class="tab ${m.id === mid ? 'active' : ''}" data-mid="${esc(m.id)}">${esc(m.name)}${m.ich ? ' (du)' : ''}</button>`).join('');
+    const m = ms.find(x => x.id === mid);
+    body().innerHTML = uebersicht(m) + wochentage(m) + ovpStufen(m) + liste(m) + rechner(m) +
+      `<p class="tf-note">Stand ${datum(TF.stand)} · Marktwerte je Kickbase-Tag (Wechsel ~22 Uhr), automatisch an
+       ${TF.mw_proben} Sofortverkäufen geprüft. „Trade“ = vor dem nächsten Anpfiff wieder verkauft.
+       OVP = Kaufpreis über Marktwert. Sichtbar sind nur die <i>gewinnenden</i> Gebote – unterlegene Gebote kennt die API nicht.</p>`;
+    rechnerInit(m);
+  };
+
+  document.getElementById('tf-chips').addEventListener('click', e => {
+    const b = e.target.closest('[data-mid]');
+    if (!b) return;
+    mid = b.dataset.mid; pref.set('mid', mid);
+    window.renderTransfers();
+  });
+  document.getElementById('tf-body').addEventListener('click', e => {
+    const b = e.target.closest('[data-filter]');
+    if (!b) return;
+    filter = b.dataset.filter; pref.set('filter', filter);
+    window.renderTransfers();
+  });
+
+  function kpi(label, wert, sub = '', c = '') {
+    return `<div><div class="stat-label">${label}</div><div class="stat-value ${c}">${wert}</div>${sub ? `<div class="stat-sub">${sub}</div>` : ''}</div>`;
+  }
+
+  function uebersicht(m) {
+    const t = m.trades, g = m.gehalten, o = m.offen;
+    const quote = t.anzahl ? t.gewinner / t.anzahl : null;
+    return `<div class="tm-card">
+      <h3>${esc(m.name)} · Transfer-Bilanz seit Reset</h3>
+      <div class="tf-kpis">
+        ${kpi('Transfers', nf(m.kaeufe + m.verkaeufe), `${nf(m.kaeufe)} Käufe · ${nf(m.verkaeufe)} Verkäufe`)}
+        ${kpi('TF-Gewinn realisiert', smio(m.tf_gewinn), 'Verkauf − Kaufpreis, alle verkauften Käufe', cls(m.tf_gewinn))}
+        ${kpi('Unrealisiert (Kader)', smio(m.unrealisiert), `${nf(o.anzahl)} gekaufte Spieler noch im Kader`, cls(m.unrealisiert))}
+        ${kpi('Trades', nf(t.anzahl), quote === null ? '' : `${pct0(quote, 0)} mit Gewinn · ${nf(t.verlierer)} Verluste`)}
+        ${kpi('Gewinn aus Trades', smio(t.gewinn_summe), `Ø ${smio(t.gewinn_schnitt)} pro Trade`, cls(t.gewinn_summe))}
+        ${kpi('OVP bei Trades', pct0(t.ovp_median), `Median · Ø ${pct0(t.ovp_schnitt)} · gesamt ${mio(t.ovp_eur_summe)}`)}
+        ${kpi('Gehalten & verkauft', nf(g.anzahl), `Gewinn ${smio(g.gewinn_summe)} · OVP ${pct0(g.ovp_median)}`, '')}
+        ${kpi('Ø Haltedauer Trade', leer(t.haltedauer_median) ? '–' : nf(t.haltedauer_median, 1) + ' Tage',
+              leer(t.tage_bis_anpfiff_median) ? '' : `gekauft ${nf(t.tage_bis_anpfiff_median, 1)} Tage vor Anpfiff (Median)`)}
+        ${kpi('Mit Managern gehandelt', nf(m.kaeufe_von_manager + m.verkaeufe_an_manager),
+              `${nf(m.kaeufe_von_manager)} Käufe · ${nf(m.verkaeufe_an_manager)} Verkäufe`)}
+      </div>
+      ${m.startkader_verkauft.length ? `<p class="tf-note">Dazu ${nf(m.startkader_verkauft.length)} verkaufte Startkader-Spieler
+        (Erlös ${mio(m.startkader_erloes)}) – ohne Kaufpreis, daher nicht im TF-Gewinn.</p>` : ''}
+    </div>`;
+  }
+
+  function gruppenTabelle(zeilen, kopf) {
+    if (!zeilen.length) return '<p class="tf-note">Keine Daten.</p>';
+    return `<div class="tf-table-wrap"><table class="tf-table"><thead><tr><th>${kopf}</th><th>Anzahl</th><th>OVP (Med.)</th>
+      <th>MW-Anstieg</th><th>Ø Gewinn</th><th>Σ Gewinn</th><th>Treffer</th><th>OVP eingespielt</th></tr></thead><tbody>
+      ${zeilen.map(z => `<tr><td>${esc(z.gruppe)}</td><td>${nf(z.anzahl)}</td><td>${pct0(z.ovp_median)}</td>
+        <td>${pct(z.anstieg_median)}</td><td class="${cls(z.gewinn_schnitt)}">${smio(z.gewinn_schnitt)}</td>
+        <td class="${cls(z.gewinn_summe)}">${smio(z.gewinn_summe)}</td>
+        <td>${z.anzahl ? pct0(z.gewinner / z.anzahl, 0) : '–'}</td><td>${pct0(z.eingespielt_quote, 0)}</td></tr>`).join('')}
+      </tbody></table></div>`;
+  }
+
+  function wochentage(m) {
+    const z = m.nach_wochentag;
+    const max = Math.max(1, ...z.map(x => x.anzahl));
+    return `<div class="tm-card"><h3>Trades nach Kauf-Wochentag</h3>
+      <div class="tf-bars">${z.map(x => `<div class="tf-bar-row"><span>${x.gruppe}</span>
+        <div class="tf-bar"><span style="left:0;width:${(x.anzahl / max) * 100}%;background:var(--gold)"></span></div>
+        <b class="${cls(x.gewinn_summe)}">${nf(x.anzahl)} · ${smio(x.gewinn_summe, 1)}</b></div>`).join('')}</div>
+      ${gruppenTabelle(z, 'Tag')}
+    </div>`;
+  }
+
+  function ovpStufen(m) {
+    return `<div class="tm-card"><h3>OVP im Vergleich zum Gewinn (Trades)</h3>
+      <p class="tf-note" style="margin-top:0">Wie viel über Marktwert geboten wurde – und was am Ende hängen blieb.
+        „OVP eingespielt“ = Marktwert ist bis zum Verkauf mindestens um die OVP gestiegen.</p>
+      ${gruppenTabelle(m.nach_ovp, 'OVP')}</div>`;
+  }
+
+  function liste(m) {
+    const pos = [...m.positionen].reverse();
+    const gruppen = {
+      alle: pos, gewinn: pos.filter(p => p.tf_gewinn > 0), verlust: pos.filter(p => p.tf_gewinn < 0),
+      trade: pos.filter(p => p.typ === 'trade'), gehalten: pos.filter(p => p.typ === 'gehalten'), offen: pos.filter(p => p.typ === 'offen'),
+    };
+    const namen = { alle: 'Alle', trade: 'Trades', gewinn: 'Mit Gewinn', verlust: 'Mit Verlust', gehalten: 'Gehalten & verkauft', offen: 'Noch im Kader' };
+    const sel = gruppen[filter] ? filter : 'alle';
+    const zeilen = gruppen[sel];
+    const typ = { trade: 'Trade', gehalten: 'gehalten', offen: 'im Kader' };
+    return `<div class="tm-card"><h3>Alle Käufe im Detail</h3>
+      <div class="tf-filter">${Object.keys(namen).map(k => `<button class="sort-btn ${k === sel ? 'active' : ''}" data-filter="${k}">${namen[k]} (${gruppen[k].length})</button>`).join('')}</div>
+      <div class="tf-table-wrap"><table class="tf-table"><thead><tr><th>Spieler</th><th>Kaufpreis</th><th>OVP</th><th>MW-Anstieg</th>
+        <th>Verkauf</th><th>TF-Gewinn</th><th>Spieltage</th></tr></thead><tbody>
+      ${zeilen.slice(0, 300).map(p => {
+        const ergebnis = p.typ === 'offen' ? p.unrealisiert : p.tf_gewinn;
+        return `<tr class="${ergebnis < 0 ? 'loss' : ''}">
+          <td class="tf-name">${esc(p.name)}<small>${p.wochentag} ${datum(p.kauf)} · ${typ[p.typ]}${p.von === 'manager' ? ' · von ' + esc(p.von_name) : ''}
+            ${leer(p.trend_vortag) ? '' : ' · Trend ' + pct(p.trend_vortag)}${leer(p.tage_bis_anpfiff) ? '' : ' · ' + nf(p.tage_bis_anpfiff, 1) + ' T. bis Anpfiff'}</small></td>
+          <td>${mio(p.preis)}<small>MW ${mio(p.mw_kauf)}</small></td>
+          <td>${pct(p.ovp)}<small>${smio(p.ovp_eur)}</small></td>
+          <td class="${cls(p.mw_anstieg_eur)}">${pct(p.mw_anstieg)}<small>${smio(p.mw_anstieg_eur)}</small></td>
+          <td>${p.verkauf ? mio(p.vk_preis) + `<small>${datum(p.verkauf)}${p.an === 'manager' ? ' · an ' + esc(p.an_name) : ''}</small>`
+                          : `<span class="tf-dim">MW ${mio(p.mw_ende)}</span><small>noch im Kader</small>`}</td>
+          <td class="${cls(ergebnis)}">${smio(ergebnis)}<small>${p.typ === 'offen' ? 'unrealisiert' : nf(p.haltedauer_tage, 1) + ' Tage'}</small></td>
+          <td>${p.spieltage ? nf(p.spieltage) + `<small>${nf(p.punkte)} Pkt</small>` : '–'}</td></tr>`;
+      }).join('') || '<tr><td colspan="7" class="tf-dim">Keine Einträge.</td></tr>'}
+      </tbody></table></div>
+      <p class="tf-note">Punkte = Punkte des Spielers an den Spieltagen, an denen er im Kader war (ob er in der Startelf stand, ist hier nicht berücksichtigt).</p>
+    </div>`;
+  }
+
+  // ---------------- Gebots-Rechner ----------------
+  function tageBisAnpfiff() {
+    const jetzt = Date.now();
+    const naechster = Object.values(TF.anpfiffe || {}).map(a => new Date(a).getTime()).filter(t => t > jetzt).sort((a, b) => a - b)[0];
+    return naechster ? Math.max(0, (naechster - jetzt) / 864e5) : 3;
+  }
+
+  function rechner(m) {
+    const name = id => (TF.manager.find(x => x.id === id) || { name: id }).name;
+    const profil = TF.bieter_profil || [];
+    const ids = TF.manager.map(x => x.id);
+    const matrix = `<div class="tf-table-wrap"><table class="tf-table"><thead><tr><th>MW-Trend</th>
+        ${ids.map(id => `<th>${esc(name(id))}</th>`).join('')}<th>Alle P90</th></tr></thead><tbody>
+      ${profil.map(z => `<tr><td>${esc(z.trend)}</td>${ids.map(id => {
+        const e = z.manager[id];
+        return `<td>${e ? pct0(e.median) + `<small>${e.anzahl}× · max ${pct0(e.max, 0)}</small>` : '<span class="tf-dim">–</span>'}</td>`;
+      }).join('')}<td>${pct0(z.ovp_p90)}</td></tr>`).join('')}
+      </tbody></table></div>`;
+    return `<div class="tm-card" id="tf-rechner"><h3>Gebots-Rechner für die Rückrunde</h3>
+      <p class="tf-note" style="margin-top:0">Marktwert und letzten Anstieg eines Spielers eingeben. Der Rechner zeigt,
+        welche OVP die anderen Manager bei diesem Trend bisher gezahlt haben (also was du überbieten musst)
+        und bis zu welchem Gebot sich ein Trade bis zum Anpfiff noch lohnt.</p>
+      <div class="tf-calc">
+        <label>Marktwert (Mio)<input id="tfc-mw" inputmode="decimal" placeholder="z. B. 12,5"></label>
+        <label>MW-Anstieg letzte Nacht (%)<input id="tfc-trend" inputmode="decimal" placeholder="z. B. 2,5"></label>
+        <label>Tage bis Anpfiff<input id="tfc-tage" inputmode="decimal"></label>
+      </div>
+      <div class="tf-result" id="tfc-out"></div>
+      <h3 style="margin-top:18px">Typische OVP je Manager nach MW-Trend (Median, nur Käufe vom Markt)</h3>
+      ${matrix}
+    </div>`;
+  }
+
+  function zahl(v) {
+    const t = String(v || '').replace(/\s|%|€/g, '').replace(',', '.');
+    const n = parseFloat(t);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  function rechnerInit(m) {
+    const mwEl = document.getElementById('tfc-mw'), trEl = document.getElementById('tfc-trend'), tgEl = document.getElementById('tfc-tage');
+    const out = document.getElementById('tfc-out');
+    mwEl.value = pref.get('calc_mw', ''); trEl.value = pref.get('calc_trend', '');
+    tgEl.value = nf(tageBisAnpfiff(), 1);
+    const name = id => (TF.manager.find(x => x.id === id) || { name: id }).name;
+
+    function rechne() {
+      pref.set('calc_mw', mwEl.value); pref.set('calc_trend', trEl.value);
+      const mwMio = zahl(mwEl.value), trend = zahl(trEl.value), tage = zahl(tgEl.value);
+      if (mwMio === null || trend === null || tage === null) { out.innerHTML = ''; return; }
+      const mw = mwMio * 1e6, r = trend / 100;
+      // Marktwert entwickelt sich ungefähr mit dem letzten Tagesanstieg weiter (ein Sprung pro Nacht)
+      const naechte = Math.max(0, Math.floor(tage));
+      const mwAnpfiff = mw * Math.pow(1 + r, naechte);
+      const breakEven = mwAnpfiff - mw;               // max. OVP, damit Verkauf vor Anpfiff ±0 ist
+      const zeile = (TF.bieter_profil || []).find(z => r >= z.von && r < z.bis) || null;
+      const ich = (TF.manager.find(x => x.ich) || {}).id;
+      const gegner = zeile ? Object.entries(zeile.manager).filter(([id]) => id !== ich) : [];
+      // alle Markt-Käufe der anderen Manager in dieser Trendstufe zusammen (robuster als einzelne Manager)
+      const pool = (TF.bieter_kaeufe || []).filter(b => b.mid !== ich && b.trend !== null && zeile && b.trend >= zeile.von && b.trend < zeile.bis)
+        .map(b => b.ovp).sort((a, b) => a - b);
+      const q = p => pool.length ? pool[Math.min(pool.length - 1, Math.floor((pool.length - 1) * p + 0.5))] : null;
+      const typisch = pool.length >= 3 ? q(0.75) : null;
+      const sicher = pool.length ? pool[pool.length - 1] : null;
+      const haerteste = gegner.filter(([, e]) => e.anzahl >= 3).sort((a, b) => b[1].p75 - a[1].p75)[0];
+      const empf = leer(typisch) ? null : Math.max(0, typisch) + 0.005;
+      const gebot = empf === null ? null : mw * (1 + empf);
+      const gewinn = gebot === null ? null : mwAnpfiff - gebot;
+      const verdict = gebot === null ? ['', 'Für diesen Trend gibt es noch zu wenige Vergleichskäufe.']
+        : gewinn >= 0 ? ['ok', `Lohnt sich als Trade: bei ${smio(gewinn)} erwartetem Gewinn bis zum Anpfiff.`]
+        : ['warn', `Als reiner Trade unrentabel (${smio(gewinn)} bis Anpfiff) – nur sinnvoll, wenn du den Spieler behalten willst.`];
+      out.innerHTML = `
+        <div class="tf-kpis">
+          ${kpi('Empfohlenes Gebot', gebot === null ? '–' : `<span class="tf-big">${mio(gebot, 2)}</span>`,
+                empf === null ? '' : `${pct(empf)} OVP · über 75 % der bisherigen Gewinner-Gebote (${pool.length} Käufe der anderen)`)}
+          ${kpi('Lohnt sich bis', mio(mw + breakEven, 2), `${pct(breakEven / mw)} OVP · MW bei Anpfiff ≈ ${mio(mwAnpfiff)}`)}
+          ${kpi('Sicher gewinnen', leer(sicher) ? '–' : mio(mw * (1 + Math.max(0, sicher) + 0.005), 2),
+                leer(sicher) ? '' : `${pct(Math.max(0, sicher) + 0.005)} OVP · über dem höchsten bisherigen Gebot`)}
+        </div>
+        <div class="tf-verdict ${verdict[0]}">${verdict[1]}${haerteste ? ` Härtester Bieter bei diesem Trend: <b>${esc(name(haerteste[0]))}</b> (meist bis ${pct(haerteste[1].p75)} OVP).` : ''}</div>
+        ${zeile ? `<div class="tf-table-wrap"><table class="tf-table"><thead><tr><th>Manager bei Trend ${esc(zeile.trend)}</th>
+          <th>Käufe</th><th>OVP Median</th><th>OVP P75</th><th>OVP max</th></tr></thead><tbody>
+          ${Object.entries(zeile.manager).sort((a, b) => b[1].p75 - a[1].p75).map(([id, e]) => `<tr><td>${esc(name(id))}${id === ich ? ' <span class="tf-dim">(du)</span>' : ''}</td>
+            <td>${nf(e.anzahl)}</td><td>${pct0(e.median)}</td><td>${pct0(e.p75)}</td><td>${pct0(e.max)}</td></tr>`).join('')}
+          </tbody></table></div>` : ''}`;
+    }
+    [mwEl, trEl, tgEl].forEach(el => el.addEventListener('input', rechne));
+    rechne();
+  }
 })();
 </script>
 </body>
