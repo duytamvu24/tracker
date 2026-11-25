@@ -37,6 +37,8 @@ from __future__ import annotations
 import json
 import os
 import statistics
+import sys
+import time
 import unicodedata
 from concurrent.futures import ThreadPoolExecutor
 from datetime import date
@@ -49,8 +51,10 @@ import kickbase_tracker as kt
 BASE = "https://api.kickbase.com"
 OUTPUT_FILE = "transfer_analyse.json"
 MW_CACHE_FILE = "mw_verlauf.json"
-MW_CACHE_STUNDEN = 10        # Marktwert-Verlauf eines Spielers hoechstens so oft neu laden
-MAX_WORKERS = 6
+MW_CACHE_STUNDEN = 20        # Marktwert-Verlauf eines Spielers hoechstens so oft neu laden
+MW_DRINGEND_STUNDEN = 3      # ... ausser er wurde in den letzten 3 Tagen gehandelt
+MAX_WORKERS = 3              # Kickbase drosselt bei zu vielen Abrufen (HTTP 429)
+MAX_FEHLEND = 0.05           # fehlen mehr Marktwerte, bleibt die alte Analyse stehen
 TZ = "Europe/Berlin"
 WOCHENTAGE = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
 EPOCHE = date(1970, 1, 1)
@@ -104,12 +108,16 @@ def runde(x, n=4):
 # API
 # ---------------------------------------------------------------------------
 
-def api_get(pfad: str, headers: dict, versuche: int = 3):
+def api_get(pfad: str, headers: dict, versuche: int = 6):
     for i in range(versuche):
         try:
             r = _session.get(BASE + pfad, headers=headers, timeout=30)
             if r.status_code == 404:
                 return None
+            if r.status_code == 429 and i < versuche - 1:
+                warte = r.headers.get("Retry-After")
+                time.sleep(float(warte) if warte and warte.replace(".", "").isdigit() else min(60, 2 ** (i + 1)))
+                continue
             r.raise_for_status()
             return r.json()
         except Exception as e:  # noqa: BLE001
@@ -141,7 +149,7 @@ def transfers_nachladen(league_id: str, headers: dict, store: dict, schwelle: pd
                 break
 
 
-def lade_mw_verlauf(pids: set[str], headers: dict) -> dict:
+def lade_mw_verlauf(pids: set[str], headers: dict, dringend: set[str] | None = None) -> dict:
     """Marktwert je Tag (Tag = Tage seit 1970) fuer alle Spieler, mit Cache."""
     cache = {}
     if os.path.exists(MW_CACHE_FILE):
@@ -151,9 +159,14 @@ def lade_mw_verlauf(pids: set[str], headers: dict) -> dict:
         except (ValueError, OSError):
             cache = {}
     jetzt = pd.Timestamp.now(tz=TZ)
+    dringend = dringend or set()
+
+    def alter(pid):
+        return jetzt - berlin(cache[pid].get("stand", "2000-01-01T00:00:00+00:00"))
+
     faellig = [pid for pid in pids
-               if pid not in cache or jetzt - berlin(cache[pid].get("stand", "2000-01-01T00:00:00+00:00"))
-               > pd.Timedelta(hours=MW_CACHE_STUNDEN)]
+               if pid not in cache or alter(pid) > pd.Timedelta(hours=MW_CACHE_STUNDEN)
+               or (pid in dringend and alter(pid) > pd.Timedelta(hours=MW_DRINGEND_STUNDEN))]
     print(f"Marktwert-Verlauf: {len(pids)} Spieler, {len(faellig)} neu zu laden ...")
 
     def holen(pid):
@@ -322,7 +335,9 @@ def analysiere() -> dict:
         else:
             pids |= aus_feed.get(norm(t["pn"]), set()) | aus_daten.get(norm(t["pn"]), set()) \
                 | aus_daten.get(norm(t["pn"]).split(" ")[-1], set())
-    mw = lade_mw_verlauf(pids, headers)
+    grenze = jetzt - pd.Timedelta(days=3)
+    dringend = {str(t["pi"]) for _, ts, t in alle if t.get("pi") and ts >= grenze}
+    mw = lade_mw_verlauf(pids, headers, dringend)
 
     # Kalibrierung mit Sofortverkaeufen an Kickbase (Preis = Marktwert)
     proben = []
@@ -376,8 +391,8 @@ def analysiere() -> dict:
             typ = "gehalten"
         ende = vk if vk is not None else jetzt
         mw_ende = mw_bei(mw, pid, ende, versatz)
-        if mw_ende is None and vk is None:
-            mw_ende = (sp_by_id.get(pid) or {}).get("mv")
+        if vk is None and (sp_by_id.get(pid) or {}).get("mv"):
+            mw_ende = sp_by_id[pid]["mv"]          # noch im Kader: aktueller MW aus spieler_daten.json
         ovp_eur = (pos["preis"] - mw_k) if mw_k else None
         anstieg = (mw_ende - mw_k) if (mw_ende and mw_k) else None
         gewinn = (pos["vk_preis"] - pos["preis"]) if vk is not None else None
@@ -518,6 +533,12 @@ def analysiere() -> dict:
 
 def main() -> None:
     ergebnis = analysiere()
+    alle_pos = [p for m in ergebnis["manager"] for p in m["positionen"]]
+    fehlend = sum(1 for p in alle_pos if p["mw_kauf"] is None) / max(1, len(alle_pos))
+    if fehlend > MAX_FEHLEND and os.path.exists(OUTPUT_FILE):
+        print(f"WARNUNG: bei {fehlend:.0%} der Käufe fehlt der Marktwert (API-Drosselung?) - "
+              f"{OUTPUT_FILE} bleibt unverändert.")
+        sys.exit(0)
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(ergebnis, f, ensure_ascii=False, separators=(",", ":"), default=str)
     for m in ergebnis["manager"]:

@@ -58,6 +58,13 @@ jobs:
           KICKBASE_PASSWORD: ${{ secrets.KICKBASE_PASSWORD }}
         run: python spieler_analyse.py
 
+      - name: Marktwert-Verlauf aus dem Cache holen
+        uses: actions/cache@v4
+        with:
+          path: mw_verlauf.json
+          key: mw-verlauf-${{ github.run_id }}
+          restore-keys: mw-verlauf-
+
       - name: Transfer-Analyse aktualisieren
         continue-on-error: true   # Zusatz-Auswertung - Budget-Daten werden trotzdem gespeichert
         env:
