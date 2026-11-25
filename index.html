@@ -2245,16 +2245,19 @@ load().then(() => {
 /* =====================================================================
    Transfer-Analyse: Kauf- und Tradeverhalten je Manager + Gebots-Rechner.
    Daten aus transfer_analyse.json (erzeugt von transfer_analyse.py).
+   Alles in Euro: theoretischer Gewinn bis Anpfiff = MW-Anstieg der letzten
+   Nacht x Nächte bis Anpfiff; OVP-Anteil = OVP / theoretischer Gewinn.
    ===================================================================== */
 (() => {
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const nf = (n, d = 0) => new Intl.NumberFormat('de-DE', { minimumFractionDigits: d, maximumFractionDigits: d }).format(n);
   const leer = n => n === null || n === undefined || Number.isNaN(n);
-  const eur = n => leer(n) ? '–' : nf(Math.round(n)) + ' €';
+  // Beträge: unter 1 Mio in k, darüber in Mio
+  const geld = n => leer(n) ? '–' : Math.abs(n) >= 1e6 ? nf(n / 1e6, 2) + ' Mio' : nf(Math.round(n / 1e3)) + 'k';
+  const sgeld = n => leer(n) ? '–' : (n > 0 ? '+' : '') + geld(n);
   const mio = (n, d = 2) => leer(n) ? '–' : nf(n / 1e6, d) + ' Mio';
-  const smio = (n, d = 2) => leer(n) ? '–' : (n > 0 ? '+' : '') + mio(n, d);
-  const pct = (x, d = 1) => leer(x) ? '–' : (x > 0 ? '+' : '') + nf(x * 100, d) + ' %';
-  const pct0 = (x, d = 1) => leer(x) ? '–' : nf(x * 100, d) + ' %';
+  const anteil = x => leer(x) ? '–' : nf(x * 100, 0) + ' %';
+  const pct0 = (x, d = 0) => leer(x) ? '–' : nf(x * 100, d) + ' %';
   const cls = n => leer(n) || n === 0 ? '' : n > 0 ? 'tf-pos' : 'tf-neg';
   const datum = iso => new Date(iso).toLocaleString('de-DE', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
   const pref = {
@@ -2264,6 +2267,7 @@ load().then(() => {
 
   let TF = null, laden = null, mid = null, filter = pref.get('filter', 'alle');
   const body = () => document.getElementById('tf-body');
+  const nameVon = id => ((TF.manager.find(x => x.id === id) || {}).name || id);
 
   async function daten() {
     if (TF) return TF;
@@ -2285,11 +2289,13 @@ load().then(() => {
     document.getElementById('tf-chips').innerHTML = ms.map(m =>
       `<button class="tab ${m.id === mid ? 'active' : ''}" data-mid="${esc(m.id)}">${esc(m.name)}${m.ich ? ' (du)' : ''}</button>`).join('');
     const m = ms.find(x => x.id === mid);
-    body().innerHTML = uebersicht(m) + wochentage(m) + ovpStufen(m) + liste(m) + rechner(m) +
-      `<p class="tf-note">Stand ${datum(TF.stand)} · Marktwerte je Kickbase-Tag (Wechsel ~22 Uhr), automatisch an
-       ${TF.mw_proben} Sofortverkäufen geprüft. „Trade“ = vor dem nächsten Anpfiff wieder verkauft.
-       OVP = Kaufpreis über Marktwert. Sichtbar sind nur die <i>gewinnenden</i> Gebote – unterlegene Gebote kennt die API nicht.</p>`;
-    rechnerInit(m);
+    body().innerHTML = rechner() + uebersicht(m) + nachAnteil(m) + nachAnstieg(m) + wochentage(m) + liste(m) +
+      `<p class="tf-note">Stand ${datum(TF.stand)} · <b>Theoretischer Gewinn</b> = Marktwert-Anstieg der letzten Nacht vor dem Kauf ×
+       Nächte (Marktwert-Updates) bis zum nächsten Anpfiff – also was ein Trade ohne OVP bringen würde, wenn der Spieler
+       gleichmäßig weiter steigt. <b>OVP-Anteil</b> = wie viel davon über Marktwert geboten wurde. <b>Netto</b> = Verkaufspreis − Kaufpreis.
+       „Trade“ = vor dem nächsten Anpfiff wieder verkauft. Marktwerte an ${TF.mw_proben} Sofortverkäufen auf den Euro geprüft.
+       Sichtbar sind nur die <i>gewinnenden</i> Gebote.</p>`;
+    rechnerInit();
   };
 
   document.getElementById('tf-chips').addEventListener('click', e => {
@@ -2309,6 +2315,116 @@ load().then(() => {
     return `<div><div class="stat-label">${label}</div><div class="stat-value ${c}">${wert}</div>${sub ? `<div class="stat-sub">${sub}</div>` : ''}</div>`;
   }
 
+  // ---------------- Gebots-Rechner (oben, gilt für alle Manager) ----------------
+  function rechner() {
+    const profil = TF.bieter_profil || [];
+    const ids = TF.manager.map(x => x.id);
+    const matrix = `<div class="tf-table-wrap"><table class="tf-table"><thead><tr><th>Anstieg letzte Nacht</th>
+        ${ids.map(id => `<th>${esc(nameVon(id))}</th>`).join('')}<th>Alle</th></tr></thead><tbody>
+      ${profil.filter(z => z.anzahl).map(z => `<tr><td>${esc(z.stufe)}</td>${ids.map(id => {
+        const e = z.manager[id];
+        return `<td>${e ? geld(e.ovp_eur_median) + `<small>${anteil(e.anteil_median)} · ${e.anzahl}×</small>` : '<span class="tf-dim">–</span>'}</td>`;
+      }).join('')}<td>${geld(z.ovp_eur_median)}<small>${anteil(z.anteil_median)} · ${z.anzahl}×</small></td></tr>`).join('')}
+      </tbody></table></div>`;
+    return `<div class="tm-card" id="tf-rechner"><h3>Gebots-Rechner für die Rückrunde</h3>
+      <p class="tf-note" style="margin-top:0">Wie stark ist der Spieler letzte Nacht gestiegen? Daraus ergibt sich der theoretische Gewinn
+        bis zum Anpfiff – und der Rechner zeigt, wie viel OVP die anderen Manager bei so einem Spieler bisher gezahlt haben.</p>
+      <div class="tf-calc">
+        <label>Anstieg letzte Nacht<input id="tfc-anstieg" inputmode="decimal" placeholder="z. B. 300k"></label>
+        <label>Nächte bis Anpfiff<input id="tfc-naechte" inputmode="numeric"></label>
+        <label>Marktwert (optional)<input id="tfc-mw" inputmode="decimal" placeholder="z. B. 12,5 Mio"></label>
+      </div>
+      <div class="tf-result" id="tfc-out"></div>
+      <h3 style="margin-top:18px">Gezahlte OVP je Manager nach Anstieg der letzten Nacht</h3>
+      <p class="tf-note" style="margin-top:0">Median der OVP in Euro · darunter: Anteil am theoretischen Gewinn bis Anpfiff · Anzahl Käufe vom Markt.</p>
+      ${matrix}
+    </div>`;
+  }
+
+  // "300k", "300.000", "0,3 Mio", "1,2m", "300000" -> Euro
+  function betrag(v) {
+    let t = String(v || '').toLowerCase().replace(/\s|€/g, '');
+    if (!t) return null;
+    let f = 1;
+    if (/mio|m$/.test(t)) { f = 1e6; t = t.replace(/mio\.?|m$/g, ''); }
+    else if (/k$|tsd$/.test(t)) { f = 1e3; t = t.replace(/k$|tsd$/g, ''); }
+    if (f === 1) t = t.replace(/[.,](?=\d{3}(\D|$))/g, '');
+    t = t.replace(/\./g, f === 1 ? '' : '.').replace(',', '.');
+    const n = parseFloat(t);
+    return Number.isFinite(n) ? n * f : null;
+  }
+
+  function naechteBisAnpfiff() {
+    const jetzt = new Date();
+    const naechster = Object.values(TF.anpfiffe || {}).map(a => new Date(a)).filter(t => t > jetzt).sort((a, b) => a - b)[0];
+    if (!naechster) return 4;
+    const g = new Date(jetzt); g.setHours(22, 4, 0, 0);
+    if (g <= jetzt) g.setDate(g.getDate() + 1);
+    let n = 0;
+    while (g < naechster) { n++; g.setDate(g.getDate() + 1); }
+    return n;
+  }
+
+  function rechnerInit() {
+    const aEl = document.getElementById('tfc-anstieg'), nEl = document.getElementById('tfc-naechte'), mEl = document.getElementById('tfc-mw');
+    const out = document.getElementById('tfc-out');
+    aEl.value = pref.get('calc_anstieg', ''); mEl.value = pref.get('calc_mw', '');
+    nEl.value = pref.get('calc_naechte_manuell', null) ?? naechteBisAnpfiff();
+    const ich = (TF.manager.find(x => x.ich) || {}).id;
+
+    function rechne() {
+      pref.set('calc_anstieg', aEl.value); pref.set('calc_mw', mEl.value);
+      const anstieg = betrag(aEl.value), n = parseInt(nEl.value, 10), mw = betrag(mEl.value);
+      if (leer(anstieg) || !Number.isFinite(n) || anstieg <= 0 || n <= 0) {
+        out.innerHTML = '<p class="tf-note">Anstieg (z. B. 300k) und Nächte bis Anpfiff eingeben.</p>'; return;
+      }
+      const theo = anstieg * n;
+      // Vergleichskäufe der anderen: ähnlicher Anstieg (Faktor 0,5–2) und ähnlich viele Nächte (±1, max. 7)
+      const andere = (TF.bieter_kaeufe || []).filter(b => b.mid !== ich && b.anstieg > 0 && b.anteil !== null && b.naechte);
+      let pool = andere.filter(b => b.anstieg >= anstieg / 2 && b.anstieg <= anstieg * 2 && Math.abs(b.naechte - n) <= 1 && b.naechte <= 7);
+      let poolText = 'ähnlicher Anstieg & gleiche Nächte ±1';
+      if (pool.length < 8) { pool = andere.filter(b => Math.abs(b.naechte - n) <= 1 && b.naechte <= 7); poolText = 'gleiche Nächte ±1'; }
+      const ant = pool.map(b => b.anteil).sort((a, b) => a - b);
+      const q = p => ant.length ? ant[Math.min(ant.length - 1, Math.floor((ant.length - 1) * p + 0.5))] : null;
+      const med = q(0.5), p75 = q(0.75), p90 = q(0.9);
+      const ovpEmpf = leer(p75) ? null : Math.max(0, p75 * theo);
+      const ovpSicher = leer(p90) ? null : Math.max(0, p90 * theo);
+      const netto = ovpEmpf === null ? null : theo - ovpEmpf;
+      const verdict = ovpEmpf === null ? ['', 'Zu wenige Vergleichskäufe.']
+        : netto > 0 ? ['ok', `Mit ${geld(ovpEmpf)} OVP bleiben dir rechnerisch ${sgeld(netto)} netto bis zum Anpfiff (wenn der Spieler im gleichen Tempo weiter steigt).`]
+        : ['warn', `Kein Netto-Gewinn bis Anpfiff zu erwarten – nur sinnvoll, wenn du den Spieler behalten willst.`];
+      // je Manager: was zahlt er typischerweise bei diesem Anstieg (Anteil × theo)
+      const proManager = TF.manager.map(m => {
+        const g = (TF.bieter_kaeufe || []).filter(b => b.mid === m.id && b.anstieg > 0 && b.anteil !== null && b.naechte && b.naechte <= 7
+          && Math.abs(b.naechte - n) <= 1);
+        const a = g.map(b => b.anteil).sort((x, y) => x - y);
+        const qq = p => a.length ? a[Math.min(a.length - 1, Math.floor((a.length - 1) * p + 0.5))] : null;
+        return { m, n: a.length, med: qq(0.5), p75: qq(0.75) };
+      }).filter(x => x.n).sort((a, b) => (b.med ?? 0) - (a.med ?? 0));
+      out.innerHTML = `
+        <div class="tf-kpis">
+          ${kpi('Theoretischer Gewinn', `<span class="tf-big">${geld(theo)}</span>`, `${geld(anstieg)} × ${n} Nächte, ohne OVP`)}
+          ${kpi('Empfohlene OVP', ovpEmpf === null ? '–' : `<span class="tf-big">${geld(ovpEmpf)}</span>`,
+                ovpEmpf === null ? '' : `${anteil(p75)} vom theor. Gewinn · höher als 75 % der Gewinner-Gebote${mw ? ` · Gebot ${mio(mw + ovpEmpf)}` : ''}`)}
+          ${kpi('Netto bis Anpfiff', netto === null ? '–' : sgeld(netto), 'theoretischer Gewinn − OVP', cls(netto))}
+          ${kpi('Typisch (Median)', leer(med) ? '–' : geld(med * theo), `${anteil(med)} vom theor. Gewinn`)}
+          ${kpi('Sicher gewinnen', ovpSicher === null ? '–' : geld(ovpSicher),
+                ovpSicher === null ? '' : `${anteil(p90)} · über 90 % der Gebote${mw ? ` · Gebot ${mio(mw + ovpSicher)}` : ''}`)}
+          ${kpi('Vergleichskäufe', nf(pool.length), poolText)}
+        </div>
+        <div class="tf-verdict ${verdict[0]}">${verdict[1]}</div>
+        ${proManager.length ? `<div class="tf-table-wrap"><table class="tf-table"><thead><tr><th>Manager bei ${n} Nächten ±1</th>
+          <th>Käufe</th><th>Anteil Median</th><th>Anteil P75</th><th>= OVP typisch hier</th></tr></thead><tbody>
+          ${proManager.map(x => `<tr><td>${esc(x.m.name)}${x.m.id === ich ? ' <span class="tf-dim">(du)</span>' : ''}</td><td>${nf(x.n)}</td>
+            <td>${anteil(x.med)}</td><td>${anteil(x.p75)}</td><td>${geld(x.med * theo)}</td></tr>`).join('')}
+          </tbody></table></div>` : ''}`;
+    }
+    aEl.addEventListener('input', rechne); mEl.addEventListener('input', rechne);
+    nEl.addEventListener('input', () => { pref.set('calc_naechte_manuell', nEl.value === '' ? null : nEl.value); rechne(); });
+    rechne();
+  }
+
+  // ---------------- Manager-Auswertung ----------------
   function uebersicht(m) {
     const t = m.trades, g = m.gehalten, o = m.offen;
     const quote = t.anzahl ? t.gewinner / t.anzahl : null;
@@ -2316,31 +2432,44 @@ load().then(() => {
       <h3>${esc(m.name)} · Transfer-Bilanz seit Reset</h3>
       <div class="tf-kpis">
         ${kpi('Transfers', nf(m.kaeufe + m.verkaeufe), `${nf(m.kaeufe)} Käufe · ${nf(m.verkaeufe)} Verkäufe`)}
-        ${kpi('TF-Gewinn realisiert', smio(m.tf_gewinn), 'Verkauf − Kaufpreis, alle verkauften Käufe', cls(m.tf_gewinn))}
-        ${kpi('Unrealisiert (Kader)', smio(m.unrealisiert), `${nf(o.anzahl)} gekaufte Spieler noch im Kader`, cls(m.unrealisiert))}
-        ${kpi('Trades', nf(t.anzahl), quote === null ? '' : `${pct0(quote, 0)} mit Gewinn · ${nf(t.verlierer)} Verluste`)}
-        ${kpi('Gewinn aus Trades', smio(t.gewinn_summe), `Ø ${smio(t.gewinn_schnitt)} pro Trade`, cls(t.gewinn_summe))}
-        ${kpi('OVP bei Trades', pct0(t.ovp_median), `Median · Ø ${pct0(t.ovp_schnitt)} · gesamt ${mio(t.ovp_eur_summe)}`)}
-        ${kpi('Gehalten & verkauft', nf(g.anzahl), `Gewinn ${smio(g.gewinn_summe)} · OVP ${pct0(g.ovp_median)}`, '')}
-        ${kpi('Ø Haltedauer Trade', leer(t.haltedauer_median) ? '–' : nf(t.haltedauer_median, 1) + ' Tage',
-              leer(t.tage_bis_anpfiff_median) ? '' : `gekauft ${nf(t.tage_bis_anpfiff_median, 1)} Tage vor Anpfiff (Median)`)}
+        ${kpi('TF-Gewinn realisiert', sgeld(m.tf_gewinn), 'Verkauf − Kaufpreis, alle verkauften Käufe', cls(m.tf_gewinn))}
+        ${kpi('Unrealisiert (Kader)', sgeld(m.unrealisiert), `${nf(o.anzahl)} gekaufte Spieler noch im Kader`, cls(m.unrealisiert))}
+        ${kpi('Trades', nf(t.anzahl), quote === null ? '' : `${pct0(quote)} mit Gewinn · ${nf(t.verlierer)} mit Verlust`)}
+        ${kpi('Netto aus Trades', sgeld(t.gewinn_summe), `Ø ${sgeld(t.gewinn_schnitt)} pro Trade`, cls(t.gewinn_summe))}
+        ${kpi('OVP bei Trades', geld(t.ovp_eur_median), `Median · ${anteil(t.anteil_median)} vom theor. Gewinn · gesamt ${geld(t.ovp_eur_summe)}`)}
+        ${kpi('Typischer Trade', geld(t.anstieg_vortag_median) + ' Anstieg',
+              `${leer(t.naechte_median) ? '–' : nf(t.naechte_median, 0)} Nächte bis Anpfiff · theor. ${geld(t.theo_median)}`)}
+        ${kpi('Gehalten & verkauft', nf(g.anzahl), `Netto ${sgeld(g.gewinn_summe)} · OVP ${geld(g.ovp_eur_median)} (Median)`)}
         ${kpi('Mit Managern gehandelt', nf(m.kaeufe_von_manager + m.verkaeufe_an_manager),
               `${nf(m.kaeufe_von_manager)} Käufe · ${nf(m.verkaeufe_an_manager)} Verkäufe`)}
       </div>
       ${m.startkader_verkauft.length ? `<p class="tf-note">Dazu ${nf(m.startkader_verkauft.length)} verkaufte Startkader-Spieler
-        (Erlös ${mio(m.startkader_erloes)}) – ohne Kaufpreis, daher nicht im TF-Gewinn.</p>` : ''}
+        (Erlös ${geld(m.startkader_erloes)}) – ohne Kaufpreis, daher nicht im TF-Gewinn.</p>` : ''}
     </div>`;
   }
 
   function gruppenTabelle(zeilen, kopf) {
     if (!zeilen.length) return '<p class="tf-note">Keine Daten.</p>';
-    return `<div class="tf-table-wrap"><table class="tf-table"><thead><tr><th>${kopf}</th><th>Anzahl</th><th>OVP (Med.)</th>
-      <th>MW-Anstieg</th><th>Ø Gewinn</th><th>Σ Gewinn</th><th>Treffer</th><th>OVP eingespielt</th></tr></thead><tbody>
-      ${zeilen.map(z => `<tr><td>${esc(z.gruppe)}</td><td>${nf(z.anzahl)}</td><td>${pct0(z.ovp_median)}</td>
-        <td>${pct(z.anstieg_median)}</td><td class="${cls(z.gewinn_schnitt)}">${smio(z.gewinn_schnitt)}</td>
-        <td class="${cls(z.gewinn_summe)}">${smio(z.gewinn_summe)}</td>
-        <td>${z.anzahl ? pct0(z.gewinner / z.anzahl, 0) : '–'}</td><td>${pct0(z.eingespielt_quote, 0)}</td></tr>`).join('')}
-      </tbody></table></div>`;
+    return `<div class="tf-table-wrap"><table class="tf-table"><thead><tr><th>${kopf}</th><th>Trades</th><th>Anstieg Vornacht</th>
+      <th>Nächte</th><th>Theor. Gewinn</th><th>OVP</th><th>OVP-Anteil</th><th>Ø Netto</th><th>Σ Netto</th><th>Treffer</th></tr></thead><tbody>
+      ${zeilen.map(z => `<tr><td>${esc(z.gruppe)}</td><td>${nf(z.anzahl)}</td><td>${geld(z.anstieg_vortag_median)}</td>
+        <td>${leer(z.naechte_median) ? '–' : nf(z.naechte_median, 0)}</td><td>${geld(z.theo_median)}</td><td>${geld(z.ovp_eur_median)}</td>
+        <td>${anteil(z.anteil_median)}</td><td class="${cls(z.gewinn_schnitt)}">${sgeld(z.gewinn_schnitt)}</td>
+        <td class="${cls(z.gewinn_summe)}">${sgeld(z.gewinn_summe)}</td>
+        <td>${z.anzahl ? pct0(z.gewinner / z.anzahl) : '–'}</td></tr>`).join('')}
+      </tbody></table></div>
+      <p class="tf-note">Werte je Zeile als Median, außer Ø/Σ Netto.</p>`;
+  }
+
+  function nachAnteil(m) {
+    return `<div class="tm-card"><h3>OVP im Vergleich zum Netto-Gewinn (Trades)</h3>
+      <p class="tf-note" style="margin-top:0">Gruppiert nach: Wie viel vom theoretischen Gewinn bis Anpfiff wurde als OVP geboten – und was ist netto hängen geblieben?</p>
+      ${gruppenTabelle(m.nach_ovp, 'OVP-Anteil')}</div>`;
+  }
+
+  function nachAnstieg(m) {
+    return `<div class="tm-card"><h3>Trades nach Anstieg der letzten Nacht</h3>
+      ${gruppenTabelle(m.nach_anstieg || [], 'Anstieg')}</div>`;
   }
 
   function wochentage(m) {
@@ -2349,138 +2478,41 @@ load().then(() => {
     return `<div class="tm-card"><h3>Trades nach Kauf-Wochentag</h3>
       <div class="tf-bars">${z.map(x => `<div class="tf-bar-row"><span>${x.gruppe}</span>
         <div class="tf-bar"><span style="left:0;width:${(x.anzahl / max) * 100}%;background:var(--gold)"></span></div>
-        <b class="${cls(x.gewinn_summe)}">${nf(x.anzahl)} · ${smio(x.gewinn_summe, 1)}</b></div>`).join('')}</div>
+        <b class="${cls(x.gewinn_summe)}">${nf(x.anzahl)} · ${sgeld(x.gewinn_summe)}</b></div>`).join('')}</div>
       ${gruppenTabelle(z, 'Tag')}
     </div>`;
-  }
-
-  function ovpStufen(m) {
-    return `<div class="tm-card"><h3>OVP im Vergleich zum Gewinn (Trades)</h3>
-      <p class="tf-note" style="margin-top:0">Wie viel über Marktwert geboten wurde – und was am Ende hängen blieb.
-        „OVP eingespielt“ = Marktwert ist bis zum Verkauf mindestens um die OVP gestiegen.</p>
-      ${gruppenTabelle(m.nach_ovp, 'OVP')}</div>`;
   }
 
   function liste(m) {
     const pos = [...m.positionen].reverse();
     const gruppen = {
-      alle: pos, gewinn: pos.filter(p => p.tf_gewinn > 0), verlust: pos.filter(p => p.tf_gewinn < 0),
-      trade: pos.filter(p => p.typ === 'trade'), gehalten: pos.filter(p => p.typ === 'gehalten'), offen: pos.filter(p => p.typ === 'offen'),
+      alle: pos, trade: pos.filter(p => p.typ === 'trade'), gewinn: pos.filter(p => p.tf_gewinn > 0), verlust: pos.filter(p => p.tf_gewinn < 0),
+      gehalten: pos.filter(p => p.typ === 'gehalten'), offen: pos.filter(p => p.typ === 'offen'),
     };
     const namen = { alle: 'Alle', trade: 'Trades', gewinn: 'Mit Gewinn', verlust: 'Mit Verlust', gehalten: 'Gehalten & verkauft', offen: 'Noch im Kader' };
     const sel = gruppen[filter] ? filter : 'alle';
-    const zeilen = gruppen[sel];
     const typ = { trade: 'Trade', gehalten: 'gehalten', offen: 'im Kader' };
     return `<div class="tm-card"><h3>Alle Käufe im Detail</h3>
       <div class="tf-filter">${Object.keys(namen).map(k => `<button class="sort-btn ${k === sel ? 'active' : ''}" data-filter="${k}">${namen[k]} (${gruppen[k].length})</button>`).join('')}</div>
-      <div class="tf-table-wrap"><table class="tf-table"><thead><tr><th>Spieler</th><th>Kaufpreis</th><th>OVP</th><th>MW-Anstieg</th>
-        <th>Verkauf</th><th>TF-Gewinn</th><th>Spieltage</th></tr></thead><tbody>
-      ${zeilen.slice(0, 300).map(p => {
+      <div class="tf-table-wrap"><table class="tf-table"><thead><tr><th>Spieler</th><th>Kaufpreis</th><th>Anstieg Vornacht</th>
+        <th>Theor. Gewinn</th><th>OVP</th><th>MW-Anstieg real</th><th>Verkauf</th><th>Netto</th><th>Spieltage</th></tr></thead><tbody>
+      ${gruppen[sel].slice(0, 300).map(p => {
         const ergebnis = p.typ === 'offen' ? p.unrealisiert : p.tf_gewinn;
         return `<tr class="${ergebnis < 0 ? 'loss' : ''}">
-          <td class="tf-name">${esc(p.name)}<small>${p.wochentag} ${datum(p.kauf)} · ${typ[p.typ]}${p.von === 'manager' ? ' · von ' + esc(p.von_name) : ''}
-            ${leer(p.trend_vortag) ? '' : ' · Trend ' + pct(p.trend_vortag)}${leer(p.tage_bis_anpfiff) ? '' : ' · ' + nf(p.tage_bis_anpfiff, 1) + ' T. bis Anpfiff'}</small></td>
-          <td>${mio(p.preis)}<small>MW ${mio(p.mw_kauf)}</small></td>
-          <td>${pct(p.ovp)}<small>${smio(p.ovp_eur)}</small></td>
-          <td class="${cls(p.mw_anstieg_eur)}">${pct(p.mw_anstieg)}<small>${smio(p.mw_anstieg_eur)}</small></td>
-          <td>${p.verkauf ? mio(p.vk_preis) + `<small>${datum(p.verkauf)}${p.an === 'manager' ? ' · an ' + esc(p.an_name) : ''}</small>`
-                          : `<span class="tf-dim">MW ${mio(p.mw_ende)}</span><small>noch im Kader</small>`}</td>
-          <td class="${cls(ergebnis)}">${smio(ergebnis)}<small>${p.typ === 'offen' ? 'unrealisiert' : nf(p.haltedauer_tage, 1) + ' Tage'}</small></td>
+          <td class="tf-name">${esc(p.name)}<small>${p.wochentag} ${datum(p.kauf)} · ${typ[p.typ]}${p.von === 'manager' ? ' · von ' + esc(p.von_name) : ''}</small></td>
+          <td>${geld(p.preis)}<small>MW ${geld(p.mw_kauf)}</small></td>
+          <td class="${cls(p.anstieg_vortag)}">${sgeld(p.anstieg_vortag)}<small>${leer(p.naechte) ? '' : p.naechte + ' Nächte bis Anpfiff'}</small></td>
+          <td>${geld(p.theo_gewinn)}</td>
+          <td>${sgeld(p.ovp_eur)}<small>${leer(p.ovp_anteil) ? '' : anteil(p.ovp_anteil) + ' vom theor.'}</small></td>
+          <td class="${cls(p.mw_anstieg_eur)}">${sgeld(p.mw_anstieg_eur)}<small>${nf(p.haltedauer_tage, 1)} Tage</small></td>
+          <td>${p.verkauf ? geld(p.vk_preis) + `<small>${datum(p.verkauf)}${p.an === 'manager' ? ' · an ' + esc(p.an_name) : ''}</small>`
+                          : `<span class="tf-dim">MW ${geld(p.mw_ende)}</span><small>noch im Kader</small>`}</td>
+          <td class="${cls(ergebnis)}">${sgeld(ergebnis)}<small>${p.typ === 'offen' ? 'unrealisiert' : ''}</small></td>
           <td>${p.spieltage ? nf(p.spieltage) + `<small>${nf(p.punkte)} Pkt</small>` : '–'}</td></tr>`;
-      }).join('') || '<tr><td colspan="7" class="tf-dim">Keine Einträge.</td></tr>'}
+      }).join('') || '<tr><td colspan="9" class="tf-dim">Keine Einträge.</td></tr>'}
       </tbody></table></div>
-      <p class="tf-note">Punkte = Punkte des Spielers an den Spieltagen, an denen er im Kader war (ob er in der Startelf stand, ist hier nicht berücksichtigt).</p>
+      <p class="tf-note">Punkte = Punkte des Spielers an den Spieltagen, an denen er im Kader war (Startelf nicht unterschieden).</p>
     </div>`;
-  }
-
-  // ---------------- Gebots-Rechner ----------------
-  function tageBisAnpfiff() {
-    const jetzt = Date.now();
-    const naechster = Object.values(TF.anpfiffe || {}).map(a => new Date(a).getTime()).filter(t => t > jetzt).sort((a, b) => a - b)[0];
-    return naechster ? Math.max(0, (naechster - jetzt) / 864e5) : 3;
-  }
-
-  function rechner(m) {
-    const name = id => (TF.manager.find(x => x.id === id) || { name: id }).name;
-    const profil = TF.bieter_profil || [];
-    const ids = TF.manager.map(x => x.id);
-    const matrix = `<div class="tf-table-wrap"><table class="tf-table"><thead><tr><th>MW-Trend</th>
-        ${ids.map(id => `<th>${esc(name(id))}</th>`).join('')}<th>Alle P90</th></tr></thead><tbody>
-      ${profil.map(z => `<tr><td>${esc(z.trend)}</td>${ids.map(id => {
-        const e = z.manager[id];
-        return `<td>${e ? pct0(e.median) + `<small>${e.anzahl}× · max ${pct0(e.max, 0)}</small>` : '<span class="tf-dim">–</span>'}</td>`;
-      }).join('')}<td>${pct0(z.ovp_p90)}</td></tr>`).join('')}
-      </tbody></table></div>`;
-    return `<div class="tm-card" id="tf-rechner"><h3>Gebots-Rechner für die Rückrunde</h3>
-      <p class="tf-note" style="margin-top:0">Marktwert und letzten Anstieg eines Spielers eingeben. Der Rechner zeigt,
-        welche OVP die anderen Manager bei diesem Trend bisher gezahlt haben (also was du überbieten musst)
-        und bis zu welchem Gebot sich ein Trade bis zum Anpfiff noch lohnt.</p>
-      <div class="tf-calc">
-        <label>Marktwert (Mio)<input id="tfc-mw" inputmode="decimal" placeholder="z. B. 12,5"></label>
-        <label>MW-Anstieg letzte Nacht (%)<input id="tfc-trend" inputmode="decimal" placeholder="z. B. 2,5"></label>
-        <label>Tage bis Anpfiff<input id="tfc-tage" inputmode="decimal"></label>
-      </div>
-      <div class="tf-result" id="tfc-out"></div>
-      <h3 style="margin-top:18px">Typische OVP je Manager nach MW-Trend (Median, nur Käufe vom Markt)</h3>
-      ${matrix}
-    </div>`;
-  }
-
-  function zahl(v) {
-    const t = String(v || '').replace(/\s|%|€/g, '').replace(',', '.');
-    const n = parseFloat(t);
-    return Number.isFinite(n) ? n : null;
-  }
-
-  function rechnerInit(m) {
-    const mwEl = document.getElementById('tfc-mw'), trEl = document.getElementById('tfc-trend'), tgEl = document.getElementById('tfc-tage');
-    const out = document.getElementById('tfc-out');
-    mwEl.value = pref.get('calc_mw', ''); trEl.value = pref.get('calc_trend', '');
-    tgEl.value = nf(tageBisAnpfiff(), 1);
-    const name = id => (TF.manager.find(x => x.id === id) || { name: id }).name;
-
-    function rechne() {
-      pref.set('calc_mw', mwEl.value); pref.set('calc_trend', trEl.value);
-      const mwMio = zahl(mwEl.value), trend = zahl(trEl.value), tage = zahl(tgEl.value);
-      if (mwMio === null || trend === null || tage === null) { out.innerHTML = ''; return; }
-      const mw = mwMio * 1e6, r = trend / 100;
-      // Marktwert entwickelt sich ungefähr mit dem letzten Tagesanstieg weiter (ein Sprung pro Nacht)
-      const naechte = Math.max(0, Math.floor(tage));
-      const mwAnpfiff = mw * Math.pow(1 + r, naechte);
-      const breakEven = mwAnpfiff - mw;               // max. OVP, damit Verkauf vor Anpfiff ±0 ist
-      const zeile = (TF.bieter_profil || []).find(z => r >= z.von && r < z.bis) || null;
-      const ich = (TF.manager.find(x => x.ich) || {}).id;
-      const gegner = zeile ? Object.entries(zeile.manager).filter(([id]) => id !== ich) : [];
-      // alle Markt-Käufe der anderen Manager in dieser Trendstufe zusammen (robuster als einzelne Manager)
-      const pool = (TF.bieter_kaeufe || []).filter(b => b.mid !== ich && b.trend !== null && zeile && b.trend >= zeile.von && b.trend < zeile.bis)
-        .map(b => b.ovp).sort((a, b) => a - b);
-      const q = p => pool.length ? pool[Math.min(pool.length - 1, Math.floor((pool.length - 1) * p + 0.5))] : null;
-      const typisch = pool.length >= 3 ? q(0.75) : null;
-      const sicher = pool.length ? pool[pool.length - 1] : null;
-      const haerteste = gegner.filter(([, e]) => e.anzahl >= 3).sort((a, b) => b[1].p75 - a[1].p75)[0];
-      const empf = leer(typisch) ? null : Math.max(0, typisch) + 0.005;
-      const gebot = empf === null ? null : mw * (1 + empf);
-      const gewinn = gebot === null ? null : mwAnpfiff - gebot;
-      const verdict = gebot === null ? ['', 'Für diesen Trend gibt es noch zu wenige Vergleichskäufe.']
-        : gewinn >= 0 ? ['ok', `Lohnt sich als Trade: bei ${smio(gewinn)} erwartetem Gewinn bis zum Anpfiff.`]
-        : ['warn', `Als reiner Trade unrentabel (${smio(gewinn)} bis Anpfiff) – nur sinnvoll, wenn du den Spieler behalten willst.`];
-      out.innerHTML = `
-        <div class="tf-kpis">
-          ${kpi('Empfohlenes Gebot', gebot === null ? '–' : `<span class="tf-big">${mio(gebot, 2)}</span>`,
-                empf === null ? '' : `${pct(empf)} OVP · über 75 % der bisherigen Gewinner-Gebote (${pool.length} Käufe der anderen)`)}
-          ${kpi('Lohnt sich bis', mio(mw + breakEven, 2), `${pct(breakEven / mw)} OVP · MW bei Anpfiff ≈ ${mio(mwAnpfiff)}`)}
-          ${kpi('Sicher gewinnen', leer(sicher) ? '–' : mio(mw * (1 + Math.max(0, sicher) + 0.005), 2),
-                leer(sicher) ? '' : `${pct(Math.max(0, sicher) + 0.005)} OVP · über dem höchsten bisherigen Gebot`)}
-        </div>
-        <div class="tf-verdict ${verdict[0]}">${verdict[1]}${haerteste ? ` Härtester Bieter bei diesem Trend: <b>${esc(name(haerteste[0]))}</b> (meist bis ${pct(haerteste[1].p75)} OVP).` : ''}</div>
-        ${zeile ? `<div class="tf-table-wrap"><table class="tf-table"><thead><tr><th>Manager bei Trend ${esc(zeile.trend)}</th>
-          <th>Käufe</th><th>OVP Median</th><th>OVP P75</th><th>OVP max</th></tr></thead><tbody>
-          ${Object.entries(zeile.manager).sort((a, b) => b[1].p75 - a[1].p75).map(([id, e]) => `<tr><td>${esc(name(id))}${id === ich ? ' <span class="tf-dim">(du)</span>' : ''}</td>
-            <td>${nf(e.anzahl)}</td><td>${pct0(e.median)}</td><td>${pct0(e.p75)}</td><td>${pct0(e.max)}</td></tr>`).join('')}
-          </tbody></table></div>` : ''}`;
-    }
-    [mwEl, trEl, tgEl].forEach(el => el.addEventListener('input', rechne));
-    rechne();
   }
 })();
 </script>

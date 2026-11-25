@@ -8,8 +8,10 @@ Liga-Cockpit).
 
 Pro Kauf:
   - Wochentag, Kaufpreis, Marktwert zum Kaufzeitpunkt, OVP (Überzahlung)
-  - Marktwert-Anstieg am Vortag (Trend, mit dem der Spieler gekauft wurde)
-  - Tage bis zum nächsten Anpfiff (Spieltagsbeginn)
+  - Marktwert-Anstieg der letzten Nacht vor dem Kauf (in Euro)
+  - Naechte (= Marktwert-Updates) bis zum naechsten Anpfiff und daraus der
+    theoretische Gewinn bis Anpfiff = Anstieg x Naechte, wenn man ohne OVP kauft
+  - OVP in Euro und als Anteil am theoretischen Gewinn
   - bei Verkauf: Verkaufspreis, Marktwert-Anstieg bis zum Verkauf, TF-Gewinn,
     ob die OVP durch den Anstieg wieder eingespielt wurde
   - Typ: "trade"    = vor dem nächsten Anpfiff wieder verkauft
@@ -54,10 +56,13 @@ WOCHENTAGE = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
 EPOCHE = date(1970, 1, 1)
 
 # Stufen fuer Auswertungen
-OVP_STUFEN = [(-1.0, 0.0, "unter MW"), (0.0, 0.02, "0–2 %"), (0.02, 0.05, "2–5 %"),
-              (0.05, 0.10, "5–10 %"), (0.10, 0.20, "10–20 %"), (0.20, 99.0, "über 20 %")]
-TREND_STUFEN = [(-99.0, 0.0, "fallend"), (0.0, 0.01, "0–1 %"), (0.01, 0.02, "1–2 %"),
-                (0.02, 0.03, "2–3 %"), (0.03, 0.05, "3–5 %"), (0.05, 99.0, "über 5 %")]
+# OVP als Anteil am theoretischen Gewinn bis Anpfiff (= Anstieg letzte Nacht x Naechte bis Anpfiff)
+ANTEIL_STUFEN = [(-1e9, 0.0, "unter MW"), (0.0, 0.25, "0–25 %"), (0.25, 0.5, "25–50 %"),
+                 (0.5, 0.75, "50–75 %"), (0.75, 1.0, "75–100 %"), (1.0, 1e9, "über 100 %")]
+# Marktwert-Anstieg der letzten Nacht vor dem Kauf, in Euro
+ANSTIEG_STUFEN = [(-1e12, 1.0, "fallend/0"), (1.0, 100_000, "bis 100k"), (100_000, 200_000, "100–200k"),
+                  (200_000, 300_000, "200–300k"), (300_000, 500_000, "300–500k"),
+                  (500_000, 1_000_000, "500k–1 Mio"), (1_000_000, 1e12, "über 1 Mio")]
 
 _session = requests.Session()
 
@@ -234,6 +239,20 @@ def pid_fuer(t: dict, aus_feed: dict, aus_daten: dict, mw: dict, versatz: int) -
     return best[1] if best else None
 
 
+def naechte_bis(ts: pd.Timestamp, anpfiff: pd.Timestamp | None) -> int | None:
+    """Wie viele naechtliche Marktwert-Updates (~22 Uhr) liegen zwischen Kauf und Anpfiff?"""
+    if anpfiff is None:
+        return None
+    grenze = ts.normalize() + pd.Timedelta(hours=22, minutes=4)
+    if grenze <= ts:
+        grenze += pd.Timedelta(days=1)
+    n = 0
+    while grenze < anpfiff:
+        n += 1
+        grenze += pd.Timedelta(days=1)
+    return n
+
+
 def naechster_anpfiff(ts: pd.Timestamp, anpfiffe: list[tuple[int, pd.Timestamp]]):
     for tag, a in anpfiffe:
         if a > ts:
@@ -344,7 +363,10 @@ def analysiere() -> dict:
         mw_k = mw_bei(mw, pid, kauf, versatz)
         mw_vortag = mw_bei(mw, pid, kauf - pd.Timedelta(days=1), versatz)
         trend = (mw_k / mw_vortag - 1) if mw_k and mw_vortag else None
+        anstieg_vortag = (mw_k - mw_vortag) if mw_k and mw_vortag else None
         tag, anpfiff = naechster_anpfiff(kauf, anpfiffe)
+        naechte = naechte_bis(kauf, anpfiff)
+        theo = (max(anstieg_vortag, 0) * naechte) if (anstieg_vortag is not None and naechte is not None) else None
         vk = pos.get("verkauf")
         if vk is None:
             typ = "offen"
@@ -369,6 +391,7 @@ def analysiere() -> dict:
             "preis": pos["preis"], "von": pos["von"], "von_name": pos["von_name"],
             "mw_kauf": mw_k, "ovp_eur": ovp_eur, "ovp": runde(ovp_eur / mw_k) if ovp_eur is not None and mw_k else None,
             "trend_vortag": runde(trend),
+            "anstieg_vortag": anstieg_vortag, "naechte": naechte, "theo_gewinn": theo,
             "tage_bis_anpfiff": runde((anpfiff - kauf).total_seconds() / 86400, 2) if anpfiff is not None else None,
             "verkauf": vk.isoformat() if vk is not None else None,
             "vk_preis": pos.get("vk_preis"), "an": pos.get("an"), "an_name": pos.get("an_name"),
@@ -378,6 +401,7 @@ def analysiere() -> dict:
             "tf_gewinn": gewinn,
             "unrealisiert": (mw_ende - pos["preis"]) if (vk is None and mw_ende) else None,
             "ovp_eingespielt": (anstieg >= ovp_eur) if (anstieg is not None and ovp_eur is not None) else None,
+            "ovp_anteil": runde(ovp_eur / theo, 3) if (ovp_eur is not None and theo) else None,
             "spieltage": len(spieltage),
             "punkte": sum(pk.get(t, 0) for t in spieltage),
         }
@@ -399,6 +423,9 @@ def analysiere() -> dict:
             "verlierer": sum(1 for x in mit_gewinn if x["tf_gewinn"] < 0),
             "gewinn_schnitt": runde(statistics.mean([x["tf_gewinn"] for x in mit_gewinn]), 0) if mit_gewinn else None,
             "ovp_median": median("ovp"), "ovp_schnitt": mittel("ovp"),
+            "ovp_eur_median": median("ovp_eur"), "anstieg_vortag_median": median("anstieg_vortag"),
+            "theo_median": median("theo_gewinn"), "anteil_median": median("ovp_anteil"),
+            "naechte_median": median("naechte"),
             "ovp_eur_summe": sum(x["ovp_eur"] for x in liste if x.get("ovp_eur") is not None),
             "anstieg_median": median("mw_anstieg"),
             "haltedauer_median": median("haltedauer_tage"),
@@ -427,8 +454,9 @@ def analysiere() -> dict:
               for s in startkader_verkauf[mid]]
         kaeufe_markt = [x for x in details if x["von"] == "kickbase" and x.get("ovp") is not None]
         for x in kaeufe_markt:
-            bieter_alle.append({"mid": mid, "ovp": x["ovp"], "trend": x["trend_vortag"],
-                                "tage": x["tage_bis_anpfiff"], "typ": x["typ"], "mw": x["mw_kauf"]})
+            bieter_alle.append({"mid": mid, "ovp": x["ovp"], "ovp_eur": x["ovp_eur"], "anstieg": x["anstieg_vortag"],
+                                "naechte": x["naechte"], "anteil": x["ovp_anteil"], "typ": x["typ"],
+                                "gewinn": x["tf_gewinn"], "wt": x["wochentag"]})
         n_kauf = len(details)
         n_verkauf = len(verkauft) + len(sk)
         ergebnis_manager.append({
@@ -445,28 +473,36 @@ def analysiere() -> dict:
             "offen": zusammenfassung(offene),
             "nach_wochentag": gruppiert(trades, lambda x: x["wochentag"], WOCHENTAGE),
             "nach_wochentag_alle": gruppiert(details, lambda x: x["wochentag"], WOCHENTAGE),
-            "nach_ovp": gruppiert(trades, lambda x: stufe(x["ovp"], OVP_STUFEN), [s[2] for s in OVP_STUFEN]),
-            "nach_trend": gruppiert(kaeufe_markt, lambda x: stufe(x["trend_vortag"], TREND_STUFEN),
-                                    [s[2] for s in TREND_STUFEN]),
+            "nach_ovp": gruppiert(trades, lambda x: ("MW fiel/stagnierte" if not x["theo_gewinn"] else
+                                                     stufe(x["ovp_anteil"], ANTEIL_STUFEN)),
+                                  [s[2] for s in ANTEIL_STUFEN] + ["MW fiel/stagnierte"]),
+            "nach_anstieg": gruppiert(trades, lambda x: stufe(x["anstieg_vortag"], ANSTIEG_STUFEN),
+                                      [s[2] for s in ANSTIEG_STUFEN]),
             "positionen": details,
             "startkader_verkauft": sk,
         })
 
-    # Bieter-Profil: welche OVP zahlt wer bei welchem MW-Trend (nur Kaeufe vom Kickbase-Markt)
+    # Bieter-Profil: wie viel OVP (in Euro und als Anteil am theoretischen Gewinn bis
+    # Anpfiff) zahlt wer bei welchem MW-Anstieg der letzten Nacht (nur Kaeufe vom Markt)
     profil = []
-    for lo, hi, name in TREND_STUFEN:
-        g = [b for b in bieter_alle if b["trend"] is not None and lo <= b["trend"] < hi]
-        zeile = {"trend": name, "von": lo, "bis": hi, "anzahl": len(g),
-                 "ovp_median": runde(quantil([b["ovp"] for b in g], 0.5)),
-                 "ovp_p75": runde(quantil([b["ovp"] for b in g], 0.75)),
-                 "ovp_p90": runde(quantil([b["ovp"] for b in g], 0.9)),
-                 "ovp_max": runde(max([b["ovp"] for b in g], default=None)),
+    for lo, hi, name in ANSTIEG_STUFEN:
+        g = [b for b in bieter_alle if b["anstieg"] is not None and lo <= b["anstieg"] < hi]
+        eur = [b["ovp_eur"] for b in g]
+        ant = [b["anteil"] for b in g if b["anteil"] is not None]
+        zeile = {"stufe": name, "von": lo, "bis": hi, "anzahl": len(g),
+                 "ovp_eur_median": quantil(eur, 0.5), "ovp_eur_p75": quantil(eur, 0.75),
+                 "ovp_eur_max": max(eur, default=None),
+                 "anteil_median": runde(quantil(ant, 0.5), 3), "anteil_p75": runde(quantil(ant, 0.75), 3),
                  "manager": {}}
         for mid in manager_ids:
-            gm = [b["ovp"] for b in g if b["mid"] == mid]
+            gm = [b for b in g if b["mid"] == mid]
             if gm:
-                zeile["manager"][mid] = {"anzahl": len(gm), "median": runde(quantil(gm, 0.5)),
-                                         "p75": runde(quantil(gm, 0.75)), "max": runde(max(gm))}
+                am = [b["anteil"] for b in gm if b["anteil"] is not None]
+                zeile["manager"][mid] = {"anzahl": len(gm),
+                                         "ovp_eur_median": quantil([b["ovp_eur"] for b in gm], 0.5),
+                                         "ovp_eur_max": max(b["ovp_eur"] for b in gm),
+                                         "anteil_median": runde(quantil(am, 0.5), 3),
+                                         "anteil_p75": runde(quantil(am, 0.75), 3)}
         profil.append(zeile)
 
     return {
@@ -475,7 +511,8 @@ def analysiere() -> dict:
         "anpfiffe": {str(t): a.isoformat() for t, a in anpfiffe},
         "manager": ergebnis_manager,
         "bieter_profil": profil,
-        "bieter_kaeufe": [{k: b[k] for k in ("mid", "ovp", "trend", "tage", "typ")} for b in bieter_alle],
+        "bieter_kaeufe": [{k: b[k] for k in ("mid", "ovp_eur", "anstieg", "naechte", "anteil", "typ", "gewinn", "wt")}
+                          for b in bieter_alle if b["ovp_eur"] is not None],
     }
 
 
@@ -485,8 +522,8 @@ def main() -> None:
         json.dump(ergebnis, f, ensure_ascii=False, separators=(",", ":"), default=str)
     for m in ergebnis["manager"]:
         print(f"{m['name']:14} Käufe {m['kaeufe']:3}  Trades {m['trades']['anzahl']:3}  "
-              f"TF-Gewinn {m['tf_gewinn']:>13,.0f} €  OVP Trades (Median) "
-              f"{(m['trades']['ovp_median'] or 0) * 100:5.1f} %")
+              f"TF-Gewinn {m['tf_gewinn']:>13,.0f} €  OVP-Anteil am theor. Gewinn (Median) "
+              f"{(m['trades']['anteil_median'] or 0) * 100:5.1f} %")
     print(f"{OUTPUT_FILE} geschrieben.")
 
 
