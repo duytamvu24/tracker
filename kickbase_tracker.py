@@ -9,6 +9,8 @@ Was das Skript macht (einmal pro Tag ausführen, z.B. per Cronjob nach 22 Uhr):
 3. Für jeden Manager: aktuellen Teamwert (Dashboard) + Transfers der letzten Tage abrufen
 4. Transfers pro Manager auf Kickbase-Tage aggregieren (Grenze 22:04 Uhr) -> Netto-Transfer
 5. Für den Ziel-Tag: Budget(t) = Budget(t-1) + Netto-Transfer(t) + Login-Bonus
+                                 + Punkteprämie(t)  (Spieltagspunkte x 1.000 €,
+                                   gutgeschrieben am Montag 23:30 nach dem Spieltag)
                      Netto-Teamwert(t) = Teamwert(t) + Budget(t)
                      Max-Gebot(t) = Budget(t) + 1/3 * Netto-Teamwert(t)
 6. Ergebnis wird in state.json gespeichert (Historie je Manager) und als Tabelle ausgegeben
@@ -72,14 +74,29 @@ DEFAULT_START_BUDGET = 50_000_000
 # Korrigierte Startbudgets fuer die LAUFENDE Saison (nach dem Reset).
 # Diese Werte ueberschreiben das beim Reset geschaetzte start_budget in state.json.
 # Die komplette Budget-Kette wird danach automatisch neu berechnet.
-# Ermittelt aus dem Abgleich mit dem echten App-Budget am 06.10.2026:
-#   Duy Tam:     Tracker -45.212.629 / App -40.259.629 -> +4.953.000
-#   Dragontrieu: Tracker -49.116.123 / App -45.716.123 -> +3.400.000
+# Frueher stand hier 54.953.000 (Duy Tam) bzw. 53.400.000 (Dragontrieu). Die
+# Differenz zu 50 Mio (4.953.000 / 3.400.000) waren in Wahrheit die Punkteprämien
+# der Spieltage 1-4, die der Tracker damals noch nicht kannte. Seit die Prämie
+# eingerechnet wird, gilt wieder das echte Startbudget von 50 Mio.
 # NACH DEM NAECHSTEN SAISON-RESET LEEREN!
 START_BUDGET_OVERRIDES = {
-    "3310917": 54_953_000,   # Duy Tam
-    "3458038": 53_400_000,   # Dragontrieu
+    "3310917": 50_000_000,   # Duy Tam
+    "3458038": 50_000_000,   # Dragontrieu
 }
+
+# Punkteprämie: Kickbase schreibt nach jedem Spieltag pro erzieltem
+# Spieltagspunkt 1.000 € gut (auch in Ligen ohne Erfolgs-Boni, laut
+# Kickbase-Hilfe nicht abschaltbar). Am 25.11.2026 gegen 153 echte
+# Budgetstaende geprueft (Spieltag 5-10 auf den Euro genau).
+PUNKTE_PRAEMIE = 1_000            # € pro Spieltagspunkt
+PRAEMIE_WOCHENTAG = 0             # 0 = Montag
+PRAEMIE_UHRZEIT = "23:30"         # Berlin-Zeit, nach dem letzten Spiel des Spieltags
+COMPETITION_ID = "1"              # 1 = Bundesliga
+SPIELTAGE_FILE = "spieltage.json" # Cache: Gutschrift-Zeitpunkt je Spieltag
+# Falls fuer einen Spieltag ausnahmsweise KEINE Prämie gezahlt wurde
+# (z.B. Punkte nachtraeglich freigeschaltet, aber kein Geld):
+# {"manager_id": [spieltag, ...]}
+PRAEMIE_AUSNAHMEN: dict[str, list[int]] = {}
 
 # Deine eigene Manager-ID. Fuer dich liefert die API das ECHTE Budget
 # (/me/budget) - der Tracker vergleicht es jeden Lauf mit seiner Berechnung
@@ -179,6 +196,114 @@ def get_eigenes_budget(league_id: str, headers: dict) -> float | None:
     except Exception as e:  # noqa: BLE001 - reiner Zusatz-Check, darf nie den Lauf abbrechen
         print(f"Hinweis: eigenes Budget (/me/budget) nicht abrufbar: {e}")
         return None
+
+
+# ---------------------------------------------------------------------------
+# Punkteprämie (Spieltagspunkte x 1.000 €)
+# ---------------------------------------------------------------------------
+
+def praemien_zeitpunkt(letztes_spiel: pd.Timestamp) -> pd.Timestamp:
+    """Erster Montag 23:30 (Berlin) NACH dem letzten Spiel eines Spieltags."""
+    letztes_spiel = _berlin(letztes_spiel)
+    h, mi = (int(x) for x in PRAEMIE_UHRZEIT.split(":"))
+    tage = (PRAEMIE_WOCHENTAG - letztes_spiel.weekday()) % 7
+    d = (letztes_spiel.tz_localize(None).normalize() + pd.Timedelta(days=tage)).date()
+    kandidat = pd.Timestamp(d.year, d.month, d.day, h, mi).tz_localize("Europe/Berlin")
+    if kandidat <= letztes_spiel:
+        d = d + pd.Timedelta(days=7)
+        kandidat = pd.Timestamp(d.year, d.month, d.day, h, mi).tz_localize("Europe/Berlin")
+    return kandidat
+
+
+def load_spieltage() -> dict:
+    if os.path.exists(SPIELTAGE_FILE):
+        try:
+            with open(SPIELTAGE_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except (ValueError, OSError):
+            pass
+    return {}
+
+
+def save_spieltage(daten: dict) -> None:
+    with open(SPIELTAGE_FILE, "w", encoding="utf-8") as f:
+        json.dump(daten, f, indent=2, ensure_ascii=False)
+
+
+def lade_spieltag_gutschriften(headers: dict) -> dict[int, str]:
+    """Gutschrift-Zeitpunkt (ISO, Berlin) der Punkteprämie je Spieltag.
+
+    Quelle: GET /v4/competitions/{cid}/matchdays (Spielplan). Pro Spieltag zaehlt
+    das LETZTE Spiel; die Prämie kommt am darauffolgenden Montag um 23:30.
+    Faellt der Abruf aus, wird der letzte gespeicherte Stand (spieltage.json)
+    genommen - so laeuft die Budget-Kette auch ohne API-Antwort weiter."""
+    cache = load_spieltage()
+    try:
+        url = f"https://api.kickbase.com/v4/competitions/{COMPETITION_ID}/matchdays"
+        r = requests.get(url, headers=headers, timeout=30)
+        r.raise_for_status()
+        letzte = {}
+        for tag in r.json().get("it", []) or []:
+            for spiel in tag.get("it", []) or []:
+                day = spiel.get("day", tag.get("day"))
+                dt = spiel.get("dt")
+                if day is None or not dt:
+                    continue
+                t = _berlin(dt)
+                if int(day) not in letzte or t > letzte[int(day)]:
+                    letzte[int(day)] = t
+        if letzte:
+            cache = {str(d): {"letztes_spiel": t.isoformat(), "gutschrift": praemien_zeitpunkt(t).isoformat()}
+                     for d, t in sorted(letzte.items())}
+            save_spieltage(cache)
+    except Exception as e:  # noqa: BLE001
+        print(f"Hinweis: Spielplan nicht abrufbar ({e}) - nutze gespeicherte Spieltage.")
+    return {int(d): v["gutschrift"] for d, v in cache.items()}
+
+
+def lade_spieltagspunkte(league_id: str, manager_id: str, headers: dict) -> dict[int, int] | None:
+    """Spieltagspunkte eines Managers in der laufenden Saison.
+    GET /v4/leagues/{lid}/managers/{mid}/performance -> it[] (Saisons) -> it[] {day, mdp}.
+    Gibt None zurueck, wenn der Abruf scheitert (dann gilt der gespeicherte Stand)."""
+    try:
+        url = f"https://api.kickbase.com/v4/leagues/{league_id}/managers/{manager_id}/performance"
+        r = requests.get(url, headers=headers, timeout=30)
+        r.raise_for_status()
+        saisons = r.json().get("it", []) or []
+        if not saisons:
+            return {}
+
+        def _saison_key(s):
+            try:
+                sid = int(s.get("sid") or 0)
+            except (TypeError, ValueError):
+                sid = 0
+            return (str(s.get("sn") or ""), sid)
+
+        aktuell = max(saisons, key=_saison_key)
+        return {int(e["day"]): int(e.get("mdp") or 0)
+                for e in aktuell.get("it", []) or [] if e.get("day") is not None}
+    except Exception as e:  # noqa: BLE001
+        print(f"Hinweis: Spieltagspunkte für Manager {manager_id} nicht abrufbar: {e}")
+        return None
+
+
+def berechne_praemien(punkte: dict, gutschriften: dict[int, str], jetzt: pd.Timestamp,
+                      reset_threshold: str | None, ausnahmen: list[int] | None = None) -> list[dict]:
+    """Liste der bereits gutgeschriebenen Punkteprämien eines Managers."""
+    schwelle = _berlin(reset_threshold) if reset_threshold else None
+    ausnahmen = set(ausnahmen or [])
+    praemien = []
+    for day, p in sorted((int(d), int(v)) for d, v in punkte.items()):
+        iso = gutschriften.get(day)
+        if not iso or day in ausnahmen or p == 0:
+            continue
+        zeit = _berlin(iso)
+        if zeit > jetzt or (schwelle is not None and zeit <= schwelle):
+            continue
+        praemien.append({"spieltag": day, "punkte": p, "betrag": p * PUNKTE_PRAEMIE,
+                         "zeitpunkt": zeit.isoformat(), "tag": _tag_von(zeit)})
+    return praemien
 
 
 def kickbase_day(dt: pd.Timestamp):
@@ -355,8 +480,8 @@ def last_budget(history: list, start_budget: float) -> float:
     return history[-1]["budget"]
 
 
-def compute_day(prev_budget: float, teamwert: float, netto_transfer: float) -> dict:
-    budget = prev_budget + netto_transfer + LOGIN_BONUS
+def compute_day(prev_budget: float, teamwert: float, netto_transfer: float, praemie: float = 0.0) -> dict:
+    budget = prev_budget + netto_transfer + LOGIN_BONUS + praemie
     netto_teamwert = teamwert + budget
 
     # Basis fuer die 33%-Regel: negatives Budget reduziert die Basis (offizielles
@@ -371,6 +496,7 @@ def compute_day(prev_budget: float, teamwert: float, netto_transfer: float) -> d
         "budget": round(budget, 2),
         "teamwert": round(teamwert, 2),
         "netto_transfer": round(netto_transfer, 2),
+        "praemie": round(praemie, 2),
         "netto_teamwert": round(netto_teamwert, 2),
         "max_gebot": round(max_gebot, 2),
     }
@@ -414,8 +540,12 @@ def _netto_nach(store: dict, manager_id: str, ab, tag: str, reset_threshold) -> 
 
 def recompute_history(history: list, start_budget: float, store: dict,
                       manager_id: str, reset_threshold: str | None,
-                      korrekturen: list | None = None) -> None:
+                      korrekturen: list | None = None,
+                      praemien: list | None = None) -> None:
     """Berechnet die KOMPLETTE Budget-Kette ab Startbudget neu aus dem Archiv.
+
+    praemien: gutgeschriebene Punkteprämien (siehe berechne_praemien) - werden
+    dem Kickbase-Tag zugeschlagen, in den ihr Gutschrift-Zeitpunkt faellt.
 
     Vorher wurde nur der jeweils letzte Eintrag nachkorrigiert. Taucht ein
     Transfer erst spaeter im Archiv auf (oder wird ein Startbudget korrigiert),
@@ -439,15 +569,23 @@ def recompute_history(history: list, start_budget: float, store: dict,
         if tag not in anker or _berlin(k["zeitpunkt"]) > _berlin(anker[tag]["zeitpunkt"]):
             anker[tag] = k
 
+    praemien_je_tag: dict[str, list] = {}
+    for p in praemien or []:
+        praemien_je_tag.setdefault(p["tag"], []).append(p)
+
     budget = start_budget
     for eintrag in history:
         netto = netto_je_tag.get(eintrag["date"], 0.0)
-        neu = compute_day(budget, eintrag["teamwert"], netto)
+        praemie = sum(p["betrag"] for p in praemien_je_tag.get(eintrag["date"], []))
+        neu = compute_day(budget, eintrag["teamwert"], netto, praemie)
         k = anker.get(eintrag["date"])
         if k:
-            # Echtes Budget zum Korrektur-Zeitpunkt + Transfers danach (Login-Bonus
-            # des Tages steckt im echten Wert schon drin)
-            b = float(k["budget"]) + _netto_nach(store, manager_id, k["zeitpunkt"], eintrag["date"], reset_threshold)
+            # Echtes Budget zum Korrektur-Zeitpunkt + Transfers/Prämien danach
+            # (Login-Bonus des Tages steckt im echten Wert schon drin)
+            praemie_danach = sum(p["betrag"] for p in praemien_je_tag.get(eintrag["date"], [])
+                                 if _berlin(p["zeitpunkt"]) > _berlin(k["zeitpunkt"]))
+            b = (float(k["budget"]) + praemie_danach
+                 + _netto_nach(store, manager_id, k["zeitpunkt"], eintrag["date"], reset_threshold))
             neu["budget"] = round(b, 2)
             neu["netto_teamwert"] = round(eintrag["teamwert"] + b, 2)
             neu["max_gebot"] = round(b + MINUS_GRENZE * (eintrag["teamwert"] + min(b, 0)), 2)
@@ -456,6 +594,9 @@ def recompute_history(history: list, start_budget: float, store: dict,
             neu.pop("korrektur", None)
             eintrag.pop("korrektur", None)
         neu["date"] = eintrag["date"]
+        if not neu.get("praemie"):
+            neu.pop("praemie", None)
+            eintrag.pop("praemie", None)
         eintrag.update(neu)
         budget = neu["budget"]
 
@@ -480,7 +621,9 @@ def run_for_day(target_day: str) -> pd.DataFrame:
     if after_reset:
         print("=== AFTER_RESET aktiv: setze Budget/Teamwert-Basis für alle Manager neu ===")
 
-    jetzt_iso = pd.Timestamp.now(tz="Europe/Berlin").isoformat()
+    jetzt = pd.Timestamp.now(tz="Europe/Berlin")
+    jetzt_iso = jetzt.isoformat()
+    gutschriften = lade_spieltag_gutschriften(headers)
     korrekturen = load_korrekturen()
     if korrekturen:
         print(f"{len(korrekturen)} Budget-Korrektur(en) aus {KORREKTUREN_FILE} geladen.")
@@ -577,11 +720,26 @@ def run_for_day(target_day: str) -> pd.DataFrame:
                     # (betrifft nur Netto-Teamwert/Max-Gebot, nicht die Budget-Kette).
                     history.append({"date": tag_ts.date().isoformat(), "teamwert": teamwert})
 
+            # Punkteprämie: Spieltagspunkte von der API holen und dauerhaft
+            # speichern (faellt der Abruf aus, gilt der zuletzt gespeicherte Stand).
+            punkte = state[manager_id].setdefault("spieltagspunkte", {})
+            frisch = lade_spieltagspunkte(league_id, manager_id, headers)
+            if frisch:
+                punkte.update({str(d): p for d, p in frisch.items()})
+            praemien = berechne_praemien(punkte, gutschriften, jetzt, reset_threshold,
+                                         PRAEMIE_AUSNAHMEN.get(manager_id))
+            state[manager_id]["praemien"] = praemien
+            if praemien:
+                letzte = praemien[-1]
+                print(f"[{name}] Punkteprämien: {len(praemien)} Spieltag(e), zusammen "
+                      f"{sum(p['betrag'] for p in praemien):,.0f} € (zuletzt ST {letzte['spieltag']}: "
+                      f"{letzte['punkte']} Pkt = {letzte['betrag']:,.0f} €)")
+
             # Komplette Kette neu berechnen: erfasst auch Transfers, die erst
             # spaeter im Archiv aufgetaucht sind, und korrigierte Startbudgets.
             alte_budgets = {e["date"]: e.get("budget") for e in history}
             recompute_history(history, effektives_start_budget, transfers_store,
-                              manager_id, reset_threshold, korrekturen)
+                              manager_id, reset_threshold, korrekturen, praemien)
             geaendert = [
                 e for e in history
                 if alte_budgets.get(e["date"]) is not None

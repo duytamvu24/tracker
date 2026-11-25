@@ -9680,7 +9680,9 @@
       "dt": "2026-10-15T13:00:12Z",
       "pn": "Hranác",
       "trp": 8364289,
-      "tty": 1
+      "tty": 1,
+      "excluded": true,
+      "notiz": "Kauf von Kickbase rueckgaengig gemacht (Tippfehler-Gebot, 10x Marktwert), Geld erstattet"
     },
     "2026-10-15T07:46:22Z|2300392|2": {
       "dt": "2026-10-15T07:46:22Z",

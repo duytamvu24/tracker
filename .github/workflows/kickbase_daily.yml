@@ -5,6 +5,9 @@ on:
     # 21:30 UTC = 22:30 Uhr MEZ (Winter) bzw. 23:30 Uhr MESZ (Sommer)
     # -> immer sicher NACH der 22:04-Uhr-Grenze, unabhängig von Zeitumstellung
     - cron: "30 1,5,9,13,17,21 * * *"
+    # Zusatzlauf montags kurz nach der Punkteprämie (Gutschrift Mo 23:30 Berlin):
+    # 22:35 UTC = 23:35 MEZ (Winter), 21:35 UTC = 23:35 MESZ (Sommer)
+    - cron: "35 21,22 * * 1"
   workflow_dispatch: {}   # erlaubt manuelles Auslösen über den "Run workflow"-Button
 
 permissions:
@@ -68,7 +71,7 @@ jobs:
           git fetch origin main
           git reset --soft origin/main
 
-          for f in state.json transfers_store.json config.json squad_cache.json spieler_daten.json punkte_herkunft_cache.json; do
+          for f in state.json transfers_store.json config.json squad_cache.json spieler_daten.json punkte_herkunft_cache.json spieltage.json; do
             [ -f "$f" ] && git add "$f"
           done
           git diff --staged --quiet || git commit -m "Tracker-Update $(date -u +%Y-%m-%d)"
