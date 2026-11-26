@@ -232,6 +232,13 @@
       "marktwert": 3622076,
       "position": "MF",
       "mw_aenderung": 151933
+    },
+    {
+      "id": "2897",
+      "name": "Reitz",
+      "marktwert": 7990139,
+      "position": "MF",
+      "mw_aenderung": 297175
     }
   ],
   "3181707": [
@@ -634,11 +641,11 @@
       "mw_aenderung": 87990
     },
     {
-      "id": "663",
-      "name": "Andrich",
-      "marktwert": 6320360,
+      "id": "11512",
+      "name": "Capaldo",
+      "marktwert": 9447411,
       "position": "ABW",
-      "mw_aenderung": 104125
+      "mw_aenderung": 233949
     }
   ]
 }
