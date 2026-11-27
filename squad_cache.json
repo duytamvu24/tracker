@@ -218,20 +218,6 @@
       "marktwert": 2294151,
       "position": "ST",
       "mw_aenderung": 255365
-    },
-    {
-      "id": "15502",
-      "name": "Binder",
-      "marktwert": 3754630,
-      "position": "MF",
-      "mw_aenderung": 132554
-    },
-    {
-      "id": "2897",
-      "name": "Reitz",
-      "marktwert": 8239826,
-      "position": "MF",
-      "mw_aenderung": 249687
     }
   ],
   "3181707": [
@@ -632,6 +618,13 @@
       "marktwert": 9608288,
       "position": "ABW",
       "mw_aenderung": 160877
+    },
+    {
+      "id": "1954",
+      "name": "Bernardo",
+      "marktwert": 3011220,
+      "position": "ABW",
+      "mw_aenderung": 334232
     }
   ]
 }
